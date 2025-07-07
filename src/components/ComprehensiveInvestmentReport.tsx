@@ -1266,19 +1266,19 @@ export function ComprehensiveInvestmentReport() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {/* 1단계 */}
             <div className="bg-green-50 rounded-lg shadow p-4">
-              <h4 className="font-bold text-green-700 mb-2">1단계: 즉시 투자</h4>
+              <h4 className="font-bold text-green-700 mb-2">1단계: 즉시 투자(베트남 전략투자)</h4>
               <div className="space-y-3">
-                <div className="border-b pb-2">
-                  <div className="font-semibold">HANOI</div>
-                  <div className="text-xs text-gray-700">• 동남아 신흥시장, 제조·물류 허브<br/>• 현대차/협력사 진출, KOTRA 진출기업 다수<br/>• KT VPN 고객사(금융/제조) 수요, 네트워크 시너지 기대<br/>• 빠른 시장 진입 기회, PoP 미설치</div>
-                </div>
                 <div className="border-b pb-2">
                   <div className="font-semibold">HOCHIMINH</div>
                   <div className="text-xs text-gray-700">• 베트남 경제 중심, IT·금융 성장<br/>• 현대차/협력사, KOTRA 진출기업 활발<br/>• KT VPN 고객사(IT/금융) 수요, 글로벌 네트워크 허브<br/>• 인구·수요 증가, PoP 미설치</div>
                 </div>
+                <div className="border-b pb-2">
+                  <div className="font-semibold">HANOI</div>
+                  <div className="text-xs text-gray-700">• 동남아 신흥시장, 제조·물류 허브<br/>• 현대차/협력사 진출, KOTRA 진출기업 다수<br/>• KT VPN 고객사(금융/제조) 수요, 네트워크 시너지 기대<br/>• 빠른 시장 진입 기회, PoP 미설치</div>
+                </div>
                 <div>
-                  <div className="font-semibold">MANILA</div>
-                  <div className="text-xs text-gray-700">• 필리핀 성장시장, 영어권 인력 풍부<br/>• KOTRA 진출기업, 현대차/협력사 진출<br/>• KT VPN 고객사(제조/서비스) 수요, 시장 확대 기회<br/>• BPO·ICT 산업 성장, PoP 미설치</div>
+                  <div className="font-semibold">DONG NAI / BACNINH <span className='text-xs text-gray-500'><b>(후순위 고려)</b></span></div>
+                  <div className="text-xs text-gray-700">• 베트남 제조업 중심지(동나이/박닌)<br/>• 현대차/협력사, KOTRA 진출기업 다수<br/>• KT VPN 고객사(제조/물류) 수요, 산업 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
               </div>
             </div>
@@ -1287,16 +1287,16 @@ export function ComprehensiveInvestmentReport() {
               <h4 className="font-bold text-yellow-700 mb-2">2단계: 중기 투자</h4>
               <div className="space-y-3">
                 <div className="border-b pb-2">
-                  <div className="font-semibold">BANGKOK</div>
+                  <div className="font-semibold">BANGKOK (THAILAND)</div>
                   <div className="text-xs text-gray-700">• 태국 허브, 동남아 물류·관광 중심<br/>• 현대차/협력사, KOTRA 진출기업 진출 활발<br/>• KT VPN 고객사(제조/물류) 수요, 시너지 효과<br/>• 성장성 높음, PoP 미설치</div>
                 </div>
                 <div className="border-b pb-2">
-                  <div className="font-semibold">MUMBAI</div>
-                  <div className="text-xs text-gray-700">• 인도 경제·금융 중심, 대규모 시장<br/>• 현대차/협력사, KOTRA 진출기업 다수<br/>• KT VPN 고객사(금융/IT) 수요, 인도 내 네트워크 시너지<br/>• IT·금융·제조 성장, PoP 미설치</div>
+                  <div className="font-semibold">CHENNAI (INDIA)</div>
+                  <div className="text-xs text-gray-700">• 인도 남부 거점, 자동차·IT 산업<br/>• 현대차 생산기지, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/자동차) 수요, 산업 시너지<br/>• 성장 잠재력 높음, PoP 미설치</div>
                 </div>
                 <div>
-                  <div className="font-semibold">CHENNAI</div>
-                  <div className="text-xs text-gray-700">• 인도 남부 거점, 자동차·IT 산업<br/>• 현대차 생산기지, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/자동차) 수요, 산업 시너지<br/>• 성장 잠재력 높음, PoP 미설치</div>
+                  <div className="font-semibold">MUMBAI (INDIA)</div>
+                  <div className="text-xs text-gray-700">• 인도 경제·금융 중심, 대규모 시장<br/>• 현대차/협력사, KOTRA 진출기업 다수<br/>• KT VPN 고객사(금융/IT) 수요, 인도 내 네트워크 시너지<br/>• IT·금융·제조 성장, PoP 미설치</div>
                 </div>
               </div>
             </div>
@@ -1305,16 +1305,16 @@ export function ComprehensiveInvestmentReport() {
               <h4 className="font-bold text-red-700 mb-2">3단계: 장기/검토 투자</h4>
               <div className="space-y-3">
                 <div className="border-b pb-2">
-                  <div className="font-semibold">AMSTERDAM</div>
-                  <div className="text-xs text-gray-700">• 네덜란드 디지털 게이트웨이, 유럽 물류·IT 허브<br/>• KOTRA 진출기업, 현대차/협력사 유럽 거점<br/>• KT VPN 고객사(물류/IT) 수요, 글로벌 네트워크 시너지<br/>• 글로벌 기업 진출 활발, 성장 잠재력</div>
+                  <div className="font-semibold">MEXICO CITY (MEXICO)</div>
+                  <div className="text-xs text-gray-700">• 멕시코 경제·물류 중심, 북중미 관문<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/물류) 수요, 미주 네트워크 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
                 <div className="border-b pb-2">
-                  <div className="font-semibold">LOSANGELES</div>
-                  <div className="text-xs text-gray-700">• 미국 서부 경제·물류 중심, 북미 관문<br/>• KOTRA 진출기업, 현대차/협력사 북미 거점<br/>• KT VPN 고객사(제조/물류) 수요, 미주 네트워크 시너지<br/>• 글로벌 네트워크 수요 증가, PoP 미설치</div>
+                  <div className="font-semibold">KUALA LUMPUR (MALAYSIA)</div>
+                  <div className="text-xs text-gray-700">• 말레이시아 경제·금융 허브, 동남아 관문<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(금융/IT) 수요, 동남아 네트워크 시너지<br/>• 성장성 및 시장 확대, PoP 미설치</div>
                 </div>
                 <div>
-                  <div className="font-semibold">DUBLIN</div>
-                  <div className="text-xs text-gray-700">• 아일랜드 IT·금융 허브, 유럽 북서부 관문<br/>• KOTRA 진출기업, 현대차/협력사 유럽 거점<br/>• KT VPN 고객사(IT/금융) 수요, 유럽 네트워크 시너지<br/>• 글로벌 기업 집적, 성장 잠재력</div>
+                  <div className="font-semibold">BEKASI (INDONESIA)</div>
+                  <div className="text-xs text-gray-700">• 인도네시아 제조업 중심지, 자카르타 인근<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/물류) 수요, 산업 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
               </div>
             </div>
