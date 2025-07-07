@@ -1,0 +1,55 @@
+# Node
+node_modules/
+
+# 환경 변수
+.env
+.env.*
+
+# 빌드 결과물
+build/
+dist/
+
+# 로그 파일
+*.log
+
+# 운영체제별 불필요 파일
+.DS_Store
+Thumbs.db
+
+# 기타
+coverage/
+.npm/
+.idea/
+.vscode/
+
+# 임시/백업/출력 파일
+*.tmp
+*.bak
+*.backup
+*.swp
+*.swo
+*.orig
+
+# 데이터 분석 산출물
+*.csv
+*.json.backup
+*.deleted
+statistic_output/
+
+# IDE/에디터 설정
+*.sublime-workspace
+*.sublime-project
+
+# OS별 파일
+*.log
+*.tmp
+*.bak
+*.backup
+*.swp
+*.swo
+*.DS_Store
+*.orig
+
+# 기타
+output/
+temp/ 

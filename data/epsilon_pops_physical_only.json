@@ -1,0 +1,912 @@
+[
+  {
+    "city": "Sydney",
+    "country": "Australia",
+    "address": "47 Bourke Road, Alexandria, Sydney",
+    "coordinates": [
+      -33.91169755,
+      151.19281484622127
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix SY3",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Hong Kong",
+    "country": "Hong Kong",
+    "address": "399 Chai Wan Road, Chai Wan, 32nd Floor",
+    "coordinates": [
+      22.2793278,
+      114.1628131
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "iAdvantage MEGA-i",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Hong Kong",
+    "country": "Hong Kong",
+    "address": "399 Chai Wan Road, Chai Wan, 9th Floor",
+    "coordinates": [
+      22.2793278,
+      114.1628131
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Epsilon Global Hubs (EGH) Hong Kong",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Hong Kong",
+    "country": "Hong Kong",
+    "address": "Unit 2702, 27/F, Goodman Global Gateway, 168 Yeung Uk Road, Tsuen Wan, N.T., Hong Kong",
+    "coordinates": [
+      22.2793278,
+      114.1628131
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix HK1",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Hong Kong",
+    "country": "Hong Kong",
+    "address": "Sino Favour Centre, 1 On Yip Street, Chai Wan, Hong Kong",
+    "coordinates": [
+      22.2793278,
+      114.1628131
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "HK COLO SFC",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Jakarta",
+    "country": "Indonesia",
+    "address": "Jl. Kuningan Barat Raya No.8, RT.6/RW.3, Kuningan Bar., Kec. Mampang Prpt., Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12710, Indonesia",
+    "coordinates": [
+      -6.1754049,
+      106.827168
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "NTT Jakarta 2",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Jakarta",
+    "country": "Indonesia",
+    "address": "Jl. Kuningan Barat Raya No.8, RT.1/RW.1, Kuningan Bar., Kec. Mampang Prpt., Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12710, Indonesia",
+    "coordinates": [
+      -6.1754049,
+      106.827168
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "PT SMS Cyber 1",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Tokyo",
+    "country": "Japan",
+    "address": "2-2-43, Higashi-Shinagawa,, Shinagawa-ku, Tokyo",
+    "coordinates": [
+      35.6768601,
+      139.7638947
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix TY6",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Tokyo",
+    "country": "Japan",
+    "address": "Chuo Data Center",
+    "coordinates": [
+      35.6768601,
+      139.7638947
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "AT Tokyo CC1",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Kuala Lumpur",
+    "country": "Malaysia",
+    "address": "Changkat Raja Chulan, 50200 Kuala Lumpur",
+    "coordinates": [
+      3.14921321008827,
+      101.70616105865537
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "AIMS Menara",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "15 Pioneer Walk, #04-01, Singapore",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix SG2",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "2 Tai Seng Av., Singapore 534408",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Global Switch Tai Seng",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "2 Tai Seng Av., Singapore 534408",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "China Telecom Tai Seng 2",
+    "region": "APAC",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "20 Ayer Rajah Crescent, Singapore",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix SG1",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "29A International Business Park, Jurong East, 609934",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Digital Realty - 29A International Business Park",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "750D Chai Chee Road, Singapore 469005",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "1-Net East",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Singapore",
+    "country": "Singapore",
+    "address": "New Tech Park, 151 Lorong Chuan, Singapore 556741",
+    "coordinates": [
+      1.32165425,
+      103.695372101853
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Epsilon Global Hubs (EGH) Singapore",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Vienna",
+    "country": "Austria",
+    "address": "Louis-Häfliger-Gasse 10, Vienna, 1210, Austria",
+    "coordinates": [
+      48.2083537,
+      16.3725042
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion VIE1",
+    "region": "EUROPE",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "address": "114 Rue Ambroise Croizat, N/A, Saint Denis",
+    "coordinates": [
+      48.8588897,
+      2.3200410217200766
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix PA2",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "address": "137 Boulevard Voltaire, 75011",
+    "coordinates": [
+      48.8588897,
+      2.3200410217200766
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telehouse Paris Voltaire",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Paris",
+    "country": "France",
+    "address": "38 Rue des Jeuneurs, 75002",
+    "coordinates": [
+      48.8588897,
+      2.3200410217200766
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telehouse Paris Jeuneurs",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Marseille",
+    "country": "France",
+    "address": "40 Av. Roger Salengro, 13003",
+    "coordinates": [
+      43.3104481,
+      5.3733332
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion MRS1",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Frankfurt",
+    "country": "Germany",
+    "address": "Weismüllerstraße 19, 60314 Frankfurt am Main, Germany",
+    "coordinates": [
+      50.1106444,
+      8.6820917
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion FRA4",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Frankfurt",
+    "country": "Germany",
+    "address": "Weismüllerstrasse 40, 60314 Frankfurt am Main, Germany",
+    "coordinates": [
+      50.1106444,
+      8.6820917
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion FRA11",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Frankfurt",
+    "country": "Germany",
+    "address": "Kleyerstrasse 90, Frankfurt, DE",
+    "coordinates": [
+      50.1106444,
+      8.6820917
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix FR5",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Milan",
+    "country": "Italy",
+    "address": "Via Caldera 21, 20153",
+    "coordinates": [
+      45.4776191,
+      9.101926
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Irideos Avalon",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "address": "Johan Huizingalaan 759, 1066 VH Amsterdam, Netherlands",
+    "coordinates": [
+      52.34401,
+      4.8288651
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Global Switch Amsterdam",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "address": "Luttenbergweg 4, Amsterdam",
+    "coordinates": [
+      52.34401,
+      4.8288651
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix AM1",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "address": "Science Park 120, Amsterdam, NH 1098 XG",
+    "coordinates": [
+      52.34401,
+      4.8288651
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Digital Realty - Science Park 120",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Madrid",
+    "country": "Spain",
+    "address": "Calle Albasanz 71, Madrid, 28037, Spain",
+    "coordinates": [
+      40.4167047,
+      -3.7035825
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion MAD1",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Zurich",
+    "country": "Switzerland",
+    "address": "Josefstrasse 225, Zurich",
+    "coordinates": [
+      47.387902,
+      8.5203536
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix ZH4",
+    "region": "EUROPE",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "11 Hanbury St, London, E1 6QR, United Kingdom",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Interxion LON1",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "2 Harbour Exchange Sq., London E14 9FR",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Tata Harbour Exchange",
+    "region": "EUROPE",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "East India Dock House, 240 East India Dock Road, London, E14 9YY, United Kingdom",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Global Switch London North",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "260-266 Goswell Road, EC1V 7EB",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Lumen London",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Global Switch House, 3 Nutmeg Lane, London, E14 2AX, United Kingdom",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Global Switch London East",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "5 Greenwich View Place, Millharbour, London E14 9NN",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Docklands Data Centre",
+    "region": "EUROPE",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "6 Greenwich View Place, Millharbour, London E14 9NN",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telstra London Hosting Centre",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "6/7/8/9 Harbour Exchange Square, Limeharbour, London",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix LD8",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "69-77 Paul Street, London EC2A 4NW",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Epsilon Global Hubs (EGH) London",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "8 Buckingham Avenue, Slough Trading Estate, Slough",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix LD5",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "80 Clifton St., London EC2A 4HB",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Redcentric London",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Coriander Avenue,London, E14 2AA",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telehouse East",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Coriander Av., London E14 2AA",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telehouse North",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Coriander Av., London E14 2AA",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Telehouse West",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Fountain Court, Cox Lane, Chessington, KT9 1SJ",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Digital Realty - Fountain Court, Cox Lane",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Sovereign House, London, E14 9SD",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Digital Realty - Sovereign House",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "London",
+    "country": "United Kingdom",
+    "address": "Unit 1 & 2, Powergate Business Park, Volt Avenue, London",
+    "coordinates": [
+      51.4893335,
+      -0.14405508452768728
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix LD9",
+    "region": "EUROPE",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Johannesburg",
+    "country": "South Africa",
+    "address": "5 Brewery Street, Isando, Gauteng",
+    "coordinates": [
+      -26.205,
+      28.049722
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Teraco JB1",
+    "region": "MEA",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Cape Town",
+    "country": "South Africa",
+    "address": "Great Westerford Building, Rondebosch",
+    "coordinates": [
+      -33.9702955,
+      18.464673126244485
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Teraco CT1",
+    "region": "MEA",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Dubai",
+    "country": "United Arab Emirates",
+    "address": "International Media Production Zone, Plot No. P.B.001, Sheikh Mohammad Bin Zayed Road",
+    "coordinates": [
+      25.074282349999997,
+      55.18853865430702
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Datamena",
+    "region": "MEA",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Fujairah",
+    "country": "United Arab Emirates",
+    "address": "Old Exchange Building, Old Salamah St.",
+    "coordinates": [
+      25.1244604,
+      56.3355085
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Etisalat Smarthub",
+    "region": "MEA",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "New York",
+    "country": "USA",
+    "address": "111 8th Ave, New York, NY",
+    "coordinates": [
+      40.7417176,
+      -74.0041592
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix NY9",
+    "region": "AMERICAS",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "New York",
+    "country": "USA",
+    "address": "111 8th Avenue, NY 10011",
+    "coordinates": [
+      40.7417176,
+      -74.0041592
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Digital Realty - 111 8th Avenue",
+    "region": "AMERICAS",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "New York",
+    "country": "USA",
+    "address": "60 Hudson St., Suite 1602, NY 10013",
+    "coordinates": [
+      40.7417176,
+      -74.0041592
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "NYI-QTD (ex. Equinix NY8)",
+    "region": "AMERICAS",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "New York",
+    "country": "USA",
+    "address": "60 Hudson Street, NY 10013",
+    "coordinates": [
+      40.7417176,
+      -74.0041592
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Epsilon Global Hubs (EGH) New York",
+    "region": "AMERICAS",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "New York",
+    "country": "USA",
+    "address": "601 West 26th St., NY 10001",
+    "coordinates": [
+      40.7417176,
+      -74.0041592
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Windstream",
+    "region": "AMERICAS",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "New Jersey",
+    "country": "USA",
+    "address": "1410 Wall Church Road, Wall Township,Monmouth,  New Jersey, NJ 07719",
+    "coordinates": [
+      40.160041427709935,
+      -74.05250204088858
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "NJFX",
+    "region": "AMERICAS",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "New Jersey",
+    "country": "USA",
+    "address": "165 Halsey Street, Newark NJ 07102",
+    "coordinates": [
+      40.160041427709935,
+      -74.05250204088858
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "165 Halsey Street",
+    "region": "AMERICAS",
+    "infiny_enabled": "No"
+  },
+  {
+    "city": "Ashburn",
+    "country": "USA",
+    "address": "21715 Filigree Court, Ashburn, VA",
+    "coordinates": [
+      39.0163313,
+      -77.45876232933266
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix DC2",
+    "region": "AMERICAS",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Miami",
+    "country": "USA",
+    "address": "50 NE 9th Street, Miami, FL",
+    "coordinates": [
+      25.7825762,
+      -80.1927703
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Equinix MI1",
+    "region": "AMERICAS",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Los Angeles",
+    "country": "USA",
+    "address": "624 S Grand Av., CA 90017",
+    "coordinates": [
+      34.0478871,
+      -118.25555410911281
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Coresite LA1",
+    "region": "AMERICAS",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Seoul",
+    "country": "Korea",
+    "address": "323, Mokdongdong-ro, Yangcheon-gu, Seoul, South Korea",
+    "coordinates": [
+      37.5666791,
+      126.9782914
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "Mokdong 2",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Seoul",
+    "country": "Korea",
+    "address": "3F, 189, Gasan Digital 1-ro, Geumcheon-gu, Seoul, South Korea",
+    "coordinates": [
+      37.5666791,
+      126.9782914
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "KINX",
+    "region": "APAC",
+    "infiny_enabled": "Yes"
+  },
+  {
+    "city": "Seoul",
+    "country": "Korea",
+    "address": "Daehakro 65 Jongno-Gu, Seoul, 110-460, South Korea",
+    "coordinates": [
+      37.5666791,
+      126.9782914
+    ],
+    "type": "epsilon",
+    "facility_type": "Physical PoP",
+    "dc": "HYEHWA",
+    "region": "APAC",
+    "infiny_enabled": "No"
+  }
+]

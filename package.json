@@ -1,0 +1,42 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "city-extract": "node src/scripts/runCityExtraction.js",
+    "city-normalize": "node src/scripts/runCityNormalization.js",
+    "city-languages": "node src/scripts/detectCityLanguages.js",
+    "advanced-normalize": "node src/scripts/runAdvancedNormalization.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.2",
+    "ag-grid-community": "^34.0.0",
+    "ag-grid-react": "^34.0.0",
+    "clsx": "^2.1.1",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^17.0.0",
+    "lucide-react": "^0.523.0",
+    "mathjs": "^14.5.3",
+    "ml-pca": "^4.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
+    "react-is": "^19.1.0",
+    "recharts": "^3.0.2",
+    "tailwind-merge": "^3.3.1",
+    "vite": "^7.0.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/recharts": "^1.8.29",
+    "@vitejs/plugin-react": "^4.6.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,96 @@
+[
+  {
+    "label": "HYUNDAI, VPN, KOTRA 모두",
+    "cities": [
+      "CHENNAI",
+      "BANGKOK"
+    ]
+  },
+  {
+    "label": "HYUNDAI, VPN만",
+    "cities": [
+      "BEIJING",
+      "JIANGSU",
+      "FRANKFURT",
+      "BUDAPEST"
+    ]
+  },
+  {
+    "label": "HYUNDAI만",
+    "cities": [
+      "PESQUERIA",
+      "ANANTAPUR",
+      "NOSOVICE",
+      "ZILINA",
+      "HYDERABAD",
+      "MONTGOMERY",
+      "RIZHAO",
+      "IRVINE",
+      "EASTERNCREEK",
+      "ELLABELL",
+      "KOCAELI",
+      "MADRID",
+      "MILANO",
+      "OFFENBACH",
+      "PRAHA",
+      "SHANGHAI",
+      "TAMILNADU",
+      "TIANJIN",
+      "WARSZAWA",
+      "YANTAI",
+      "AUBURN",
+      "BRATISLAVA",
+      "BREUKELEN",
+      "CANGZHOU",
+      "CIKARANG",
+      "CUAUTITLANIZCALLI",
+      "DOLNYHRICOV",
+      "EVERE",
+      "GREENVILLE",
+      "GUANGZHOU",
+      "HAIDUONG",
+      "HIGHLANDPARK"
+    ]
+  },
+  {
+    "label": "VPN만",
+    "cities": [
+      "GUANGDONG",
+      "JIAXING",
+      "AMSTERDAM",
+      "BARAKAH",
+      "GURGAON",
+      "MEXICOCITY",
+      "MISSISSAUGA",
+      "PANAMA",
+      "SYDNEY",
+      "TORONTO",
+      "ABUDABI",
+      "ALBESTI",
+      "AUCKLAND",
+      "BAHRAIN",
+      "BANEASA",
+      "BARIAVUNGTAU",
+      "BLD",
+      "BLOOR",
+      "BOGOTA",
+      "CALGARY",
+      "CHARLOTTE",
+      "COQUITLAM",
+      "DALLAS",
+      "DAVENTRY",
+      "DAYTON",
+      "DETROIT"
+    ]
+  },
+  {
+    "label": "KOTRA만(상위5)",
+    "cities": [
+      "HANOI",
+      "BINHDUONG",
+      "TOKYO",
+      "TANGERANG",
+      "PHNOMPENH"
+    ]
+  }
+]

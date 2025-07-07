@@ -1,0 +1,1472 @@
+[
+  {
+    "city": "CHENNAI",
+    "synergyScore": 1.705,
+    "hyundaiScore": 0.94,
+    "vpnScore": 0.97,
+    "kotraScore": 0.75
+  },
+  {
+    "city": "BANGKOK",
+    "synergyScore": 1.75,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0.81,
+    "kotraScore": 0.9
+  },
+  {
+    "city": "BEIJING",
+    "synergyScore": 0.905,
+    "hyundaiScore": 1,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "JIANGSU",
+    "synergyScore": 0.975,
+    "hyundaiScore": 0.98,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "FRANKFURT",
+    "synergyScore": 1.39,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0.97,
+    "kotraScore": 0.46
+  },
+  {
+    "city": "BUDAPEST",
+    "synergyScore": 1.045,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0.81,
+    "kotraScore": 0.27
+  },
+  {
+    "city": "PESQUERIA",
+    "synergyScore": 0.495,
+    "hyundaiScore": 0.99,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "ANANTAPUR",
+    "synergyScore": 0.49,
+    "hyundaiScore": 0.98,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "NOSOVICE",
+    "synergyScore": 0.49,
+    "hyundaiScore": 0.98,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "ZILINA",
+    "synergyScore": 0.49,
+    "hyundaiScore": 0.98,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "HYDERABAD",
+    "synergyScore": 0.47,
+    "hyundaiScore": 0.94,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MONTGOMERY",
+    "synergyScore": 0.47,
+    "hyundaiScore": 0.94,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "RIZHAO",
+    "synergyScore": 0.47,
+    "hyundaiScore": 0.94,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "IRVINE",
+    "synergyScore": 0.45,
+    "hyundaiScore": 0.9,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "EASTERNCREEK",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "ELLABELL",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "KOCAELI",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MADRID",
+    "synergyScore": 0.555,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0.11
+  },
+  {
+    "city": "MILANO",
+    "synergyScore": 0.545,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0.1
+  },
+  {
+    "city": "OFFENBACH",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "PRAHA",
+    "synergyScore": 0.85,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SHANGHAI",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "TAMILNADU",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "TIANJIN",
+    "synergyScore": 0.85,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "WARSZAWA",
+    "synergyScore": 0.625,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0.18
+  },
+  {
+    "city": "YANTAI",
+    "synergyScore": 0.445,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "AUBURN",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "BRATISLAVA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "BREUKELEN",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "CANGZHOU",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "CIKARANG",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "CUAUTITLANIZCALLI",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "DOLNYHRICOV",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "EVERE",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "GREENVILLE",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "GUANGZHOU",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "HAIDUONG",
+    "synergyScore": 0.6,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0.23
+  },
+  {
+    "city": "HIGHLANDPARK",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "GUANGDONG",
+    "synergyScore": 0.495,
+    "hyundaiScore": 0,
+    "vpnScore": 0.99,
+    "kotraScore": 0
+  },
+  {
+    "city": "JIAXING",
+    "synergyScore": 0.495,
+    "hyundaiScore": 0,
+    "vpnScore": 0.99,
+    "kotraScore": 0
+  },
+  {
+    "city": "AMSTERDAM",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "BARAKAH",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "GURGAON",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "MEXICOCITY",
+    "synergyScore": 1.295,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0.97,
+    "kotraScore": 0.44
+  },
+  {
+    "city": "MISSISSAUGA",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "PANAMA",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "SYDNEY",
+    "synergyScore": 0.815,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0.33
+  },
+  {
+    "city": "TORONTO",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0
+  },
+  {
+    "city": "ABUDABI",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "ALBESTI",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "AUCKLAND",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "BAHRAIN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "BANEASA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "BARIAVUNGTAU",
+    "synergyScore": 0.845,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.44
+  },
+  {
+    "city": "BLD",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "BLOOR",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "BOGOTA",
+    "synergyScore": 0.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.08
+  },
+  {
+    "city": "CALGARY",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "CHARLOTTE",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "COQUITLAM",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "DALLAS",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "DAVENTRY",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "DAYTON",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "DETROIT",
+    "synergyScore": 0.605,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.2
+  },
+  {
+    "city": "HANOI",
+    "synergyScore": 1.395,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.99
+  },
+  {
+    "city": "BINH DUONG",
+    "synergyScore": 0.98,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.98
+  },
+  {
+    "city": "TOKYO",
+    "synergyScore": 1.365,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.96
+  },
+  {
+    "city": "TANGERANG",
+    "synergyScore": 0.91,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.91
+  },
+  {
+    "city": "PHNOM PENH",
+    "synergyScore": 0.89,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.89
+  },
+  {
+    "city": "BEKASI",
+    "synergyScore": 1.215,
+    "hyundaiScore": 0.89,
+    "vpnScore": 0,
+    "kotraScore": 0.77
+  },
+  {
+    "city": "DUBAI",
+    "synergyScore": 1.13,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0.76
+  },
+  {
+    "city": "JAKARTA",
+    "synergyScore": 1.805,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0.97,
+    "kotraScore": 0.95
+  },
+  {
+    "city": "KECSKEMET",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "KINGABDULLAHECONOMICCITY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "KOPER",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "KOSTANAY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "LEATHERHEAD",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MACQUARIEPARK",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MAHARASHTRA",
+    "synergyScore": 0.775,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "MARKHAM",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MCCALLA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MIAMI",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "MOSNOV",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "NAVARRA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "NINHBINH",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "OSLO",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "OSTRAVA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "PAJU",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "PLYMOUTH",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "PRAGUE",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "PUNE",
+    "synergyScore": 1.145,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0.81,
+    "kotraScore": 0.37
+  },
+  {
+    "city": "RICHMONDHILL",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "RIYADH",
+    "synergyScore": 0.53,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0.16
+  },
+  {
+    "city": "ROCKYVIEWCOUNTY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "RUEILMALMAISON",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "RUSSELSHEIMAMMAIN",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "SALINASVICTORIA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "SAO PAULO",
+    "synergyScore": 0.9,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0.53
+  },
+  {
+    "city": "SASSENHEIM",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "SINGAPORE",
+    "synergyScore": 1.25,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0.88
+  },
+  {
+    "city": "SUPERIORTOWNSHIP",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "SYDENY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "TAGUIGCITY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "TILBURY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "TOLEDO",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "UIWANG",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "UPPLANDSVASBY",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "WALTONONTHAMES",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "WESTPOINT",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "WIEN",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "YANCHENG",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "YOKOHAMA",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "ZIYANG",
+    "synergyScore": 0.37,
+    "hyundaiScore": 0.74,
+    "vpnScore": 0,
+    "kotraScore": 0
+  },
+  {
+    "city": "HONG KONG",
+    "synergyScore": 1.28,
+    "hyundaiScore": 0,
+    "vpnScore": 1,
+    "kotraScore": 0.78
+  },
+  {
+    "city": "HO CHI MINH",
+    "synergyScore": 1.485,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 1
+  },
+  {
+    "city": "KUALALUMPUR",
+    "synergyScore": 1.275,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0.79
+  },
+  {
+    "city": "NEW YORK",
+    "synergyScore": 1.135,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0.65
+  },
+  {
+    "city": "OSAKA",
+    "synergyScore": 1.125,
+    "hyundaiScore": 0,
+    "vpnScore": 0.97,
+    "kotraScore": 0.64
+  },
+  {
+    "city": "BACNINH",
+    "synergyScore": 1.325,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.92
+  },
+  {
+    "city": "DONGNAI",
+    "synergyScore": 1.345,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.94
+  },
+  {
+    "city": "DUNHILL",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "FUKUOKA",
+    "synergyScore": 0.675,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.27
+  },
+  {
+    "city": "GURUGRAM",
+    "synergyScore": 0.775,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.37
+  },
+  {
+    "city": "HANNOVER",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "HOOFDDORP",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "HUAIAN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "ISATANBUL",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "JARKARTA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "JAWABARAT",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "LA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "LIVONIA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "LONDON",
+    "synergyScore": 1.095,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.69
+  },
+  {
+    "city": "LOS ANGELES",
+    "synergyScore": 1.075,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.67
+  },
+  {
+    "city": "MAGYARORSZAG",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "MAYNILA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "MEMHPIS",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "MOSCOOW",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "NASHVILLE",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "NEWSOUTHWALES",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "PALOSVERDESPENINSULA",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "PARIS",
+    "synergyScore": 0.715,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0.31
+  },
+  {
+    "city": "POLAND",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "PRAVENEC",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "QINGDAO",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "QUANGNAM",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "QZHU",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SANGHAI",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SANSEBASTIAN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SCHWECHAT",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SESTOSANGIOVANNI",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SHERRY",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "SINAPORE",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "TAGUIG",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "TAIPEI",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "TAIWAN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "TENNESSEE",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "UNIONTOWN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "UPPLANDSVSBY",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "VILLEURBANNE",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "YINCHUAN",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "ZHEJIANG",
+    "synergyScore": 0.405,
+    "hyundaiScore": 0,
+    "vpnScore": 0.81,
+    "kotraScore": 0
+  },
+  {
+    "city": "",
+    "synergyScore": 0.03,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.03
+  },
+  {
+    "city": "DHAKA",
+    "synergyScore": 0.87,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.87
+  },
+  {
+    "city": "YANGON",
+    "synergyScore": 0.84,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.84
+  },
+  {
+    "city": "MOSCOW",
+    "synergyScore": 0.83,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.83
+  },
+  {
+    "city": "LONGAN",
+    "synergyScore": 0.82,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.82
+  },
+  {
+    "city": "CHONBURI",
+    "synergyScore": 0.81,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.81
+  },
+  {
+    "city": "CALIFORNIA",
+    "synergyScore": 0.8,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.8
+  },
+  {
+    "city": "WESTJAVA",
+    "synergyScore": 0.75,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.75
+  },
+  {
+    "city": "BACGIANG",
+    "synergyScore": 0.71,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.71
+  },
+  {
+    "city": "ISTANBUL",
+    "synergyScore": 0.7,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.7
+  },
+  {
+    "city": "MANILA",
+    "synergyScore": 0.67,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.67
+  },
+  {
+    "city": "HANAM",
+    "synergyScore": 0.63,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.63
+  },
+  {
+    "city": "VINHPHUC",
+    "synergyScore": 0.62,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.62
+  },
+  {
+    "city": "BOGOR",
+    "synergyScore": 0.6,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.6
+  },
+  {
+    "city": "BINHPHUOC",
+    "synergyScore": 0.6,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.6
+  },
+  {
+    "city": "TASHKENT",
+    "synergyScore": 0.58,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.58
+  },
+  {
+    "city": "ALMATY",
+    "synergyScore": 0.57,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.57
+  },
+  {
+    "city": "THAINGUYEN",
+    "synergyScore": 0.56,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.56
+  },
+  {
+    "city": "RAYONG",
+    "synergyScore": 0.55,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.55
+  },
+  {
+    "city": "TAYNINH",
+    "synergyScore": 0.54,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.54
+  },
+  {
+    "city": "CAVITE",
+    "synergyScore": 0.52,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.52
+  },
+  {
+    "city": "PHUTHO",
+    "synergyScore": 0.51,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.51
+  },
+  {
+    "city": "NEWDELHI",
+    "synergyScore": 0.49,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.49
+  },
+  {
+    "city": "ULAANBAATAR",
+    "synergyScore": 0.48,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.48
+  },
+  {
+    "city": "WROCLAW",
+    "synergyScore": 0.46,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.46
+  },
+  {
+    "city": "DANANG",
+    "synergyScore": 0.42,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.42
+  },
+  {
+    "city": "GUATEMALACITY",
+    "synergyScore": 0.41,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.41
+  },
+  {
+    "city": "NEWJERSEY",
+    "synergyScore": 0.4,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.4
+  },
+  {
+    "city": "HUNGYEN",
+    "synergyScore": 0.38,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.38
+  },
+  {
+    "city": "SAINTPETERSBURG",
+    "synergyScore": 0.35,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.35
+  },
+  {
+    "city": "MONTERREY",
+    "synergyScore": 0.34,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.34
+  },
+  {
+    "city": "SELANGOR",
+    "synergyScore": 0.3,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.3
+  },
+  {
+    "city": "SEMARANG",
+    "synergyScore": 0.3,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.3
+  },
+  {
+    "city": "HAIPHONG",
+    "synergyScore": 0.27,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.27
+  },
+  {
+    "city": "VIRGINIA",
+    "synergyScore": 0.24,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.24
+  },
+  {
+    "city": "ABUDHABI",
+    "synergyScore": 0.23,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.23
+  },
+  {
+    "city": "BANTEN",
+    "synergyScore": 0.21,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.21
+  },
+  {
+    "city": "CAIRO",
+    "synergyScore": 0.19,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.19
+  },
+  {
+    "city": "MUMBAI",
+    "synergyScore": 0.17,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.17
+  },
+  {
+    "city": "VIENTIANE",
+    "synergyScore": 0.15,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.15
+  },
+  {
+    "city": "DOLNOSLASKIE",
+    "synergyScore": 0.14,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.14
+  },
+  {
+    "city": "SANJOSE",
+    "synergyScore": 0.12,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.12
+  },
+  {
+    "city": "JOHANNESBURG",
+    "synergyScore": 0.1,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.1
+  },
+  {
+    "city": "MICHIGAN",
+    "synergyScore": 0.08,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.08
+  },
+  {
+    "city": "SANTIAGO",
+    "synergyScore": 0.06,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.06
+  },
+  {
+    "city": "COLOMBO",
+    "synergyScore": 0.06,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.06
+  },
+  {
+    "city": "SERANG",
+    "synergyScore": 0.04,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.04
+  },
+  {
+    "city": "NOIDA",
+    "synergyScore": 0.03,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.03
+  },
+  {
+    "city": "MARYLAND",
+    "synergyScore": 0.03,
+    "hyundaiScore": 0,
+    "vpnScore": 0,
+    "kotraScore": 0.03
+  }
+]

@@ -1,0 +1,716 @@
+[
+  {
+    "city": "SINGAPORE",
+    "rfq": 1,
+    "sof": 0.4407894736842105,
+    "epsilonScore": "0.8882",
+    "rank": 1
+  },
+  {
+    "city": "LONDON",
+    "rfq": 0.6521739130434783,
+    "sof": 1,
+    "epsilonScore": "0.7217",
+    "rank": 2
+  },
+  {
+    "city": "SEOUL",
+    "rfq": 0.5217391304347826,
+    "sof": 0.013157894736842105,
+    "epsilonScore": "0.4200",
+    "rank": 3
+  },
+  {
+    "city": "HONG KONG",
+    "rfq": 0.45893719806763283,
+    "sof": 0.22039473684210525,
+    "epsilonScore": "0.4112",
+    "rank": 4
+  },
+  {
+    "city": "FRANKFURT",
+    "rfq": 0.27053140096618356,
+    "sof": 0.26973684210526316,
+    "epsilonScore": "0.2704",
+    "rank": 5
+  },
+  {
+    "city": "AMSTERDAM",
+    "rfq": 0.12560386473429952,
+    "sof": 0.14802631578947367,
+    "epsilonScore": "0.1301",
+    "rank": 6
+  },
+  {
+    "city": "SHANGHAI",
+    "rfq": 0.13043478260869565,
+    "sof": 0,
+    "epsilonScore": "0.1043",
+    "rank": 7
+  },
+  {
+    "city": "LOSANGELES",
+    "rfq": 0.12077294685990338,
+    "sof": 0.019736842105263157,
+    "epsilonScore": "0.1006",
+    "rank": 8
+  },
+  {
+    "city": "SHINAGAWA",
+    "rfq": 0.12077294685990338,
+    "sof": 0,
+    "epsilonScore": "0.0966",
+    "rank": 9
+  },
+  {
+    "city": "JAKARTASELATAN",
+    "rfq": 0.10628019323671498,
+    "sof": 0,
+    "epsilonScore": "0.0850",
+    "rank": 10
+  },
+  {
+    "city": "MARSEILLE",
+    "rfq": 0.08695652173913043,
+    "sof": 0.0625,
+    "epsilonScore": "0.0821",
+    "rank": 11
+  },
+  {
+    "city": "DUBAI",
+    "rfq": 0.08695652173913043,
+    "sof": 0.023026315789473683,
+    "epsilonScore": "0.0742",
+    "rank": 12
+  },
+  {
+    "city": "NEWYORK",
+    "rfq": 0.07729468599033816,
+    "sof": 0.049342105263157895,
+    "epsilonScore": "0.0717",
+    "rank": 13
+  },
+  {
+    "city": "PARIS",
+    "rfq": 0.057971014492753624,
+    "sof": 0.08881578947368421,
+    "epsilonScore": "0.0641",
+    "rank": 14
+  },
+  {
+    "city": "BERKSHIRE",
+    "rfq": 0.07729468599033816,
+    "sof": 0,
+    "epsilonScore": "0.0618",
+    "rank": 15
+  },
+  {
+    "city": "BEIJING",
+    "rfq": 0.06280193236714976,
+    "sof": 0,
+    "epsilonScore": "0.0502",
+    "rank": 16
+  },
+  {
+    "city": "OSAKA",
+    "rfq": 0.06280193236714976,
+    "sof": 0,
+    "epsilonScore": "0.0502",
+    "rank": 17
+  },
+  {
+    "city": "SANJOSE",
+    "rfq": 0.06280193236714976,
+    "sof": 0,
+    "epsilonScore": "0.0502",
+    "rank": 18
+  },
+  {
+    "city": "MUMBAI",
+    "rfq": 0.057971014492753624,
+    "sof": 0,
+    "epsilonScore": "0.0464",
+    "rank": 19
+  },
+  {
+    "city": "BUSAN",
+    "rfq": 0.05314009661835749,
+    "sof": 0,
+    "epsilonScore": "0.0425",
+    "rank": 20
+  },
+  {
+    "city": "DUBLIN",
+    "rfq": 0.04830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0386",
+    "rank": 21
+  },
+  {
+    "city": "KUALALUMPUR",
+    "rfq": 0.043478260869565216,
+    "sof": 0,
+    "epsilonScore": "0.0348",
+    "rank": 22
+  },
+  {
+    "city": "ABUDHABI",
+    "rfq": 0.03864734299516908,
+    "sof": 0,
+    "epsilonScore": "0.0309",
+    "rank": 23
+  },
+  {
+    "city": "CHUO",
+    "rfq": 0.03864734299516908,
+    "sof": 0,
+    "epsilonScore": "0.0309",
+    "rank": 24
+  },
+  {
+    "city": "KOWLOON",
+    "rfq": 0.03864734299516908,
+    "sof": 0,
+    "epsilonScore": "0.0309",
+    "rank": 25
+  },
+  {
+    "city": "SURREY",
+    "rfq": 0.03864734299516908,
+    "sof": 0,
+    "epsilonScore": "0.0309",
+    "rank": 26
+  },
+  {
+    "city": "MADRID",
+    "rfq": 0.033816425120772944,
+    "sof": 0.013157894736842105,
+    "epsilonScore": "0.0297",
+    "rank": 27
+  },
+  {
+    "city": "SLOUGH",
+    "rfq": 0,
+    "sof": 0.13815789473684212,
+    "epsilonScore": "0.0276",
+    "rank": 28
+  },
+  {
+    "city": "KRUNGTHEPMAHANAKHON",
+    "rfq": 0.033816425120772944,
+    "sof": 0,
+    "epsilonScore": "0.0271",
+    "rank": 29
+  },
+  {
+    "city": "ASHBURN",
+    "rfq": 0.028985507246376812,
+    "sof": 0.003289473684210526,
+    "epsilonScore": "0.0238",
+    "rank": 30
+  },
+  {
+    "city": "BATAM",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 31
+  },
+  {
+    "city": "CAUGIAY",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 32
+  },
+  {
+    "city": "CHIYODA",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 33
+  },
+  {
+    "city": "INCHEON",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 34
+  },
+  {
+    "city": "KO",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 35
+  },
+  {
+    "city": "MILANO",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 36
+  },
+  {
+    "city": "NAIROBI",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 37
+  },
+  {
+    "city": "SEATTLE",
+    "rfq": 0.028985507246376812,
+    "sof": 0,
+    "epsilonScore": "0.0232",
+    "rank": 38
+  },
+  {
+    "city": "COUNTYDUBLIN",
+    "rfq": 0.024154589371980676,
+    "sof": 0,
+    "epsilonScore": "0.0193",
+    "rank": 39
+  },
+  {
+    "city": "JAKARTA",
+    "rfq": 0.01932367149758454,
+    "sof": 0.013157894736842105,
+    "epsilonScore": "0.0181",
+    "rank": 40
+  },
+  {
+    "city": "FUJAIRAH",
+    "rfq": 0.014492753623188406,
+    "sof": 0.02631578947368421,
+    "epsilonScore": "0.0169",
+    "rank": 41
+  },
+  {
+    "city": "AUBERVILLIERS",
+    "rfq": 0.01932367149758454,
+    "sof": 0,
+    "epsilonScore": "0.0155",
+    "rank": 42
+  },
+  {
+    "city": "HERTFORDSHIRE",
+    "rfq": 0.01932367149758454,
+    "sof": 0,
+    "epsilonScore": "0.0155",
+    "rank": 43
+  },
+  {
+    "city": "NEIHU",
+    "rfq": 0.01932367149758454,
+    "sof": 0,
+    "epsilonScore": "0.0155",
+    "rank": 44
+  },
+  {
+    "city": "STOCKHOLMS",
+    "rfq": 0.01932367149758454,
+    "sof": 0,
+    "epsilonScore": "0.0155",
+    "rank": 45
+  },
+  {
+    "city": "ADDISABABA",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 46
+  },
+  {
+    "city": "DENIS",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 47
+  },
+  {
+    "city": "EGELSBACH",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 48
+  },
+  {
+    "city": "MAKATI",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 49
+  },
+  {
+    "city": "MELBOURNE",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 50
+  },
+  {
+    "city": "PALOAL",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 51
+  },
+  {
+    "city": "YONGINSI",
+    "rfq": 0.014492753623188406,
+    "sof": 0,
+    "epsilonScore": "0.0116",
+    "rank": 52
+  },
+  {
+    "city": "ALEXANDRIA",
+    "rfq": 0.00966183574879227,
+    "sof": 0.009868421052631578,
+    "epsilonScore": "0.0097",
+    "rank": 53
+  },
+  {
+    "city": "ZURICH",
+    "rfq": 0.00966183574879227,
+    "sof": 0.009868421052631578,
+    "epsilonScore": "0.0097",
+    "rank": 54
+  },
+  {
+    "city": "ACCRA",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 55
+  },
+  {
+    "city": "CHICAGO",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 56
+  },
+  {
+    "city": "CIUDADDEMEXICO",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 57
+  },
+  {
+    "city": "CLICHY",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 58
+  },
+  {
+    "city": "CROUGHTON",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 59
+  },
+  {
+    "city": "DALLAS",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 60
+  },
+  {
+    "city": "DOHA",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 61
+  },
+  {
+    "city": "GABORONE",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 62
+  },
+  {
+    "city": "HAMPSHIRE",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 63
+  },
+  {
+    "city": "HKIX3B",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 64
+  },
+  {
+    "city": "HOUSTON",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 65
+  },
+  {
+    "city": "INZAI",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 66
+  },
+  {
+    "city": "ISTANBUL",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 67
+  },
+  {
+    "city": "KARACHI",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 68
+  },
+  {
+    "city": "MANAMA",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 69
+  },
+  {
+    "city": "NEWARK",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 70
+  },
+  {
+    "city": "PISCATAWAY",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 71
+  },
+  {
+    "city": "SEONGNAMSI",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 72
+  },
+  {
+    "city": "SYDNEY",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 73
+  },
+  {
+    "city": "TORON",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 74
+  },
+  {
+    "city": "WIEN",
+    "rfq": 0.00966183574879227,
+    "sof": 0,
+    "epsilonScore": "0.0077",
+    "rank": 75
+  },
+  {
+    "city": "MIAMI",
+    "rfq": 0.004830917874396135,
+    "sof": 0.009868421052631578,
+    "epsilonScore": "0.0058",
+    "rank": 76
+  },
+  {
+    "city": "MILAN",
+    "rfq": 0,
+    "sof": 0.02631578947368421,
+    "epsilonScore": "0.0053",
+    "rank": 77
+  },
+  {
+    "city": "ALMATY",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 78
+  },
+  {
+    "city": "AMMAN",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 79
+  },
+  {
+    "city": "CYBERJAYA",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 80
+  },
+  {
+    "city": "DAKAR",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 81
+  },
+  {
+    "city": "DUSSELDORF",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 82
+  },
+  {
+    "city": "GERLAFINGEN",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 83
+  },
+  {
+    "city": "GURUGRAM",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 84
+  },
+  {
+    "city": "HARARE",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 85
+  },
+  {
+    "city": "KUTAIREGENCY",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 86
+  },
+  {
+    "city": "KUWAIT",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 87
+  },
+  {
+    "city": "LUSAKA",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 88
+  },
+  {
+    "city": "MUNCHEN",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 89
+  },
+  {
+    "city": "PASIG",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 90
+  },
+  {
+    "city": "PETALINGJAYA",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 91
+  },
+  {
+    "city": "QUAN1",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 92
+  },
+  {
+    "city": "QUAN7",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 93
+  },
+  {
+    "city": "SANFRANCISCO",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 94
+  },
+  {
+    "city": "SECAUCUS",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 95
+  },
+  {
+    "city": "TAGUIG",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 96
+  },
+  {
+    "city": "ULSAN",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 97
+  },
+  {
+    "city": "ULTIMO",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 98
+  },
+  {
+    "city": "WARSZAWA",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 99
+  },
+  {
+    "city": "ZAVENTEM",
+    "rfq": 0.004830917874396135,
+    "sof": 0,
+    "epsilonScore": "0.0039",
+    "rank": 100
+  },
+  {
+    "city": "TOKYO",
+    "rfq": 0,
+    "sof": 0.019736842105263157,
+    "epsilonScore": "0.0039",
+    "rank": 101
+  },
+  {
+    "city": "WOKING",
+    "rfq": 0,
+    "sof": 0.01644736842105263,
+    "epsilonScore": "0.0033",
+    "rank": 102
+  }
+]

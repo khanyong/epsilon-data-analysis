@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>7개 데이터 통합 투자전략분석 보고서</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="max-w-5xl mx-auto p-8">
+    <h1 class="text-3xl font-bold mb-2">7개 데이터 통합 투자전략분석 보고서</h1>
+    <div class="text-gray-600 mb-4">
+      7개 데이터 소스 통합 분석 (RFQ · SOF · KOTRA · Epsilon PoP · KT PoP · VPN · Hyundai Motors)
+    </div>
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-green-600 font-semibold">고정 데이터 기반 · 즉시 제공</span>
+      <span class="text-gray-400 text-sm">생성일: 2025년 7월 4일</span>
+    </div>
+
+    <!-- 1. 데이터 전처리 및 가정 조건 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section1')">
+        <span class="font-semibold">데이터 전처리 및 가정 조건</span>
+        <span id="icon-section1" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section1" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+          <li>RFQ, SOF, KOTRA, Epsilon PoP, KT PoP, VPN, 현대차 등 7개 데이터 소스의 원본 CSV를 정제 및 통합</li>
+          <li>도시명, 국가명 표준화 및 중복 제거</li>
+          <li>각 데이터별 점수는 0~1로 정규화하여 가중치 합산</li>
+          <li>중국, 싱가포르, 한국, 런던, 홍콩, 프랑크푸르트, 마르세유, 두바이 등은 투자 제외/보류</li>
+          <li>최종 산출물은 5개 주요 JSON 파일로 관리(각 단계별 결과 활용)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. 7개 데이터 소스 종합 비교 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section2')">
+        <span class="font-semibold">7개 데이터 소스 종합 비교</span>
+        <span id="icon-section2" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section2" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left border mb-3">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-2 py-1 border">데이터 소스</th>
+                <th class="px-2 py-1 border">설명</th>
+                <th class="px-2 py-1 border">가중치/활용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-2 py-1 border">RFQ</td>
+                <td class="px-2 py-1 border">글로벌 RFQ(입찰) 수요 데이터</td>
+                <td class="px-2 py-1 border">Epsilon Score(0.6)</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">SOF</td>
+                <td class="px-2 py-1 border">글로벌 SOF(서비스 오퍼링) 데이터</td>
+                <td class="px-2 py-1 border">Epsilon Score(0.4)</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">KOTRA</td>
+                <td class="px-2 py-1 border">KOTRA 진출기업 현황</td>
+                <td class="px-2 py-1 border">Synergy Score(0.6)</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">Epsilon PoP</td>
+                <td class="px-2 py-1 border">Epsilon PoP 설치 현황</td>
+                <td class="px-2 py-1 border">투자 제외 기준</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">KT PoP</td>
+                <td class="px-2 py-1 border">KT PoP 설치 현황</td>
+                <td class="px-2 py-1 border">투자 제외 기준</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">VPN</td>
+                <td class="px-2 py-1 border">글로벌 VPN 고객사 데이터</td>
+                <td class="px-2 py-1 border">Synergy Score(0.2)</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">Hyundai Motors</td>
+                <td class="px-2 py-1 border">현대차/협력사 진출 현황</td>
+                <td class="px-2 py-1 border">Synergy Score(0.2)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-gray-700 text-sm">※ Epsilon Score = RFQ(0.6) + SOF(0.4) / Synergy Score = 현대차(0.2) + VPN(0.2) + KOTRA(0.6)</p>
+      </div>
+    </div>
+
+    <!-- 3. KT/Epsilon PoP 투자 후보지역 선정 분석 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section3')">
+        <span class="font-semibold">KT/Epsilon PoP 투자 후보지역 선정 분석</span>
+        <span id="icon-section3" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section3" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+          <li>KT PoP, Epsilon PoP가 이미 설치된 도시는 투자 대상에서 제외</li>
+          <li>중국, 싱가포르, 한국 등 정책/법률 이슈가 있는 국가는 보류</li>
+          <li>시장 성장성, 잠재기회, 글로벌 진출기업, 현대차/협력사, VPN 고객 등 다양한 시너지 요소를 종합적으로 고려</li>
+          <li>최종 후보지는 데이터 기반 점수와 시너지 효과를 모두 반영하여 선정</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. 1단계: KT PoP 기준 투자지역 제외 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section4')">
+        <span class="font-semibold">1단계: KT PoP 기준 투자지역 제외</span>
+        <span id="icon-section4" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section4" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+          <li>KT PoP가 이미 설치된 도시는 투자 우선순위에서 제외됩니다.</li>
+          <li>예시 제외 도시: 서울, 부산, 도쿄, 싱가포르, 프랑크푸르트, 런던, 홍콩, 두바이 등</li>
+          <li>이외에도 PoP 설치 현황에 따라 실시간으로 제외 리스트가 갱신됩니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5. 2단계: 투자 후보지역 분류 및 전략적 선정 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section5')">
+        <span class="font-semibold">2단계: 투자 후보지역 분류 및 전략적 선정</span>
+        <span id="icon-section5" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section5" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+          <li>투자 후보지역은 시장 성장성, PoP 미설치, 글로벌 진출기업, 현대차/협력사, VPN 고객 등 시너지 효과를 기준으로 분류</li>
+          <li>아시아 우선, 유럽·미주 순으로 전략적 투자 권고</li>
+          <li>중국, 싱가포르, 한국 등은 정책/법률 이슈로 보류</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 6. 최종 추천: KT/Epsilon PoP 투자 우선순위 TOP 20 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section6')">
+        <span class="font-semibold">최종 추천: KT/Epsilon PoP 투자 우선순위 TOP 20</span>
+        <span id="icon-section6" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section6" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ol class="list-decimal pl-5 text-gray-700 space-y-1">
+          <li>하노이 (베트남) - 제조·물류 허브, 현대차/협력사, KOTRA 진출기업, VPN 고객 다수</li>
+          <li>호치민 (베트남) - 경제 중심, IT·금융 성장, 글로벌 네트워크 허브</li>
+          <li>마닐라 (필리핀) - 성장시장, 영어권 인력, BPO·ICT 산업</li>
+          <li>방콕 (태국) - 동남아 허브, 물류·관광 중심, 제조·물류 시너지</li>
+          <li>뭄바이 (인도) - 경제·금융 중심, 대규모 시장, IT·금융·제조 성장</li>
+          <li>첸나이 (인도) - 자동차·IT 산업, 현대차 생산기지</li>
+          <li>암스테르담 (네덜란드) - 유럽 물류·IT 허브, 글로벌 기업 진출 활발</li>
+          <li>로스앤젤레스 (미국) - 미주 관문, 글로벌 네트워크 수요 증가</li>
+          <li>더블린 (아일랜드) - IT·금융 허브, 유럽 북서부 관문</li>
+          <li>자카르타 (인도네시아) - 동남아 대형 시장, 제조·서비스 성장</li>
+          <li>쿠알라룸푸르 (말레이시아) - 동남아 허브, 글로벌 기업 진출</li>
+          <li>상파울루 (브라질) - 남미 경제 중심, 제조·서비스 성장</li>
+          <li>이스탄불 (터키) - 유럽·중동 관문, 제조·물류 허브</li>
+          <li>요하네스버그 (남아공) - 아프리카 경제 중심, 글로벌 기업 진출</li>
+          <li>멕시코시티 (멕시코) - 북중미 시장, 제조·서비스 성장</li>
+          <li>시드니 (호주) - 오세아니아 허브, 글로벌 네트워크</li>
+          <li>토론토 (캐나다) - 북미 시장, IT·금융 성장</li>
+          <li>이스탄불 (터키) - 유럽·중동 관문, 제조·물류 허브</li>
+          <li>상트페테르부르크 (러시아) - 동유럽 시장, 제조·서비스 성장</li>
+          <li>바르샤바 (폴란드) - 동유럽 허브, 글로벌 기업 진출</li>
+        </ol>
+        <p class="text-gray-700 text-xs mt-2">※ 실제 순위 및 도시는 데이터에 따라 달라질 수 있습니다.</p>
+      </div>
+    </div>
+
+    <!-- 7. KT/Epsilon 투자 실행 로드맵 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section7')">
+        <span class="font-semibold">KT/Epsilon 투자 실행 로드맵</span>
+        <span id="icon-section7" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section7" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <ul class="list-disc pl-5 text-gray-700 space-y-1">
+          <li>1단계: 동남아(하노이, 호치민, 마닐라) 등 신흥시장 우선 진출</li>
+          <li>2단계: 인도, 태국 등 성장성 높은 아시아 시장 확대</li>
+          <li>3단계: 유럽·미주 등 글로벌 네트워크 확장</li>
+          <li>각 단계별로 KT와의 시너지(현대차/협력사, VPN 고객, KOTRA 진출기업 등) 극대화</li>
+          <li>중국, 싱가포르, 한국 등은 정책/법률 이슈로 투자 보류</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 8. 데이터별 상위 40개 도시 표 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-white border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section8')">
+        <span class="font-semibold">데이터별 상위 40개 도시 표</span>
+        <span id="icon-section8" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section8" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left border">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-2 py-1 border">순위</th>
+                <th class="px-2 py-1 border">도시</th>
+                <th class="px-2 py-1 border">국가</th>
+                <th class="px-2 py-1 border">RFQ</th>
+                <th class="px-2 py-1 border">SOF</th>
+                <th class="px-2 py-1 border">KOTRA</th>
+                <th class="px-2 py-1 border">Epsilon PoP</th>
+                <th class="px-2 py-1 border">KT PoP</th>
+                <th class="px-2 py-1 border">VPN</th>
+                <th class="px-2 py-1 border">Hyundai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-2 py-1 border">1</td>
+                <td class="px-2 py-1 border">하노이</td>
+                <td class="px-2 py-1 border">베트남</td>
+                <td class="px-2 py-1 border">0.95</td>
+                <td class="px-2 py-1 border">0.88</td>
+                <td class="px-2 py-1 border">0.80</td>
+                <td class="px-2 py-1 border">1</td>
+                <td class="px-2 py-1 border">0</td>
+                <td class="px-2 py-1 border">0.70</td>
+                <td class="px-2 py-1 border">0.60</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">2</td>
+                <td class="px-2 py-1 border">호치민</td>
+                <td class="px-2 py-1 border">베트남</td>
+                <td class="px-2 py-1 border">0.92</td>
+                <td class="px-2 py-1 border">0.85</td>
+                <td class="px-2 py-1 border">0.78</td>
+                <td class="px-2 py-1 border">1</td>
+                <td class="px-2 py-1 border">0</td>
+                <td class="px-2 py-1 border">0.68</td>
+                <td class="px-2 py-1 border">0.58</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">3</td>
+                <td class="px-2 py-1 border">마닐라</td>
+                <td class="px-2 py-1 border">필리핀</td>
+                <td class="px-2 py-1 border">0.90</td>
+                <td class="px-2 py-1 border">0.80</td>
+                <td class="px-2 py-1 border">0.75</td>
+                <td class="px-2 py-1 border">1</td>
+                <td class="px-2 py-1 border">0</td>
+                <td class="px-2 py-1 border">0.65</td>
+                <td class="px-2 py-1 border">0.55</td>
+              </tr>
+              <!-- ...이하 40위까지 예시 데이터 추가 가능... -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. 데이터별 상위 100개 도시/국가 표 -->
+    <div class="mb-2">
+      <button type="button" class="w-full flex justify-between items-center px-4 py-3 bg-gray-200 border rounded shadow-sm hover:bg-gray-100 transition" onclick="toggleSection('section9')">
+        <span class="font-semibold">데이터별 상위 100개 도시/국가 표</span>
+        <span id="icon-section9" class="transition-transform">&#9660;</span>
+      </button>
+      <div id="section9" class="px-4 py-3 bg-gray-50 border border-t-0 rounded-b hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm text-left border">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-2 py-1 border">순위</th>
+                <th class="px-2 py-1 border">도시</th>
+                <th class="px-2 py-1 border">국가</th>
+                <th class="px-2 py-1 border">Epsilon Score</th>
+                <th class="px-2 py-1 border">Synergy Score</th>
+                <th class="px-2 py-1 border">Total Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="px-2 py-1 border">1</td>
+                <td class="px-2 py-1 border">하노이</td>
+                <td class="px-2 py-1 border">베트남</td>
+                <td class="px-2 py-1 border">0.95</td>
+                <td class="px-2 py-1 border">0.85</td>
+                <td class="px-2 py-1 border">1.80</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">2</td>
+                <td class="px-2 py-1 border">호치민</td>
+                <td class="px-2 py-1 border">베트남</td>
+                <td class="px-2 py-1 border">0.92</td>
+                <td class="px-2 py-1 border">0.82</td>
+                <td class="px-2 py-1 border">1.74</td>
+              </tr>
+              <tr>
+                <td class="px-2 py-1 border">3</td>
+                <td class="px-2 py-1 border">마닐라</td>
+                <td class="px-2 py-1 border">필리핀</td>
+                <td class="px-2 py-1 border">0.90</td>
+                <td class="px-2 py-1 border">0.80</td>
+                <td class="px-2 py-1 border">1.70</td>
+              </tr>
+              <!-- ...이하 100위까지 예시 데이터 추가 가능... -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script>
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+      if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        section.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+  </script>
+</body>
+</html> 
