@@ -200,7 +200,7 @@ function Top100CitiesTabs() {
             ))}
           </tbody>
         </table>
-        <div className="text-xs text-gray-500 mt-2">※ 실제 데이터 연동 시 상위 100개 도시/국가/건수 기준으로 자동 출력됩니다.</div>
+        <div className="text-xs text-gray-500 mt-2">※ 모든 데이터는 원본 기준으로 코드에서 자동 집계·표준화되어 상위 100개 도시/국가/건수가 실시간으로 동기화됩니다.</div>
       </div>
     </div>
   );
@@ -1256,9 +1256,10 @@ export function ComprehensiveInvestmentReport() {
         <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-900 text-sm rounded">
           <strong>선정 기준 안내</strong><br/>
           <ul className="list-disc ml-6 mt-2">
-            <li>본 투자 우선순위는 <b>Epsilon Score</b>(견적·주문 데이터 기반) 상위 도시 중 <b>중국(법률/정책 이슈)로 보류</b>하고, 시장 성장성·잠재기회·PoP 미설치 여부, <b>KT와의 시너지(현대차/협력사, VPN 고객, KOTRA 진출기업 등)</b>까지 종합적으로 고려해 선정합니다.</li>
-            <li><b>KT와 Epsilon 추천 도시는 중복되지 않으며, 아시아 우선 → 유럽 순으로 단계별(1~3단계) 투자 진행을 권고합니다.</b></li>
-            <li>각 단계별로 3개 도시만 추천하며, 점수는 표기하지 않고 핵심 투자 포인트와 KT 시너지 효과를 제공합니다.</li>
+            <li>Epsilon Score(견적·주문 데이터 기반) 상위 도시 중 중국(법률/정책 이슈)은 보류</li>
+            <li>시장 성장성, 잠재기회, PoP 미설치 여부, KT와의 시너지(현대차/협력사, VPN 고객, KOTRA 진출기업 등)까지 종합적으로 고려</li>
+            <li>아시아 우선 → 유럽 순으로 단계별(1~3단계) 투자 진행 권고</li>
+            <li>각 단계별로 3개 도시만 추천, 점수는 표기하지 않고 핵심 투자 포인트와 KT 시너지 효과 제공</li>
           </ul>
         </div>
         {/* Epsilon 기준 */}
@@ -1378,7 +1379,7 @@ export function ComprehensiveInvestmentReport() {
         {/* 보고서 푸터 */}
         <div className="text-center text-sm text-gray-500 border-t pt-6">
           <p>본 보고서는 7개 데이터 소스를 종합 분석하여 KT/Epsilon PoP 투자 우선순위를 도출하였습니다.</p>
-          <p className="mt-2">© 2024 KT/Epsilon Strategic Investment Analysis. All rights reserved.</p>
+          <p className="mt-2">© 2024 KT/Epsilon 성장이행팀. All rights reserved.</p>
         </div>
       </CollapsibleSection>
 
