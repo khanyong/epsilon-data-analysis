@@ -1309,13 +1309,17 @@ export function ComprehensiveInvestmentReport() {
                   <div className="text-xs text-gray-700">• 멕시코 경제·물류 중심, 북중미 관문<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/물류) 수요, 미주 네트워크 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
                 <div className="border-b pb-2">
-                  <div className="font-semibold">KUALA LUMPUR (MALAYSIA)</div>
-                  <div className="text-xs text-gray-700">• 말레이시아 경제·금융 허브, 동남아 관문<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(금융/IT) 수요, 동남아 네트워크 시너지<br/>• 성장성 및 시장 확대, PoP 미설치</div>
+                  <div className="font-semibold">PESQUERIA (MEXICO)</div>
+                  <div className="text-xs text-gray-700">• 현대자동차 진출 도시, 멕시코 북부 산업단지<br/>• 자동차·제조업 중심, 글로벌 공급망 허브<br/>• KT VPN 고객사(제조/물류) 수요, 산업 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
                 <div>
                   <div className="font-semibold">BEKASI (INDONESIA)</div>
                   <div className="text-xs text-gray-700">• 인도네시아 제조업 중심지, 자카르타 인근<br/>• 현대차/협력사, KOTRA 진출기업 진출<br/>• KT VPN 고객사(제조/물류) 수요, 산업 시너지<br/>• 성장 잠재력, PoP 미설치</div>
                 </div>
+              </div>
+              <br/>
+              <div className="mb-2 text-xs text-red-700 font-bold">
+                3단계 장기/검토 투자에서는 멕시코(멕시코시티, 페스케리아 등 현대차 진출 및 글로벌 공급망 거점)를 투자 우선 국가로 고려.
               </div>
             </div>
           </div>
