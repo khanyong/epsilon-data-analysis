@@ -258,10 +258,24 @@ function getCityHighlightClass(city) {
 function normalizeCity(city) {
   if (!city) return '';
   let c = city.trim().toUpperCase().replace(/\s+/g, '');
-  // 특수 표준화 예시
-  if (c.includes('HONGKONG')) return 'HONGKONG';
-  if (c.includes('SHANGHAI')) return 'SHANGHAI';
+
+  // HONGKONG
+  if (c.includes('HONGKONG') || c.includes('홍콩')) return 'HONGKONG';
+  // SHANGHAI
+  if (c.includes('SHANGHAI') || c.includes('상하이') || c.includes('上海') || c.includes('상해')) return 'SHANGHAI';
+  // JAKARTA
+  if (c.includes('JAKARTA') || c.includes('자카르타')) return 'JAKARTA';
+  // SINGAPORE
+  if (c.includes('SINGAPORE') || c.includes('싱가포르')) return 'SINGAPORE';
+  // CHENNAI
+  if (c.includes('CHENNAI') || c.includes('첸나이')) return 'CHENNAI';
+  // YANTAI
+  if (c.includes('YANTAI') || c.includes('옌타이') || c.includes('烟台') || c.includes('연태')) return 'YANTAI';
+  // LOSANGELES
+  if (c.includes('LOSANGELES') || c.includes('로스앤젤레스')) return 'LOSANGELES';
+  // NEWYORK
   if (c.includes('NEWYORK')) return 'NEWYORK';
+
   return c;
 }
 
@@ -838,6 +852,19 @@ export function ComprehensiveInvestmentReport() {
     synergyScoreNorm: minMaxNormalize(synergyScoreArr, Number(row.synergyScore))
   }));
 
+  // 1. 랜딩 스테이션 도시 배열 추가 (이미지 기준, 표준화 필요)
+  const LANDING_STATION_CITIES = [
+    "SINGAPORE", "HONGKONG", "SHANGHAI", "LOSANGELES", "DUBAI","MARSEILLE", "MUMBAI", "BUSAN", "DUBLIN", "ABUDHABI", "KOWLOON", "BATAM", "INCHEON", "COUNTYDUBLIN",
+    "HONG KONG", "SLOUGH", "FUJAIRAH", "JAKARTA", "ALEXANDRIA", "MIAMI",
+    "CHENNAI", "TAMILNADU", "YANTAI", "PANAMA", "SYDNEY", "ABUDABI", "BAHRAIN", "BARIAVUNGTAU", "칭다오(青岛,청도)","촌부리(CHONBURI)", "마닐라(MANILA)"
+    // ... 필요시 추가 ...
+  ];
+  // 2. 랜딩 스테이션 여부 함수
+  function isLandingStationCity(city) {
+    if (!city) return false;
+    return LANDING_STATION_CITIES.includes(normalizeCity(city));
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-8 bg-white space-y-8">
       {/* 보고서 헤더 */}
@@ -1352,16 +1379,41 @@ export function ComprehensiveInvestmentReport() {
               {Array.from({ length: 40 }).map((_, idx) => (
                 <tr key={idx}>
                   <td className="border px-2 py-1">{idx + 1}</td>
-                  {/* 도시 셀: KT/Epsilon/둘 다 색상 분기 */}
-                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.RFQ[idx]?.city)}`}>{top40.RFQ[idx]?.city ?? ''}</td>
+                  {/* 도시 셀: KT/Epsilon/둘 다 색상 분기 + 랜딩스테이션 아이콘 */}
+                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.RFQ[idx]?.city)}`}>
+                    {top40.RFQ[idx]?.city ?? ''}
+                    {top40.RFQ[idx]?.city && (
+                      <span className="ml-1 align-middle">{isLandingStationCity(top40.RFQ[idx]?.city) ? "🟢" : "⚪"}</span>
+                    )}
+                  </td>
                   <td className="border px-2 py-1">{top40.RFQ[idx]?.count ?? ''}</td>
-                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.SOF[idx]?.city)}`}>{top40.SOF[idx]?.city ?? ''}</td>
+                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.SOF[idx]?.city)}`}>
+                    {top40.SOF[idx]?.city ?? ''}
+                    {top40.SOF[idx]?.city && (
+                      <span className="ml-1 align-middle">{isLandingStationCity(top40.SOF[idx]?.city) ? "🟢" : "⚪"}</span>
+                    )}
+                  </td>
                   <td className="border px-2 py-1">{top40.SOF[idx]?.count ?? ''}</td>
-                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.HYUNDAI[idx]?.city)}`}>{top40.HYUNDAI[idx]?.city ?? ''}</td>
+                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.HYUNDAI[idx]?.city)}`}>
+                    {top40.HYUNDAI[idx]?.city ?? ''}
+                    {top40.HYUNDAI[idx]?.city && (
+                      <span className="ml-1 align-middle">{isLandingStationCity(top40.HYUNDAI[idx]?.city) ? "🟢" : "⚪"}</span>
+                    )}
+                  </td>
                   <td className="border px-2 py-1">{top40.HYUNDAI[idx]?.count ?? ''}</td>
-                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.VPN[idx]?.city)}`}>{top40.VPN[idx]?.city ?? ''}</td>
+                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.VPN[idx]?.city)}`}>
+                    {top40.VPN[idx]?.city ?? ''}
+                    {top40.VPN[idx]?.city && (
+                      <span className="ml-1 align-middle">{isLandingStationCity(top40.VPN[idx]?.city) ? "🟢" : "⚪"}</span>
+                    )}
+                  </td>
                   <td className="border px-2 py-1">{top40.VPN[idx]?.count ?? ''}</td>
-                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.KOTRA[idx]?.city)}`}>{top40.KOTRA[idx]?.city ?? ''}</td>
+                  <td className={`border px-2 py-1 ${getCityHighlightClass(top40.KOTRA[idx]?.city)}`}>
+                    {top40.KOTRA[idx]?.city ?? ''}
+                    {top40.KOTRA[idx]?.city && (
+                      <span className="ml-1 align-middle">{isLandingStationCity(top40.KOTRA[idx]?.city) ? "🟢" : "⚪"}</span>
+                    )}
+                  </td>
                   <td className="border px-2 py-1">{top40.KOTRA[idx]?.count ?? ''}</td>
                 </tr>
               ))}
@@ -1372,7 +1424,9 @@ export function ComprehensiveInvestmentReport() {
             <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded mx-1">KT PoP</span>
             <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 rounded mx-1">Epsilon PoP</span>
             <span className="inline-block px-2 py-1 bg-gradient-to-r from-blue-200 via-purple-200 to-orange-200 text-purple-900 rounded mx-1">KT+Epsilon 동시</span>
-            도시는 색상으로 구분됩니다.
+            도시는 색상으로 구분됩니다.<br/>
+            <span className="inline-block ml-2">🟢 랜딩 스테이션 있음</span>
+            <span className="inline-block ml-2">⚪ 없음</span>
           </div>
         </div>
 
