@@ -11,7 +11,7 @@
     "advanced-normalize": "node src/scripts/runAdvancedNormalization.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.2",
+    "@supabase/supabase-js": "^2.52.0",
     "@types/marked": "^5.0.2",
     "@types/react-router-dom": "^5.3.3",
     "ag-grid-community": "^34.0.0",
