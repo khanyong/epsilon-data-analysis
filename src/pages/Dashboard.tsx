@@ -4,6 +4,7 @@ import { SOFAnalysis } from './SOFAnalysis';
 import { KOTRAAnalysis } from './KOTRAAnalysis';
 // import { EpsilonPoPAnalysis } from './EpsilonPoPAnalysis';
 import { ComprehensiveInvestmentReport } from '../components/ComprehensiveInvestmentReport';
+import { MarketingReport } from './MarketingReport';
 
 type MenuType = 'RFQ' | 'SOF' | 'KOTRA' | 'EPSILON_POPS' | 'INVEST_REPORT' | 'MARKETING_REPORT';
 
@@ -46,7 +47,7 @@ export function Dashboard() {
             </li>
             <li className={`rounded px-3 py-2 font-semibold ${selectedMenu === 'MARKETING_REPORT' ? 'bg-blue-700' : 'hover:bg-gray-700 cursor-pointer'}`}
                 onClick={() => setSelectedMenu('MARKETING_REPORT')}>
-              마케팅 전략 보고서
+              사업성 분석 보고서
             </li>
           </ul>
         </nav>
@@ -74,29 +75,8 @@ export function Dashboard() {
         {/* 종합 투자전략보고서 */}
         {selectedMenu === 'INVEST_REPORT' && <ComprehensiveInvestmentReport />}
         
-        {/* 마케팅전략보고서 섹션 */}
-        {selectedMenu === 'MARKETING_REPORT' && (
-          <section className="bg-white rounded-lg shadow p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">📈 마케팅전략 보고서</h2>
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                onClick={() => setSelectedMenu('RFQ')}
-              >
-                ← 분석 화면으로 돌아가기
-              </button>
-            </div>
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-lg mb-4">🚧</div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                마케팅전략보고서 기능 준비중
-              </h3>
-              <p className="text-gray-600">
-                향후 업데이트에서 제공될 예정입니다.
-              </p>
-            </div>
-          </section>
-        )}
+        {/* 사업성 분석 보고서 */}
+        {selectedMenu === 'MARKETING_REPORT' && <MarketingReport />}
       </main>
     </div>
   );
