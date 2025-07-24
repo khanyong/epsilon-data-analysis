@@ -35,6 +35,7 @@ export function Dashboard() {
   const [businessFeasibilityOpen, setBusinessFeasibilityOpen] = useState(true);
   const [businessFeasibilitySection, setBusinessFeasibilitySection] = useState('overview');
   const [businessFeasibilityViewMode, setBusinessFeasibilityViewMode] = useState<'section' | 'all'>('section');
+  const [investmentStrategyOpen, setInvestmentStrategyOpen] = useState(true);
   const [investmentStrategySection, setInvestmentStrategySection] = useState('preprocessing');
   const [investmentStrategyViewMode, setInvestmentStrategyViewMode] = useState<'section' | 'all'>('section');
   const { user, signOut } = useAuth();
@@ -179,29 +180,45 @@ export function Dashboard() {
           {/* 보고서 */}
           <div className="text-gray-500 text-xs mb-2">보고서</div>
           <ul className="space-y-1 mb-6">
-            <li
-              className={`rounded px-3 py-2 font-semibold ${selectedMenu === 'INVEST_REPORT' ? 'bg-blue-500 text-white' : 'hover:bg-gray-300 cursor-pointer'}`}
-              onClick={() => setSelectedMenu('INVEST_REPORT')}
-            >
-              투자 전략 보고서
+            {/* 투자 전략 보고서 */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full whitespace-nowrap ${
+                  selectedMenu === 'INVEST_REPORT'
+                    ? 'bg-blue-500 text-white'
+                    : 'hover:bg-gray-300 text-gray-900'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('INVEST_REPORT');
+                  setInvestmentStrategyOpen((v) => (selectedMenu === 'INVEST_REPORT' ? !v : true));
+                }}
+                aria-expanded={selectedMenu === 'INVEST_REPORT' && investmentStrategyOpen}
+                aria-controls="investmentstrategy-toc-list"
+                style={{ maxWidth: '100%' }}
+              >
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '160px' }}>
+                  투자 전략 보고서
+                </span>
+                <span className="ml-2">{selectedMenu === 'INVEST_REPORT' && investmentStrategyOpen ? '▲' : '▼'}</span>
+              </button>
+              {selectedMenu === 'INVEST_REPORT' && investmentStrategyOpen && (
+                <ul id="investmentstrategy-toc-list" className="pl-4 mt-1 space-y-1">
+                  {investmentStrategyToc.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${investmentStrategySection === item.id ? 'font-bold underline' : ''}`}
+                        onClick={() => {
+                          setInvestmentStrategySection(item.id);
+                          setInvestmentStrategyViewMode('section');
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
-            {selectedMenu === 'INVEST_REPORT' && (
-              <ul className="pl-4 mt-1 space-y-1">
-                {investmentStrategyToc.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${investmentStrategySection === item.id ? 'font-bold underline' : ''}`}
-                      onClick={() => {
-                        setInvestmentStrategySection(item.id);
-                        setInvestmentStrategyViewMode('section');
-                      }}
-                    >
-                      {item.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
             {/* 사업성 분석 보고서 */}
             <li>
               <button
