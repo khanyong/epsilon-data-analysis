@@ -4,7 +4,7 @@ import { RFQAnalysis } from './RFQAnalysis';
 import { SOFAnalysis } from './SOFAnalysis';
 import { KOTRAAnalysis } from './KOTRAAnalysis';
 import { ComprehensiveInvestmentReport } from './InvestmentStrategyReport/ComprehensiveInvestmentReport';
-import { NewYorkDiscountReport } from './NewYorkDiscountReport';
+import { NewYorkDiscountReport } from './NewYorkDiscountReport/NewYorkDiscountReport';
 import { nyDiscountToc } from './NewYorkDiscountReport/NYDiscountTocData';
 import { EpsilonFactbook, toc as factbookToc } from './EpsilonFactbook/EpsilonFactbook';
 import { BusinessFeasibilityReport } from './MarketingReport/BusinessFeasibilityReport';

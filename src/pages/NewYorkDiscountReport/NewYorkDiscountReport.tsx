@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { nyDiscountToc } from './NewYorkDiscountReport/NYDiscountTocData';
+import { nyDiscountToc } from './NYDiscountTocData';
 import {
   NYDiscountSectionIntro,
   NYDiscountSectionMacro,
@@ -10,7 +10,7 @@ import {
   NYDiscountSectionTaxRate,
   NYDiscountSectionWaccCalculation,
   NYDiscountSectionConclusion,
-} from './NewYorkDiscountReport/NYDiscountSections';
+} from './NYDiscountSections';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
 function Modal({ open, onClose, title, children }) {
