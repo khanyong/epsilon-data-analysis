@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -9,22 +10,97 @@ export function Login() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
   const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  // URL 파라미터 확인하여 회원가입 모드로 자동 전환
+  // URL 파라미터 확인하여 회원가입 모드로 자동 전환 및 이메일 확인 처리
   useEffect(() => {
     const mode = searchParams.get('mode')
+    const type = searchParams.get('type')
+    
     if (mode === 'signup') {
       setIsSignUp(true)
     }
+
+    // 이메일 확인 처리
+    if (type === 'email' && mode === 'confirmation') {
+      handleEmailConfirmation()
+    }
+
+    // URL 해시에서 토큰 확인 (Supabase가 때로 해시로 토큰을 전달함)
+    const handleHashParams = () => {
+      const hash = window.location.hash
+      if (hash.includes('access_token') && hash.includes('type=signup')) {
+        console.log('해시에서 회원가입 토큰 발견:', hash)
+        setMessage('✅ 이메일 확인이 완료되었습니다! 이제 로그인할 수 있습니다.')
+        setIsSignUp(false)
+        // 해시 제거
+        window.history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
+    }
+
+    handleHashParams()
   }, [searchParams])
+
+  const handleEmailConfirmation = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      setMessage('이메일 확인을 처리하고 있습니다...')
+
+      // Supabase가 자동으로 세션을 처리하므로 현재 세션 확인
+      const { data: { session }, error } = await supabase.auth.getSession()
+
+      if (error) {
+        console.error('세션 확인 실패:', error)
+        setError('이메일 확인에 실패했습니다. 링크가 만료되었거나 잘못되었을 수 있습니다.')
+        setMessage('')
+      } else if (session?.user?.email_confirmed_at) {
+        console.log('이메일 확인 완료:', session.user.email)
+        setMessage('✅ 이메일 확인이 완료되었습니다! 이제 로그인할 수 있습니다.')
+        setError('')
+        setIsSignUp(false) // 로그인 모드로 전환
+      } else {
+        // 세션이 없으면 URL에서 토큰 찾기
+        const accessToken = searchParams.get('access_token')
+        const refreshToken = searchParams.get('refresh_token')
+        
+        if (accessToken && refreshToken) {
+          const { data, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          })
+          
+          if (sessionError) {
+            console.error('세션 설정 실패:', sessionError)
+            setError('이메일 확인 처리 중 오류가 발생했습니다.')
+            setMessage('')
+          } else {
+            console.log('세션 설정 성공:', data.user?.email)
+            setMessage('✅ 이메일 확인이 완료되었습니다! 이제 로그인할 수 있습니다.')
+            setError('')
+            setIsSignUp(false)
+          }
+        } else {
+          setMessage('이메일 확인을 위해 이메일의 링크를 다시 클릭해주세요.')
+        }
+      }
+    } catch (err) {
+      console.error('이메일 확인 처리 중 오류:', err)
+      setError('이메일 확인 처리 중 오류가 발생했습니다.')
+      setMessage('')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setMessage('')
 
     try {
       console.log(`${isSignUp ? '회원가입' : '로그인'} 시도:`, { email, username })
@@ -46,7 +122,7 @@ export function Login() {
       } else {
         console.log(`${isSignUp ? '회원가입' : '로그인'} 성공`)
         if (isSignUp) {
-          setError('✅ 회원가입이 완료되었습니다! 이메일을 확인하여 계정을 활성화해주세요.')
+          setMessage('✅ 회원가입이 완료되었습니다! 이메일을 확인하여 계정을 활성화해주세요.')
           setIsSignUp(false) // 로그인 모드로 전환
         } else {
           navigate('/dashboard')
@@ -141,6 +217,21 @@ export function Login() {
                     ? 'text-green-600' 
                     : 'text-red-600'
                 }`}>{error}</p>
+              </div>
+            )}
+
+            {/* 성공 메시지 */}
+            {message && (
+              <div className={`border rounded-md p-3 ${
+                message.includes('완료') || message.includes('성공') 
+                  ? 'bg-green-50 border-green-200' 
+                  : 'bg-blue-50 border-blue-200'
+              }`}>
+                <p className={`text-sm ${
+                  message.includes('완료') || message.includes('성공') 
+                    ? 'text-green-600' 
+                    : 'text-blue-600'
+                }`}>{message}</p>
               </div>
             )}
 

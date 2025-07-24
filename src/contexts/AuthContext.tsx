@@ -41,6 +41,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 인증 상태 변경 리스너
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email)
+        
+        // 이메일 확인 완료 시 처리
+        if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+          console.log('이메일 확인 완료:', session.user.email)
+        }
+        
+        // 토큰 새로고침 오류 처리
+        if (event === 'TOKEN_REFRESHED') {
+          console.log('토큰이 새로고침되었습니다.')
+        }
+
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -124,12 +136,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: '데이터베이스 연결에 실패했습니다.' }
       }
 
+      // 현재 도메인 확인
+      const currentOrigin = window.location.origin
+      console.log('현재 도메인:', currentOrigin)
+
       // 이메일 확인과 함께 회원가입
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/login`,
+          emailRedirectTo: `${currentOrigin}/login?type=email&mode=confirmation`,
           data: {
             username: username
           }
@@ -144,6 +160,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { error: '이미 등록된 이메일입니다. 로그인을 시도해주세요.' }
         }
         
+        // 이메일 형식 오류 처리
+        if (error.message.includes('Invalid email')) {
+          return { error: '올바른 이메일 형식을 입력해주세요.' }
+        }
+
+        // 비밀번호 길이 오류 처리
+        if (error.message.includes('Password should be at least')) {
+          return { error: '비밀번호는 최소 6자 이상이어야 합니다.' }
+        }
+        
         return { error: error.message }
       }
 
@@ -153,11 +179,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: data.user.email,
           username: username,
           emailConfirmed: data.user.email_confirmed_at,
-          createdAt: data.user.created_at
+          createdAt: data.user.created_at,
+          redirectUrl: `${currentOrigin}/login?type=email&mode=confirmation`
         })
 
         // 트리거가 자동으로 profiles 테이블에 레코드를 생성합니다
-        return { error: null, message: '회원가입이 완료되었습니다. 이메일을 확인하여 계정을 활성화해주세요.' }
+        return { 
+          error: null, 
+          message: `회원가입이 완료되었습니다! ${email}로 발송된 확인 이메일의 링크를 클릭하여 계정을 활성화해주세요.` 
+        }
       } else {
         console.error('회원가입 응답에 사용자 데이터가 없습니다.')
         return { error: '회원가입 처리 중 오류가 발생했습니다.' }
