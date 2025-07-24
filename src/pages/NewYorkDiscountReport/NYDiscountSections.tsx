@@ -42,7 +42,7 @@ export function NYDiscountSectionIntro() {
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
           <h3 className="font-bold text-blue-800 mb-2">보고서 목적</h3>
           <p className="text-blue-700">
-            본 보고서는 Epsilon 뉴욕법인의 DCF(현금흐름할인법) 수행을 위한 WACC(가중평균자본비용) 산정에 특화된 전문 보고서입니다.
+            본 보고서는 Epsilon 뉴욕법인의 DCF(현금흐름할인법) 수행을 위한 WACC(가중평균자본비용) 산정을 위한 보고서입니다.
           </p>
         </div>
         
@@ -72,7 +72,7 @@ export function NYDiscountSectionIntro() {
 }
 
 export function NYDiscountSectionMacro() {
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState<string | null>(null);
 
   const treasuryData = {
     title: "Bloomberg US Treasury Yields - 24개월 평균 데이터",
@@ -380,7 +380,7 @@ export function NYDiscountSectionMacro() {
 }
 
 export function NYDiscountSectionRiskFree() {
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState<string | null>(null);
 
   const riskFreeData = {
     title: "무위험 이자율 산정 근거 데이터",
@@ -526,7 +526,7 @@ export function NYDiscountSectionRiskFree() {
 }
 
 export function NYDiscountSectionMarketPremium() {
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState<string | null>(null);
 
   const damodaranData = {
     title: "Damodaran 시장 위험 프리미엄 상세 데이터",
@@ -712,7 +712,7 @@ export function NYDiscountSectionMarketPremium() {
 }
 
 export function NYDiscountSectionBeta() {
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState<string | null>(null);
 
   const betaData = {
     title: "베타(β) 산정 상세 데이터 및 근거",
@@ -1147,7 +1147,7 @@ export function NYDiscountSectionTaxRate() {
 }
 
 export function NYDiscountSectionWaccCalculation() {
-  const [modalOpen, setModalOpen] = useState(null);
+  const [modalOpen, setModalOpen] = useState<string | null>(null);
 
   const waccData = {
     title: "WACC 계산 상세 과정 및 근거",
