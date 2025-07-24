@@ -1,0 +1,68 @@
+import React, { useState } from 'react';
+import { nyDiscountToc } from './NewYorkDiscountReport/NYDiscountTocData';
+import {
+  NYDiscountSectionIntro,
+  NYDiscountSectionMacro,
+  NYDiscountSectionTreasury,
+  NYDiscountSectionWacc,
+  NYDiscountSectionDcf,
+  NYDiscountSectionSensitivity,
+  NYDiscountSectionConclusion,
+} from './NewYorkDiscountReport/NYDiscountSections';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+
+function Modal({ open, onClose, title, children }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-lg w-full relative">
+        <button onClick={onClose} className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl">×</button>
+        <h3 className="text-lg font-bold mb-2">{title}</h3>
+        <div>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export function NewYorkDiscountReport({ sectionId, viewMode }: { sectionId: string, viewMode?: 'section' | 'all' }) {
+  const [modal, setModal] = useState(null);
+  return (
+    <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-3xl font-bold text-green-700 mb-6">뉴욕법인 할인율(WACC) 산정 보고서</h1>
+      {viewMode === 'all' ? (
+        <>
+          <NYDiscountSectionIntro />
+          <NYDiscountSectionMacro />
+          <NYDiscountSectionTreasury />
+          <NYDiscountSectionWacc />
+          <NYDiscountSectionDcf />
+          <NYDiscountSectionSensitivity />
+          <NYDiscountSectionConclusion />
+        </>
+      ) : (
+        <>
+          {sectionId === 'intro' && <NYDiscountSectionIntro />}
+          {sectionId === 'macro' && <NYDiscountSectionMacro />}
+          {sectionId === 'treasury' && <NYDiscountSectionTreasury />}
+          {sectionId === 'wacc' && <NYDiscountSectionWacc />}
+          {sectionId === 'dcf' && <NYDiscountSectionDcf />}
+          {sectionId === 'sensitivity' && <NYDiscountSectionSensitivity />}
+          {sectionId === 'conclusion' && <NYDiscountSectionConclusion />}
+        </>
+      )}
+      {/* Modal 등 부가 기능은 그대로 유지 */}
+      <Modal open={modal === 'rf'} onClose={() => setModal(null)} title="미국 국채 실시간 금리 (Bloomberg)">
+        <img src="/attachments/appendix_rf.png" alt="미국 국채 실시간 금리" className="mb-2 rounded shadow" />
+        <a href="https://www.bloomberg.com/markets/rates-bonds/government-bonds/us/" className="text-blue-600 underline inline-flex items-center" target="_blank">
+          Bloomberg US Treasury <FaExternalLinkAlt className="ml-1" />
+        </a>
+      </Modal>
+      <Modal open={modal === 'premium'} onClose={() => setModal(null)} title="Damodaran 국가별 리스크 프리미엄">
+        <img src="/attachments/appendix_premium.png" alt="Damodaran 국가별 리스크 프리미엄" className="mb-2 rounded shadow" />
+        <a href="http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html" className="text-blue-600 underline inline-flex items-center" target="_blank">
+          Damodaran Country Risk Premiums <FaExternalLinkAlt className="ml-1" />
+        </a>
+      </Modal>
+    </div>
+  );
+} 
