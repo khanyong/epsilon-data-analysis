@@ -1,7 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function Landing() {
+  const navigate = useNavigate();
+
+  const handleSignupClick = () => {
+    console.log('회원가입 버튼 클릭됨');
+    navigate('/login?mode=signup');
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-green-100 overflow-hidden">
       {/* 지도 윤곽선 + 네트워크 SVG 배경 */}
@@ -46,16 +53,16 @@ export function Landing() {
         <div className="flex space-x-4">
           <Link
             to="/login"
-            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md text-base font-semibold transition-colors shadow"
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md text-base font-semibold transition-colors shadow cursor-pointer"
           >
             로그인
           </Link>
-          <Link
-            to="/signup"
-            className="bg-white border border-green-600 text-green-700 hover:bg-green-50 px-8 py-3 rounded-md text-base font-semibold transition-colors shadow"
+          <button
+            onClick={handleSignupClick}
+            className="bg-white border-2 border-green-600 text-green-700 hover:bg-green-50 hover:border-green-700 px-8 py-3 rounded-md text-base font-semibold transition-all duration-200 shadow cursor-pointer active:scale-95"
           >
             회원가입
-          </Link>
+          </button>
         </div>
       </div>
     </div>

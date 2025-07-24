@@ -1,15 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function Login() {
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')  // 추가
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+
+  // URL 파라미터 확인하여 회원가입 모드로 자동 전환
+  useEffect(() => {
+    const mode = searchParams.get('mode')
+    if (mode === 'signup') {
+      setIsSignUp(true)
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,16 +27,33 @@ export function Login() {
     setError('')
 
     try {
+      console.log(`${isSignUp ? '회원가입' : '로그인'} 시도:`, { email, username })
+      
       const { error } = isSignUp 
-        ? await signUp(email, password)
+        ? await signUp(email, password, username)  // username 추가
         : await signIn(email, password)
 
       if (error) {
-        setError(error)
+        console.error(`${isSignUp ? '회원가입' : '로그인'} 실패:`, error)
+        
+        // 회원가입 실패 시 특별한 안내
+        if (isSignUp && error.includes('서버 오류')) {
+          setError('회원가입에 실패했습니다. 이미 계정이 있을 수 있으니 로그인을 시도해보세요.')
+          setIsSignUp(false) // 로그인 모드로 전환
+        } else {
+          setError(error)
+        }
       } else {
-        navigate('/dashboard')
+        console.log(`${isSignUp ? '회원가입' : '로그인'} 성공`)
+        if (isSignUp) {
+          setError('✅ 회원가입이 완료되었습니다! 이메일을 확인하여 계정을 활성화해주세요.')
+          setIsSignUp(false) // 로그인 모드로 전환
+        } else {
+          navigate('/dashboard')
+        }
       }
     } catch (err) {
+      console.error('예상치 못한 오류:', err)
       setError('알 수 없는 오류가 발생했습니다.')
     } finally {
       setLoading(false)
@@ -49,10 +76,30 @@ export function Login() {
 
           {/* 폼 */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* 사용자명 입력 (회원가입 시에만 표시) */}
+            {isSignUp && (
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                  사용자명 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="사용자명을 입력하세요"
+                  minLength={2}
+                  maxLength={20}
+                />
+              </div>
+            )}
+
             {/* 이메일 입력 */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                이메일
+                이메일 <span className="text-red-500">*</span>
               </label>
               <input
                 id="email"
@@ -68,7 +115,7 @@ export function Login() {
             {/* 비밀번호 입력 */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                비밀번호
+                비밀번호 <span className="text-red-500">*</span>
               </label>
               <input
                 id="password"
@@ -84,8 +131,16 @@ export function Login() {
 
             {/* 에러 메시지 */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-md p-3">
-                <p className="text-sm text-red-600">{error}</p>
+              <div className={`border rounded-md p-3 ${
+                error.includes('완료') || error.includes('성공') 
+                  ? 'bg-green-50 border-green-200' 
+                  : 'bg-red-50 border-red-200'
+              }`}>
+                <p className={`text-sm ${
+                  error.includes('완료') || error.includes('성공') 
+                    ? 'text-green-600' 
+                    : 'text-red-600'
+                }`}>{error}</p>
               </div>
             )}
 
@@ -109,7 +164,10 @@ export function Login() {
           {/* 모드 전환 */}
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsSignUp(!isSignUp)
+                setUsername('') // 모드 전환 시 username 초기화
+              }}
               className="text-sm text-blue-600 hover:text-blue-500"
             >
               {isSignUp ? '이미 계정이 있으신가요? 로그인' : '계정이 없으신가요? 회원가입'}

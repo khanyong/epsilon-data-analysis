@@ -3,10 +3,12 @@ import { nyDiscountToc } from './NewYorkDiscountReport/NYDiscountTocData';
 import {
   NYDiscountSectionIntro,
   NYDiscountSectionMacro,
-  NYDiscountSectionTreasury,
-  NYDiscountSectionWacc,
-  NYDiscountSectionDcf,
-  NYDiscountSectionSensitivity,
+  NYDiscountSectionRiskFree,
+  NYDiscountSectionMarketPremium,
+  NYDiscountSectionBeta,
+  NYDiscountSectionCapitalStructure,
+  NYDiscountSectionTaxRate,
+  NYDiscountSectionWaccCalculation,
   NYDiscountSectionConclusion,
 } from './NewYorkDiscountReport/NYDiscountSections';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -33,20 +35,24 @@ export function NewYorkDiscountReport({ sectionId, viewMode }: { sectionId: stri
         <>
           <NYDiscountSectionIntro />
           <NYDiscountSectionMacro />
-          <NYDiscountSectionTreasury />
-          <NYDiscountSectionWacc />
-          <NYDiscountSectionDcf />
-          <NYDiscountSectionSensitivity />
+          <NYDiscountSectionRiskFree />
+          <NYDiscountSectionMarketPremium />
+          <NYDiscountSectionBeta />
+          <NYDiscountSectionCapitalStructure />
+          <NYDiscountSectionTaxRate />
+          <NYDiscountSectionWaccCalculation />
           <NYDiscountSectionConclusion />
         </>
       ) : (
         <>
           {sectionId === 'intro' && <NYDiscountSectionIntro />}
           {sectionId === 'macro' && <NYDiscountSectionMacro />}
-          {sectionId === 'treasury' && <NYDiscountSectionTreasury />}
-          {sectionId === 'wacc' && <NYDiscountSectionWacc />}
-          {sectionId === 'dcf' && <NYDiscountSectionDcf />}
-          {sectionId === 'sensitivity' && <NYDiscountSectionSensitivity />}
+          {sectionId === 'risk-free' && <NYDiscountSectionRiskFree />}
+          {sectionId === 'market-premium' && <NYDiscountSectionMarketPremium />}
+          {sectionId === 'beta' && <NYDiscountSectionBeta />}
+          {sectionId === 'capital-structure' && <NYDiscountSectionCapitalStructure />}
+          {sectionId === 'tax-rate' && <NYDiscountSectionTaxRate />}
+          {sectionId === 'wacc-calculation' && <NYDiscountSectionWaccCalculation />}
           {sectionId === 'conclusion' && <NYDiscountSectionConclusion />}
         </>
       )}
@@ -55,12 +61,6 @@ export function NewYorkDiscountReport({ sectionId, viewMode }: { sectionId: stri
         <img src="/attachments/appendix_rf.png" alt="미국 국채 실시간 금리" className="mb-2 rounded shadow" />
         <a href="https://www.bloomberg.com/markets/rates-bonds/government-bonds/us/" className="text-blue-600 underline inline-flex items-center" target="_blank">
           Bloomberg US Treasury <FaExternalLinkAlt className="ml-1" />
-        </a>
-      </Modal>
-      <Modal open={modal === 'premium'} onClose={() => setModal(null)} title="Damodaran 국가별 리스크 프리미엄">
-        <img src="/attachments/appendix_premium.png" alt="Damodaran 국가별 리스크 프리미엄" className="mb-2 rounded shadow" />
-        <a href="http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/ctryprem.html" className="text-blue-600 underline inline-flex items-center" target="_blank">
-          Damodaran Country Risk Premiums <FaExternalLinkAlt className="ml-1" />
         </a>
       </Modal>
     </div>
