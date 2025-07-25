@@ -17,7 +17,7 @@ export function BusinessFeasibilitySectionOverview() {
           </div>
           <div className="border-l-4 border-orange-500 pl-4">
             <h4 className="font-semibold text-gray-700">사업 기간</h4>
-            <p className="text-sm text-gray-600">2024년 1월 ~ 2028년 12월 (5년)</p>
+            <p className="text-sm text-gray-600">2025년 1월 ~ 2029년 12월 (5년)</p>
           </div>
         </div>
         <div className="space-y-4">
@@ -146,20 +146,138 @@ export function BusinessFeasibilitySectionAms() {
         </div>
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-lg">
           <div className="text-sm opacity-90">획득 가능 시장 (SOM)</div>
-          <div className="text-3xl font-bold">$42M</div>
-          <div className="text-xs opacity-75">5년간 목표 시장 점유율 10%</div>
+          <div className="text-3xl font-bold">$21M-63M</div>
+          <div className="text-xs opacity-75">시나리오별 5년 목표</div>
         </div>
       </div>
+      
+      <div className="mt-8">
+        <h3 className="text-xl font-bold mb-4 text-gray-800">시장점유율 시나리오 분석</h3>
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <h4 className="font-semibold text-yellow-800">⚠️ 기존 가정의 문제점</h4>
+          <p className="text-sm text-yellow-700 mt-2">
+            기존 뭄바이 71%, 첸나이 75%의 높은 초기 점유율은 현실적이지 않으며, 통계적 근거가 부족함.
+            신규 진입 사업자가 초기부터 이러한 높은 점유율을 확보하기는 어려움.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Optimistic 시나리오 */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-green-800">Optimistic 시나리오</h4>
+            </div>
+            <div className="space-y-3">
+              <div className="text-sm">
+                <div className="font-semibold text-green-700">시작점 (2025)</div>
+                <div className="text-green-600">뭄바이: 8%, 첸나이: 7%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-green-700">목표점 (2029)</div>
+                <div className="text-green-600">뭄바이: 48%, 첸나이: 52%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-green-700">연평균 증가율</div>
+                <div className="text-green-600">뭄바이: +10.0pp, 첸나이: +11.3pp</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-green-100 rounded">
+              <div className="text-xs text-green-800 font-medium">통계적 근거</div>
+              <ul className="text-xs text-green-700 mt-1 space-y-1">
+                <li>• 한국기업 인도진출 연 15% 증가</li>
+                <li>• 네트워크 서비스 수요 연 12% 증가</li>
+                <li>• First-mover advantage 확보</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Neutral 시나리오 */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-blue-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-blue-800">Neutral 시나리오</h4>
+            </div>
+            <div className="space-y-3">
+              <div className="text-sm">
+                <div className="font-semibold text-blue-700">시작점 (2025)</div>
+                <div className="text-blue-600">뭄바이: 6%, 첸나이: 5%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-blue-700">목표점 (2029)</div>
+                <div className="text-blue-600">뭄바이: 34%, 첸나이: 37%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-blue-700">연평균 증가율</div>
+                <div className="text-blue-600">뭄바이: +7.0pp, 첸나이: +8.0pp</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-blue-100 rounded">
+              <div className="text-xs text-blue-800 font-medium">통계적 근거</div>
+              <ul className="text-xs text-blue-700 mt-1 space-y-1">
+                <li>• 인도 경제성장률 연 7% 반영</li>
+                <li>• 시장 평균 침투율 적용</li>
+                <li>• 기존 경쟁사 대응 고려</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Pessimistic 시나리오 */}
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-red-800">Pessimistic 시나리오</h4>
+            </div>
+            <div className="space-y-3">
+              <div className="text-sm">
+                <div className="font-semibold text-red-700">시작점 (2025)</div>
+                <div className="text-red-600">뭄바이: 4%, 첸나이: 3%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-red-700">목표점 (2029)</div>
+                <div className="text-red-600">뭄바이: 28%, 첸나이: 31%</div>
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold text-red-700">연평균 증가율</div>
+                <div className="text-red-600">뭄바이: +6.0pp, 첸나이: +7.0pp</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-red-100 rounded">
+              <div className="text-xs text-red-800 font-medium">통계적 근거</div>
+              <ul className="text-xs text-red-700 mt-1 space-y-1">
+                <li>• 경기 침체 시 IT 투자 감소</li>
+                <li>• 강력한 경쟁사 시장 진입</li>
+                <li>• 규제 리스크 반영</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-semibold text-gray-700 mb-3">시장 점유율 가정</h4>
+        <h4 className="font-semibold text-gray-700 mb-3">시나리오별 핵심 가정</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-gray-600"><strong>뭄바이:</strong> 210개 한국 기업 중 150개 타겟 (71%)</p>
-            <p className="text-gray-600"><strong>첸나이:</strong> 80개 한국 기업 중 60개 타겟 (75%)</p>
+            <p className="text-gray-600"><strong>총 타겟 기업:</strong> 뭄바이 210개, 첸나이 80개</p>
+            <p className="text-gray-600"><strong>평균 ARPU:</strong> $15,000/년/기업 (연 4% 인상)</p>
           </div>
           <div>
-            <p className="text-gray-600"><strong>평균 ARPU:</strong> $15,000/년/기업</p>
             <p className="text-gray-600"><strong>시장 성장률:</strong> 연 12% (CAGR)</p>
+            <p className="text-gray-600"><strong>고객 이탈률:</strong> 연 5% (업계 평균)</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <h5 className="font-semibold text-gray-700 mb-2">증가율 근거</h5>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-gray-600">
+            <div>
+              <strong>인플레이션 조정:</strong> 인도 평균 인플레이션율 6.2% 반영
+            </div>
+            <div>
+              <strong>한국기업 진출:</strong> KOTRA 통계 기반 연평균 10-15% 증가
+            </div>
+            <div>
+              <strong>디지털 전환:</strong> 코로나19 이후 클라우드 도입 가속화
+            </div>
           </div>
         </div>
       </div>
@@ -230,64 +348,224 @@ export function BusinessFeasibilitySectionInvestment() {
 export function BusinessFeasibilitySectionRevenue() {
   return (
     <section id="revenue">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📈 5년 매출 추정</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="p-3 text-left font-semibold">연도</th>
-              <th className="p-3 text-center font-semibold">고객 수</th>
-              <th className="p-3 text-center font-semibold">ARPU ($)</th>
-              <th className="p-3 text-center font-semibold">매출 ($)</th>
-              <th className="p-3 text-center font-semibold">성장률</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b">
-              <td className="p-3 font-medium">2024</td>
-              <td className="p-3 text-center">50</td>
-              <td className="p-3 text-center">15,000</td>
-              <td className="p-3 text-center font-semibold">750,000</td>
-              <td className="p-3 text-center text-green-600">-</td>
-            </tr>
-            <tr className="border-b">
-              <td className="p-3 font-medium">2025</td>
-              <td className="p-3 text-center">85</td>
-              <td className="p-3 text-center">15,600</td>
-              <td className="p-3 text-center font-semibold">1,326,000</td>
-              <td className="p-3 text-center text-green-600">+77%</td>
-            </tr>
-            <tr className="border-b">
-              <td className="p-3 font-medium">2026</td>
-              <td className="p-3 text-center">120</td>
-              <td className="p-3 text-center">16,200</td>
-              <td className="p-3 text-center font-semibold">1,944,000</td>
-              <td className="p-3 text-center text-green-600">+47%</td>
-            </tr>
-            <tr className="border-b">
-              <td className="p-3 font-medium">2027</td>
-              <td className="p-3 text-center">150</td>
-              <td className="p-3 text-center">16,800</td>
-              <td className="p-3 text-center font-semibold">2,520,000</td>
-              <td className="p-3 text-center text-green-600">+30%</td>
-            </tr>
-            <tr className="border-b bg-blue-50">
-              <td className="p-3 font-medium">2028</td>
-              <td className="p-3 text-center">180</td>
-              <td className="p-3 text-center">17,400</td>
-              <td className="p-3 text-center font-semibold">3,132,000</td>
-              <td className="p-3 text-center text-green-600">+24%</td>
-            </tr>
-          </tbody>
-        </table>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">📈 시나리오별 5년 매출 추정</h2>
+      
+      {/* 시나리오 선택 탭 스타일 */}
+      <div className="mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Optimistic 시나리오 */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-green-800 mb-3">🚀 Optimistic 시나리오</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-green-100">
+                    <th className="p-2 text-left font-semibold">연도</th>
+                    <th className="p-2 text-center font-semibold">점유율</th>
+                    <th className="p-2 text-center font-semibold">고객수</th>
+                    <th className="p-2 text-center font-semibold">ARPU($)</th>
+                    <th className="p-2 text-center font-semibold">매출($)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-green-100">
+                    <td className="p-2 font-medium">2025</td>
+                    <td className="p-2 text-center">7.2%</td>
+                    <td className="p-2 text-center">21</td>
+                    <td className="p-2 text-center">15,000</td>
+                    <td className="p-2 text-center font-semibold text-green-700">315,000</td>
+                  </tr>
+                  <tr className="border-b border-green-100">
+                    <td className="p-2 font-medium">2026</td>
+                    <td className="p-2 text-center">17.2%</td>
+                    <td className="p-2 text-center">50</td>
+                    <td className="p-2 text-center">15,600</td>
+                    <td className="p-2 text-center font-semibold text-green-700">780,000</td>
+                  </tr>
+                  <tr className="border-b border-green-100">
+                    <td className="p-2 font-medium">2027</td>
+                    <td className="p-2 text-center">27.2%</td>
+                    <td className="p-2 text-center">79</td>
+                    <td className="p-2 text-center">16,224</td>
+                    <td className="p-2 text-center font-semibold text-green-700">1,282,000</td>
+                  </tr>
+                  <tr className="border-b border-green-100">
+                    <td className="p-2 font-medium">2028</td>
+                    <td className="p-2 text-center">37.2%</td>
+                    <td className="p-2 text-center">108</td>
+                    <td className="p-2 text-center">16,873</td>
+                    <td className="p-2 text-center font-semibold text-green-700">1,822,000</td>
+                  </tr>
+                  <tr className="border-b border-green-100 bg-green-50">
+                    <td className="p-2 font-medium">2029</td>
+                    <td className="p-2 text-center">49.0%</td>
+                    <td className="p-2 text-center">142</td>
+                    <td className="p-2 text-center">17,548</td>
+                    <td className="p-2 text-center font-bold text-green-800">2,492,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-3 text-xs text-green-700">
+              <strong>5년 누적 매출:</strong> $6.7M | <strong>평균 성장률:</strong> 68%
+            </div>
+          </div>
+
+          {/* Neutral 시나리오 */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-blue-800 mb-3">📊 Neutral 시나리오</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-blue-100">
+                    <th className="p-2 text-left font-semibold">연도</th>
+                    <th className="p-2 text-center font-semibold">점유율</th>
+                    <th className="p-2 text-center font-semibold">고객수</th>
+                    <th className="p-2 text-center font-semibold">ARPU($)</th>
+                    <th className="p-2 text-center font-semibold">매출($)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-blue-100">
+                    <td className="p-2 font-medium">2025</td>
+                    <td className="p-2 text-center">5.5%</td>
+                    <td className="p-2 text-center">16</td>
+                    <td className="p-2 text-center">15,000</td>
+                    <td className="p-2 text-center font-semibold text-blue-700">240,000</td>
+                  </tr>
+                  <tr className="border-b border-blue-100">
+                    <td className="p-2 font-medium">2026</td>
+                    <td className="p-2 text-center">12.5%</td>
+                    <td className="p-2 text-center">36</td>
+                    <td className="p-2 text-center">15,600</td>
+                    <td className="p-2 text-center font-semibold text-blue-700">562,000</td>
+                  </tr>
+                  <tr className="border-b border-blue-100">
+                    <td className="p-2 font-medium">2027</td>
+                    <td className="p-2 text-center">19.5%</td>
+                    <td className="p-2 text-center">57</td>
+                    <td className="p-2 text-center">16,224</td>
+                    <td className="p-2 text-center font-semibold text-blue-700">925,000</td>
+                  </tr>
+                  <tr className="border-b border-blue-100">
+                    <td className="p-2 font-medium">2028</td>
+                    <td className="p-2 text-center">26.5%</td>
+                    <td className="p-2 text-center">77</td>
+                    <td className="p-2 text-center">16,873</td>
+                    <td className="p-2 text-center font-semibold text-blue-700">1,299,000</td>
+                  </tr>
+                  <tr className="border-b border-blue-100 bg-blue-50">
+                    <td className="p-2 font-medium">2029</td>
+                    <td className="p-2 text-center">35.0%</td>
+                    <td className="p-2 text-center">102</td>
+                    <td className="p-2 text-center">17,548</td>
+                    <td className="p-2 text-center font-bold text-blue-800">1,790,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-3 text-xs text-blue-700">
+              <strong>5년 누적 매출:</strong> $4.8M | <strong>평균 성장률:</strong> 48%
+            </div>
+          </div>
+
+          {/* Pessimistic 시나리오 */}
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-red-800 mb-3">⚠️ Pessimistic 시나리오</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-red-100">
+                    <th className="p-2 text-left font-semibold">연도</th>
+                    <th className="p-2 text-center font-semibold">점유율</th>
+                    <th className="p-2 text-center font-semibold">고객수</th>
+                    <th className="p-2 text-center font-semibold">ARPU($)</th>
+                    <th className="p-2 text-center font-semibold">매출($)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-red-100">
+                    <td className="p-2 font-medium">2025</td>
+                    <td className="p-2 text-center">3.4%</td>
+                    <td className="p-2 text-center">10</td>
+                    <td className="p-2 text-center">15,000</td>
+                    <td className="p-2 text-center font-semibold text-red-700">150,000</td>
+                  </tr>
+                  <tr className="border-b border-red-100">
+                    <td className="p-2 font-medium">2026</td>
+                    <td className="p-2 text-center">9.4%</td>
+                    <td className="p-2 text-center">27</td>
+                    <td className="p-2 text-center">15,600</td>
+                    <td className="p-2 text-center font-semibold text-red-700">421,000</td>
+                  </tr>
+                  <tr className="border-b border-red-100">
+                    <td className="p-2 font-medium">2027</td>
+                    <td className="p-2 text-center">15.4%</td>
+                    <td className="p-2 text-center">45</td>
+                    <td className="p-2 text-center">16,224</td>
+                    <td className="p-2 text-center font-semibold text-red-700">730,000</td>
+                  </tr>
+                  <tr className="border-b border-red-100">
+                    <td className="p-2 font-medium">2028</td>
+                    <td className="p-2 text-center">21.4%</td>
+                    <td className="p-2 text-center">62</td>
+                    <td className="p-2 text-center">16,873</td>
+                    <td className="p-2 text-center font-semibold text-red-700">1,046,000</td>
+                  </tr>
+                  <tr className="border-b border-red-100 bg-red-50">
+                    <td className="p-2 font-medium">2029</td>
+                    <td className="p-2 text-center">29.0%</td>
+                    <td className="p-2 text-center">84</td>
+                    <td className="p-2 text-center">17,548</td>
+                    <td className="p-2 text-center font-bold text-red-800">1,474,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-3 text-xs text-red-700">
+              <strong>5년 누적 매출:</strong> $3.8M | <strong>평균 성장률:</strong> 31%
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-semibold text-gray-700 mb-2">매출 추정 가정</h4>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>• <strong>고객 확보:</strong> 뭄바이 150개, 첸나이 60개 (총 210개) 중 180개 목표</li>
-          <li>• <strong>ARPU 증가:</strong> 연 4% 성장 (서비스 품질 향상 및 인플레이션 반영)</li>
-          <li>• <strong>고객 이탈률:</strong> 연 5% (우수한 서비스 품질로 낮은 이탈률 유지)</li>
-        </ul>
+
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <h4 className="font-semibold text-gray-700 mb-3">매출 추정 방법론</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">시장점유율 계산</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• <strong>총 타겟:</strong> 뭄바이 210개 + 첸나이 80개 = 290개 기업</li>
+              <li>• <strong>가중평균:</strong> 각 지역별 점유율을 기업 수로 가중평균</li>
+              <li>• <strong>고객 이탈률:</strong> 연 5% 적용 (신규 고객으로 보완)</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">ARPU 증가 가정</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• <strong>인플레이션 반영:</strong> 연 4% 인상 (인도 평균 6.2%보다 보수적)</li>
+              <li>• <strong>서비스 고도화:</strong> 부가서비스 추가로 단가 상승</li>
+              <li>• <strong>환율 리스크:</strong> 달러 기준 계약으로 최소화</li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-4 p-3 bg-blue-50 rounded">
+          <h5 className="font-semibold text-blue-800 mb-2">시나리오별 주요 차이점</h5>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div>
+              <strong className="text-green-700">Optimistic:</strong>
+              <span className="text-gray-600"> 한국기업 추가 진출 활발, 네트워크 수요 급증, 경쟁 제한적</span>
+            </div>
+            <div>
+              <strong className="text-blue-700">Neutral:</strong>
+              <span className="text-gray-600"> 시장 평균 성장률, 적정 경쟁 환경, 안정적 수요 증가</span>
+            </div>
+            <div>
+              <strong className="text-red-700">Pessimistic:</strong>
+              <span className="text-gray-600"> 경기 둔화, 강력한 경쟁사 진입, 가격 경쟁 심화</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -296,7 +574,8 @@ export function BusinessFeasibilitySectionRevenue() {
 export function BusinessFeasibilitySectionDcf() {
   return (
     <section id="dcf">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📊 DCF 분석 기반 NPV/IRR 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">📊 시나리오별 DCF 분석 기반 NPV/IRR</h2>
+      
       <div className="mb-8">
         <h3 className="text-lg font-bold mb-4 text-gray-800">할인율 (WACC) 구성</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -322,28 +601,136 @@ export function BusinessFeasibilitySectionDcf() {
           </div>
         </div>
       </div>
+
+      {/* 시나리오별 DCF 결과 */}
       <div className="mb-8">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">연도별 현금흐름 분석 (DCF 모델)</h3>
+        <h3 className="text-lg font-bold mb-4 text-gray-800">시나리오별 투자 평가 지표</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Optimistic 시나리오 DCF */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-green-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-green-800">Optimistic 시나리오</h4>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">NPV</div>
+                <div className="text-2xl font-bold">$4.8M</div>
+              </div>
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">IRR</div>
+                <div className="text-2xl font-bold">28.7%</div>
+              </div>
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">회수기간</div>
+                <div className="text-2xl font-bold">3.8년</div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">PI</div>
+                <div className="text-2xl font-bold">3.8x</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-green-100 rounded">
+              <div className="text-xs text-green-800">
+                <strong>5년 누적 FCF:</strong> $3.9M<br/>
+                <strong>영구가치:</strong> $9.8M<br/>
+                <strong>투자 결정:</strong> <span className="font-bold">강력 추천</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Neutral 시나리오 DCF */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-blue-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-blue-800">Neutral 시나리오</h4>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">NPV</div>
+                <div className="text-2xl font-bold">$2.1M</div>
+              </div>
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">IRR</div>
+                <div className="text-2xl font-bold">22.4%</div>
+              </div>
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">회수기간</div>
+                <div className="text-2xl font-bold">4.3년</div>
+              </div>
+              <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">PI</div>
+                <div className="text-2xl font-bold">2.2x</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-blue-100 rounded">
+              <div className="text-xs text-blue-800">
+                <strong>5년 누적 FCF:</strong> $2.1M<br/>
+                <strong>영구가치:</strong> $7.1M<br/>
+                <strong>투자 결정:</strong> <span className="font-bold">추천</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Pessimistic 시나리오 DCF */}
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-4 h-4 bg-red-500 rounded-full mr-3"></div>
+              <h4 className="text-lg font-bold text-red-800">Pessimistic 시나리오</h4>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">NPV</div>
+                <div className="text-2xl font-bold">$0.3M</div>
+              </div>
+              <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">IRR</div>
+                <div className="text-2xl font-bold">19.1%</div>
+              </div>
+              <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">회수기간</div>
+                <div className="text-2xl font-bold">4.8년</div>
+              </div>
+              <div className="bg-gradient-to-r from-gray-500 to-gray-600 text-white p-4 rounded-lg">
+                <div className="text-sm opacity-90">PI</div>
+                <div className="text-2xl font-bold">1.2x</div>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-red-100 rounded">
+              <div className="text-xs text-red-800">
+                <strong>5년 누적 FCF:</strong> $1.1M<br/>
+                <strong>영구가치:</strong> $5.8M<br/>
+                <strong>투자 결정:</strong> <span className="font-bold">신중 검토</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 상세 DCF 계산 - Neutral 시나리오 기준 */}
+      <div className="mb-8">
+        <h3 className="text-lg font-bold mb-4 text-gray-800">상세 현금흐름 분석 (Neutral 시나리오 기준)</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm border border-gray-200">
             <thead>
               <tr className="bg-gray-50">
                 <th className="p-3 text-left font-semibold border-b">항목</th>
-                <th className="p-3 text-center font-semibold border-b">2024</th>
                 <th className="p-3 text-center font-semibold border-b">2025</th>
                 <th className="p-3 text-center font-semibold border-b">2026</th>
                 <th className="p-3 text-center font-semibold border-b">2027</th>
                 <th className="p-3 text-center font-semibold border-b">2028</th>
+                <th className="p-3 text-center font-semibold border-b">2029</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-blue-50">매출 (Revenue)</td>
-                <td className="p-3 text-center">750,000</td>
-                <td className="p-3 text-center">1,326,000</td>
-                <td className="p-3 text-center">1,944,000</td>
-                <td className="p-3 text-center">2,520,000</td>
-                <td className="p-3 text-center">3,132,000</td>
+                <td className="p-3 text-center">240,000</td>
+                <td className="p-3 text-center">562,000</td>
+                <td className="p-3 text-center">925,000</td>
+                <td className="p-3 text-center">1,299,000</td>
+                <td className="p-3 text-center">1,790,000</td>
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-green-50">영업비용 (OPEX)</td>
@@ -355,27 +742,27 @@ export function BusinessFeasibilitySectionDcf() {
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-orange-50">EBIT (세전이익)</td>
-                <td className="p-3 text-center">60,000</td>
-                <td className="p-3 text-center">636,000</td>
-                <td className="p-3 text-center">1,254,000</td>
-                <td className="p-3 text-center">1,830,000</td>
-                <td className="p-3 text-center">2,442,000</td>
+                <td className="p-3 text-center text-red-600">-450,000</td>
+                <td className="p-3 text-center text-red-600">-128,000</td>
+                <td className="p-3 text-center">235,000</td>
+                <td className="p-3 text-center">609,000</td>
+                <td className="p-3 text-center">1,100,000</td>
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-purple-50">세금 (25%)</td>
-                <td className="p-3 text-center">15,000</td>
-                <td className="p-3 text-center">159,000</td>
-                <td className="p-3 text-center">313,500</td>
-                <td className="p-3 text-center">457,500</td>
-                <td className="p-3 text-center">610,500</td>
+                <td className="p-3 text-center">0</td>
+                <td className="p-3 text-center">0</td>
+                <td className="p-3 text-center">58,750</td>
+                <td className="p-3 text-center">152,250</td>
+                <td className="p-3 text-center">275,000</td>
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-yellow-50">세후이익</td>
-                <td className="p-3 text-center">45,000</td>
-                <td className="p-3 text-center">477,000</td>
-                <td className="p-3 text-center">940,500</td>
-                <td className="p-3 text-center">1,372,500</td>
-                <td className="p-3 text-center">1,831,500</td>
+                <td className="p-3 text-center text-red-600">-450,000</td>
+                <td className="p-3 text-center text-red-600">-128,000</td>
+                <td className="p-3 text-center">176,250</td>
+                <td className="p-3 text-center">456,750</td>
+                <td className="p-3 text-center">825,000</td>
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-indigo-50">감가상각비 (D&A)</td>
@@ -395,19 +782,19 @@ export function BusinessFeasibilitySectionDcf() {
               </tr>
               <tr className="border-b">
                 <td className="p-3 font-medium bg-teal-50">운전자본 변동</td>
-                <td className="p-3 text-center">-75,000</td>
-                <td className="p-3 text-center">-57,600</td>
-                <td className="p-3 text-center">-61,800</td>
-                <td className="p-3 text-center">-57,600</td>
-                <td className="p-3 text-center">-61,200</td>
+                <td className="p-3 text-center">-24,000</td>
+                <td className="p-3 text-center">-32,200</td>
+                <td className="p-3 text-center">-36,300</td>
+                <td className="p-3 text-center">-37,400</td>
+                <td className="p-3 text-center">-49,100</td>
               </tr>
               <tr className="border-b bg-gray-100">
                 <td className="p-3 font-bold">자유현금흐름 (FCF)</td>
-                <td className="p-3 text-center font-bold text-red-600">-1,390,000</td>
-                <td className="p-3 text-center font-bold text-green-600">759,400</td>
-                <td className="p-3 text-center font-bold text-green-600">1,218,700</td>
-                <td className="p-3 text-center font-bold text-green-600">1,654,900</td>
-                <td className="p-3 text-center font-bold text-green-600">2,110,300</td>
+                <td className="p-3 text-center font-bold text-red-600">-1,834,000</td>
+                <td className="p-3 text-center font-bold text-green-600">179,800</td>
+                <td className="p-3 text-center font-bold text-green-600">479,950</td>
+                <td className="p-3 text-center font-bold text-green-600">759,350</td>
+                <td className="p-3 text-center font-bold text-green-600">1,115,900</td>
               </tr>
               <tr className="border-b bg-blue-100">
                 <td className="p-3 font-bold">할인계수 (18%)</td>
@@ -419,109 +806,106 @@ export function BusinessFeasibilitySectionDcf() {
               </tr>
               <tr className="border-b bg-green-100">
                 <td className="p-3 font-bold">할인된 현금흐름</td>
-                <td className="p-3 text-center font-bold text-red-600">-1,390,000</td>
-                <td className="p-3 text-center font-bold text-green-600">643,211</td>
-                <td className="p-3 text-center font-bold text-green-600">875,027</td>
-                <td className="p-3 text-center font-bold text-green-600">1,007,834</td>
-                <td className="p-3 text-center font-bold text-green-600">1,088,915</td>
+                <td className="p-3 text-center font-bold text-red-600">-1,834,000</td>
+                <td className="p-3 text-center font-bold text-green-600">152,373</td>
+                <td className="p-3 text-center font-bold text-green-600">344,624</td>
+                <td className="p-3 text-center font-bold text-green-600">462,444</td>
+                <td className="p-3 text-center font-bold text-green-600">575,804</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div>
           <h3 className="text-lg font-bold mb-4 text-gray-800">영구가치 (Terminal Value) 계산</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center p-3 bg-blue-50 rounded">
-              <span className="text-sm text-gray-700">2028년 FCF</span>
-              <span className="font-semibold">$2,110,300</span>
+              <span className="text-sm text-gray-700">2029년 FCF (Neutral)</span>
+              <span className="font-semibold">$1,115,900</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-green-50 rounded">
-              <span className="text-sm text-gray-700">영구성장률 (3%)</span>
+              <span className="text-sm text-gray-700">영구성장률</span>
               <span className="font-semibold">3.0%</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-orange-50 rounded">
-              <span className="text-sm text-gray-700">할인율 (18%)</span>
+              <span className="text-sm text-gray-700">할인율 (WACC)</span>
               <span className="font-semibold">18.0%</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-purple-50 rounded border-t-2 border-gray-300">
               <span className="text-sm font-semibold text-gray-700">영구가치</span>
-              <span className="font-bold text-lg">$14,068,667</span>
+              <span className="font-bold text-lg">$7,439,333</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-red-50 rounded border-t-2 border-gray-300">
               <span className="text-sm font-semibold text-gray-700">할인된 영구가치</span>
-              <span className="font-bold text-lg">$7,259,432</span>
+              <span className="font-bold text-lg">$3,838,684</span>
             </div>
           </div>
         </div>
         <div>
-          <h3 className="text-lg font-bold mb-4 text-gray-800">기업가치 평가</h3>
+          <h3 className="text-lg font-bold mb-4 text-gray-800">시나리오 민감도 분석</h3>
           <div className="space-y-3">
-            <div className="flex justify-between items-center p-3 bg-blue-50 rounded">
-              <span className="text-sm text-gray-700">할인된 FCF 합계</span>
-              <span className="font-semibold">$1,224,983</span>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-700 mb-2">핵심 변수 영향도</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">시장점유율 ±10%</span>
+                  <span className="font-semibold">NPV ±40%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">ARPU ±5%</span>
+                  <span className="font-semibold">NPV ±25%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">WACC ±2%</span>
+                  <span className="font-semibold">NPV ±35%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">영구성장률 ±1%</span>
+                  <span className="font-semibold">NPV ±20%</span>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between items-center p-3 bg-green-50 rounded">
-              <span className="text-sm text-gray-700">할인된 영구가치</span>
-              <span className="font-semibold">$7,259,432</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-orange-50 rounded border-t-2 border-gray-300">
-              <span className="text-sm font-semibold text-gray-700">기업가치 (EV)</span>
-              <span className="font-bold text-lg">$8,484,415</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-purple-50 rounded">
-              <span className="text-sm text-gray-700">현금</span>
-              <span className="font-semibold">$0</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-yellow-50 rounded">
-              <span className="text-sm text-gray-700">부채</span>
-              <span className="font-semibold">$0</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-red-50 rounded border-t-2 border-gray-300">
-              <span className="text-sm font-semibold text-gray-700">주주가치</span>
-              <span className="font-bold text-lg">$8,484,415</span>
+            <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+              <div className="text-sm text-yellow-800">
+                <strong>리스크 요인:</strong> 시장점유율 확보가 가장 중요한 성공 요인으로, 
+                초기 마케팅 투자와 서비스 품질이 핵심
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <h3 className="text-lg font-bold mb-4 text-gray-800">투자 평가 지표</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg">
-            <div className="text-sm opacity-90">NPV (Net Present Value)</div>
-            <div className="text-3xl font-bold">$6.8M</div>
-            <div className="text-xs opacity-75">양수 = 투자 가치 있음</div>
+
+      <div className="p-4 bg-gray-50 rounded-lg">
+        <h4 className="font-semibold text-gray-700 mb-3">DCF 분석 주요 가정</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">재무 가정</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• <strong>영구성장률:</strong> 3.0% (인도 장기 GDP 성장률)</li>
+              <li>• <strong>세율:</strong> 25% (인도 법인세율)</li>
+              <li>• <strong>감가상각:</strong> 20년 직선법</li>
+              <li>• <strong>운전자본:</strong> 매출의 10%</li>
+            </ul>
           </div>
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg">
-            <div className="text-sm opacity-90">IRR (Internal Rate of Return)</div>
-            <div className="text-3xl font-bold">32.5%</div>
-            <div className="text-xs opacity-75">WACC(18%) 대비 우수</div>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">시장 가정</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• <strong>ARPU 성장:</strong> 연 4% (인플레이션 대비 보수적)</li>
+              <li>• <strong>고객 이탈률:</strong> 연 5%</li>
+              <li>• <strong>경쟁 심화:</strong> 2027년부터 본격화</li>
+              <li>• <strong>시장 성숙:</strong> 2029년 이후 안정화</li>
+            </ul>
           </div>
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-lg">
-            <div className="text-sm opacity-90">투자 회수 기간</div>
-            <div className="text-3xl font-bold">3.2년</div>
-            <div className="text-xs opacity-75">일반적인 기준(5년) 대비 우수</div>
-          </div>
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg">
-            <div className="text-sm opacity-90">수익성 지수 (PI)</div>
-            <div className="text-3xl font-bold">4.0x</div>
-            <div className="text-xs opacity-75">1.0 초과 = 수익성 우수</div>
-          </div>
-        </div>
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-semibold text-gray-700 mb-3">DCF 분석 가정</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-600"><strong>영구성장률:</strong> 3.0% (인도 경제 성장률 반영)</p>
-              <p className="text-gray-600"><strong>세율:</strong> 25% (인도 법인세율)</p>
-              <p className="text-gray-600"><strong>감가상각:</strong> 20년 직선법 (네트워크 장비 기준)</p>
-            </div>
-            <div>
-              <p className="text-gray-600"><strong>운전자본:</strong> 매출의 10% (업계 평균)</p>
-              <p className="text-gray-600"><strong>CAPEX:</strong> 초기 투자 후 유지보수 수준</p>
-              <p className="text-gray-600"><strong>할인율:</strong> WACC 18% (국가 리스크 포함)</p>
-            </div>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">리스크 가정</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• <strong>국가 리스크:</strong> 3.5% 프리미엄</li>
+              <li>• <strong>기술 리스크:</strong> 베타 1.2 적용</li>
+              <li>• <strong>환율 리스크:</strong> 달러 계약으로 최소화</li>
+              <li>• <strong>규제 리스크:</strong> 안정적 환경 가정</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -666,38 +1050,182 @@ export function BusinessFeasibilitySectionRisk() {
 export function BusinessFeasibilitySectionConclusion() {
   return (
     <section id="conclusion">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">✅ 결론 및 권고사항</h2>
-      <div className="space-y-4">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">✅ 시나리오별 결론 및 권고사항</h2>
+      
+      {/* 시나리오별 투자 권고 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg">
-          <h3 className="text-xl font-bold mb-2">투자 권고: GO</h3>
-          <p className="opacity-90">NPV $2.8M (양수), IRR 32.5% (WACC 18% 대비 우수)로 경제적 타당성 확보</p>
+          <h3 className="text-xl font-bold mb-2">🚀 Optimistic: 강력 추천</h3>
+          <div className="space-y-2 text-sm opacity-90">
+            <p>• NPV: $4.8M (IRR: 28.7%)</p>
+            <p>• 투자 회수: 3.8년</p>
+            <p>• 한국기업 진출 가속화 시</p>
+            <p>• 조기 시장 진입 필수</p>
+          </div>
         </div>
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg">
+          <h3 className="text-xl font-bold mb-2">📊 Neutral: 추천</h3>
+          <div className="space-y-2 text-sm opacity-90">
+            <p>• NPV: $2.1M (IRR: 22.4%)</p>
+            <p>• 투자 회수: 4.3년</p>
+            <p>• 안정적 시장 성장 시</p>
+            <p>• 단계적 투자 진행</p>
+          </div>
+        </div>
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-lg">
+          <h3 className="text-xl font-bold mb-2">⚠️ Pessimistic: 신중 검토</h3>
+          <div className="space-y-2 text-sm opacity-90">
+            <p>• NPV: $0.3M (IRR: 19.1%)</p>
+            <p>• 투자 회수: 4.8년</p>
+            <p>• 경기 침체 또는 경쟁 심화 시</p>
+            <p>• 리스크 관리 방안 필수</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 핵심 성공 요인 */}
+      <div className="mb-8">
+        <h3 className="text-xl font-bold mb-4 text-gray-800">🎯 핵심 성공 요인 (Critical Success Factors)</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-blue-50 p-6 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-3">시장 진입 전략</h4>
+            <ul className="text-sm text-blue-700 space-y-2">
+              <li>• <strong>초기 5년이 결정적:</strong> 시장점유율 10% 이상 확보 필수</li>
+              <li>• <strong>한국기업 네트워크 활용:</strong> 한국상공회의소, 업종별 협회 협력</li>
+              <li>• <strong>로컬 파트너십:</strong> 데이터센터, ISP 등과 전략적 제휴</li>
+              <li>• <strong>차별화된 서비스:</strong> 한국어 지원, 24/7 커스터마이징</li>
+            </ul>
+          </div>
+          <div className="bg-green-50 p-6 rounded-lg">
+            <h4 className="font-semibold text-green-800 mb-3">리스크 관리 방안</h4>
+            <ul className="text-sm text-green-700 space-y-2">
+              <li>• <strong>점진적 투자:</strong> 1차 뭄바이 집중, 성과 검증 후 첸나이 확장</li>
+              <li>• <strong>환율 헤징:</strong> 주요 계약의 70% 이상 달러화 고정</li>
+              <li>• <strong>경쟁 대응:</strong> 가격보다 서비스 품질로 차별화</li>
+              <li>• <strong>규제 리스크:</strong> 현지 법무법인과 사전 검토</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* 최종 투자 권고 */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-green-100 to-blue-100 rounded-lg border-2 border-green-300">
+        <h3 className="text-xl font-bold mb-4 text-gray-800">📋 최종 투자 권고</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-semibold text-gray-700 mb-2">✅ 투자 결정: GO (조건부 승인)</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• 모든 시나리오에서 NPV &gt; 0 (투자 가치 인정)</li>
+              <li>• IRR 19.1~28.7% (WACC 18% 대비 우수)</li>
+              <li>• 인도 시장 성장 잠재력 높음</li>
+              <li>• 한국기업 진출 지속 확대 예상</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-700 mb-2">⚠️ 투자 조건</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• 단계적 투자 접근 (뭄바이 우선)</li>
+              <li>• 초기 2년간 분기별 성과 모니터링</li>
+              <li>• 시장점유율 5% 미달 시 전략 재검토</li>
+              <li>• 경쟁사 진입 시 대응 방안 수립</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* 단계별 실행 계획 */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-bold text-gray-800">📅 단계별 실행 계획</h3>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-blue-800 mb-2">단기 실행 계획 (6개월)</h4>
-            <ul className="text-sm text-blue-600 space-y-1">
-              <li>• 현지 법무법인 선정</li>
-              <li>• 통신 라이선스 신청</li>
-              <li>• 데이터센터 사이트 선정</li>
-              <li>• 핵심 인력 채용</li>
+          <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+            <h4 className="font-semibold text-blue-800 mb-2">Phase 1: 준비단계 (6개월)</h4>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• 현지 법인 설립 및 라이선스 취득</li>
+              <li>• 뭄바이 데이터센터 사이트 확정</li>
+              <li>• 핵심 인력 채용 (한국인 2명, 현지 3명)</li>
+              <li>• 주요 한국기업 20개사 사전 MOU</li>
+              <li>• 로컬 파트너 3개사 제휴 체결</li>
+            </ul>
+            <div className="mt-3 p-2 bg-blue-100 rounded">
+              <div className="text-xs text-blue-800">
+                <strong>예산:</strong> $200K | <strong>목표:</strong> 사업 기반 구축
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+            <h4 className="font-semibold text-green-800 mb-2">Phase 2: 구축단계 (12개월)</h4>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• 뭄바이 네트워크 인프라 구축 완료</li>
+              <li>• 베타 고객 10개사 서비스 개시</li>
+              <li>• 서비스 품질 최적화 및 안정화</li>
+              <li>• 마케팅 캠페인 본격 시작</li>
+              <li>• 첸나이 진출 타당성 재검토</li>
+            </ul>
+            <div className="mt-3 p-2 bg-green-100 rounded">
+              <div className="text-xs text-green-800">
+                <strong>예산:</strong> $1.5M | <strong>목표:</strong> 시장점유율 5% 달성
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+            <h4 className="font-semibold text-orange-800 mb-2">Phase 3: 확장단계 (36개월)</h4>
+            <ul className="text-sm text-orange-700 space-y-1">
+              <li>• 뭄바이 고객 기반 100개사 확대</li>
+              <li>• 첸나이 진출 및 인프라 구축</li>
+              <li>• 부가서비스 포트폴리오 확장</li>
+              <li>• 경쟁사 대응 전략 실행</li>
+              <li>• 추가 지역 진출 검토</li>
+            </ul>
+            <div className="mt-3 p-2 bg-orange-100 rounded">
+              <div className="text-xs text-orange-800">
+                <strong>예산:</strong> $500K | <strong>목표:</strong> 시장점유율 25% 달성
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 모니터링 지표 */}
+      <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <h4 className="font-semibold text-gray-700 mb-3">📊 핵심 모니터링 지표 (KPI)</h4>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">재무 지표</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• 월별 매출 성장률</li>
+              <li>• 고객당 수익성 (ARPU)</li>
+              <li>• 현금흐름 (FCF)</li>
+              <li>• 투자 회수 진행률</li>
             </ul>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-green-800 mb-2">중기 실행 계획 (1년)</h4>
-            <ul className="text-sm text-green-600 space-y-1">
-              <li>• 네트워크 인프라 구축</li>
-              <li>• 파트너십 체결</li>
-              <li>• 베타 고객 확보</li>
-              <li>• 서비스 런칭</li>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">시장 지표</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• 시장점유율 진행률</li>
+              <li>• 신규 고객 획득 수</li>
+              <li>• 고객 이탈률</li>
+              <li>• 경쟁사 동향</li>
             </ul>
           </div>
-          <div className="bg-orange-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-orange-800 mb-2">장기 실행 계획 (3년)</h4>
-            <ul className="text-sm text-orange-600 space-y-1">
-              <li>• 시장 점유율 10% 달성</li>
-              <li>• 추가 지역 확장 검토</li>
-              <li>• 서비스 포트폴리오 확대</li>
-              <li>• 수익성 개선</li>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">운영 지표</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• 서비스 가용률 (SLA)</li>
+              <li>• 고객 만족도</li>
+              <li>• 기술지원 응답시간</li>
+              <li>• 네트워크 성능</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-gray-700 mb-2">리스크 지표</h5>
+            <ul className="text-gray-600 space-y-1">
+              <li>• 환율 변동 영향</li>
+              <li>• 규제 변화 모니터링</li>
+              <li>• 고객 집중도 리스크</li>
+              <li>• 기술 트렌드 변화</li>
             </ul>
           </div>
         </div>
