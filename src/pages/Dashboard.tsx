@@ -150,7 +150,7 @@ export function Dashboard() {
       </div>
 
       {/* 사이드바 */}
-      <aside className="w-64 bg-gray-200 text-gray-900 flex flex-col fixed left-0 top-16 h-full">
+      <aside className="w-64 bg-gray-200 text-gray-900 flex flex-col fixed left-0 top-16 h-full overflow-y-auto">
         <nav className="flex-1 px-4 py-6 space-y-2">
           {/* 데이터 분석 */}
           <div className="text-gray-500 text-xs mb-2">데이터 분석</div>
