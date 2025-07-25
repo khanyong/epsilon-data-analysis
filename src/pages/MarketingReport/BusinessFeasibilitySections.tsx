@@ -153,13 +153,6 @@ export function BusinessFeasibilitySectionAms() {
       
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4 text-gray-800">시장점유율 시나리오 분석</h3>
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-          <h4 className="font-semibold text-yellow-800">⚠️ 기존 가정의 문제점</h4>
-          <p className="text-sm text-yellow-700 mt-2">
-            기존 뭄바이 71%, 첸나이 75%의 높은 초기 점유율은 현실적이지 않으며, 통계적 근거가 부족함.
-            신규 진입 사업자가 초기부터 이러한 높은 점유율을 확보하기는 어려움.
-          </p>
-        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Optimistic 시나리오 */}
