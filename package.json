@@ -11,6 +11,7 @@
     "advanced-normalize": "node src/scripts/runAdvancedNormalization.js"
   },
   "dependencies": {
+    "@supabase/mcp-server-supabase": "^0.4.5",
     "@supabase/supabase-js": "^2.52.0",
     "@types/marked": "^5.0.2",
     "@types/react-router-dom": "^5.3.3",
