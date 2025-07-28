@@ -67,7 +67,7 @@ export function BusinessFeasibilitySectionDcf() {
     const basePrice = 1160;
     const baseCustomers = region === 'mumbai' ? 5 : 3;
     const baseProduct = 10;
-    const capex = 82000; // 투자 비용 분석에서 가져온 값
+    const capex = 41000; // 투자 비용 분석에서 가져온 값
     const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
     
     const revenues: number[] = [];
@@ -428,7 +428,7 @@ export function BusinessFeasibilitySectionDcf() {
             <li>• OPEX 증가율: 3%</li>
             <li>• 세율: 25%</li>
             <li>• 감가상각: 5년 직선법</li>
-            <li>• 초기 투자: $82,000 (CAPEX)</li>
+            <li>• 초기 투자: $41,000 (CAPEX)</li>
             <li>• 연간 OPEX: $3,200</li>
           </ul>
         </div>

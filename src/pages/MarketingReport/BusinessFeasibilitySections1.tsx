@@ -216,7 +216,7 @@ export function BusinessFeasibilitySectionMumbai() {
                   <h4 className="font-semibold text-blue-700 mb-2">시장 현황</h4>
                   <ul className="text-sm text-blue-600 space-y-1">
                     <li>• 총 타겟 고객: 150개 기업</li>
-                    <li>• 연간 시장 규모: $8.5M</li>
+                    <li>• 연간 시장 규모: $2.7M</li>
                     <li>• 예상 성장률: 12% (연간)</li>
                     <li>• 평균 ARPU: $1,500/월</li>
                   </ul>
@@ -225,7 +225,7 @@ export function BusinessFeasibilitySectionMumbai() {
                   <h4 className="font-semibold text-blue-700 mb-2">성장 전망</h4>
                   <ul className="text-sm text-blue-600 space-y-1">
                     <li>• 2029년까지 210개 기업으로 확대</li>
-                    <li>• 시장 규모 $12.5M 예상</li>
+                    <li>• 시장 규모 $3.8M 예상</li>
                     <li>• IT 서비스 수요 지속 증가</li>
                     <li>• 디지털 전환 가속화</li>
                   </ul>
@@ -371,7 +371,7 @@ export function BusinessFeasibilitySectionChennai() {
                   <h4 className="font-semibold text-orange-700 mb-2">시장 현황</h4>
                   <ul className="text-sm text-orange-600 space-y-1">
                     <li>• 총 타겟 고객: 120개 기업</li>
-                    <li>• 연간 시장 규모: $6.0M</li>
+                    <li>• 연간 시장 규모: $1.44M</li>
                     <li>• 예상 성장률: 8% (연간)</li>
                     <li>• 평균 ARPU: $1,000/월</li>
                   </ul>
@@ -380,7 +380,7 @@ export function BusinessFeasibilitySectionChennai() {
                   <h4 className="font-semibold text-orange-700 mb-2">성장 전망</h4>
                   <ul className="text-sm text-orange-600 space-y-1">
                     <li>• 2029년까지 180개 기업으로 확대</li>
-                    <li>• 시장 규모 $7.2M 예상</li>
+                    <li>• 시장 규모 $2.2M 예상</li>
                     <li>• 제조업 중심 성장</li>
                     <li>• 자동차 산업 확장</li>
                   </ul>
