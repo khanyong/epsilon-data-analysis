@@ -761,43 +761,43 @@ export function BusinessFeasibilitySectionRevenue() {
                     <>
                       <tr className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2025</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">3</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">30</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">4</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">40</td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,160</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$34,800</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$34,800</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$46,400</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$46,400</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2026</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">6</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">60</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">8</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">80</td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,206</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$72,360</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$72,360</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$96,480</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$96,480</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2027</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">9</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">90</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">12</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">120</td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,254</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$112,860</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$112,860</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$150,480</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$150,480</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2028</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">12</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">120</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">16</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">160</td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,304</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$156,480</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$156,480</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$208,640</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$208,640</td>
                       </tr>
                       <tr className="hover:bg-gray-50">
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2029</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">15</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">150</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">20</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">200</td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,356</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$203,400</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$203,400</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$271,200</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$271,200</td>
                       </tr>
                     </>
                   )}
@@ -825,7 +825,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 뭄바이 금융센터에 인도 본사 설립 (2018년)</li>
                     <li>• <strong>업종 성장세:</strong> 인도 전자제품 시장 연평균 15% 성장</li>
                     <li>• <strong>네트워크 수요:</strong> 글로벌 R&D센터 연동으로 고대역폭 필요</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 최대 한국 기업, 연매출 $10B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 인도 전자제품 시장 선도기업, 연매출 $10B+</li>
                     <li>• <strong>지역 특성:</strong> 뭄바이 IT 허브와 금융센터 접근성 우수</li>
                   </ul>
                 </div>
@@ -836,7 +836,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 뭄바이에 인도 마케팅 본부 운영 (2020년)</li>
                     <li>• <strong>업종 성장세:</strong> 인도 자동차 시장 연평균 8% 성장, 전기차 25%</li>
                     <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 연동</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 자동차 시장 점유율 2위, 연매출 $5B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 인도 자동차 시장 주요 기업, 연매출 $5B+</li>
                     <li>• <strong>지역 특성:</strong> 뭄바이 물류 허브로 부품 공급망 관리</li>
                   </ul>
                 </div>
@@ -847,7 +847,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 뭄바이에 인도 본사 및 R&D센터 운영 (2019년)</li>
                     <li>• <strong>업종 성장세:</strong> 인도 가전시장 연평균 12% 성장, 스마트홈 20%</li>
                     <li>• <strong>네트워크 수요:</strong> IoT 디바이스 관리 플랫폼 운영</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 가전시장 점유율 3위, 연매출 $3B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 인도 가전시장 주요 기업, 연매출 $3B+</li>
                     <li>• <strong>지역 특성:</strong> 뭄바이 IT 인프라 활용한 디지털 전환 추진</li>
                   </ul>
                 </div>
@@ -869,7 +869,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 뭄바이에 인도 본사 및 물류센터 운영 (2017년)</li>
                     <li>• <strong>업종 성장세:</strong> 인도 철강 시장 연평균 6% 성장, 건설붐 지속</li>
                     <li>• <strong>네트워크 수요:</strong> 전국 물류센터와 실시간 재고 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 철강 수입 1위, 연매출 $4B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 인도 철강 수입 주요 기업, 연매출 $4B+</li>
                     <li>• <strong>지역 특성:</strong> 뭄바이 항만과 철도 연결로 물류 효율성 극대화</li>
                   </ul>
                 </div>
@@ -878,56 +878,46 @@ export function BusinessFeasibilitySectionRevenue() {
 
             {/* 2026년 추가 타겟 고객 */}
             <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-800 mb-3">2026년 추가 타겟 고객 (10개사 누적)</h4>
+              <h4 className="font-semibold text-green-800 mb-3">2026년 추가 타겟 고객 (8개사 누적)</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">6. 네이버 인도</h5>
+                  <h5 className="font-semibold text-gray-800 mb-2">5. 대우건설 첸나이</h5>
                   <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• IT 서비스 업계</li>
+                    <li>• 건설업계</li>
+                    <li>• 한국 기업으로 프로젝트 이해</li>
+                    <li>• 첸나이 인프라 개발</li>
+                    <li>• 현장 관리 네트워크</li>
+                  </ul>
+                </div>
+                <div className="bg-white p-3 rounded-lg border">
+                  <h5 className="font-semibold text-gray-800 mb-2">6. 현대건설 첸나이</h5>
+                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 건설업계</li>
                     <li>• 한국 기업으로 기술적 이해</li>
-                    <li>• 뭄바이 IT 허브 진출</li>
-                    <li>• 클라우드 서비스 확장</li>
+                    <li>• 첸나이 개발 프로젝트</li>
+                    <li>• 안전 관리 시스템</li>
                   </ul>
                 </div>
                 <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">7. 카카오 인도</h5>
+                  <h5 className="font-semibold text-gray-800 mb-2">7. 한화생명 첸나이</h5>
                   <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 모바일 플랫폼 업계</li>
+                    <li>• 보험업계</li>
                     <li>• 한국 기업으로 서비스 이해</li>
-                    <li>• 뭄바이 시장 진출</li>
-                    <li>• 글로벌 서비스 확장</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">8. 쿠팡 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 이커머스 업계</li>
-                    <li>• 한국 기업으로 비즈니스 모델 이해</li>
-                    <li>• 뭄바이 물류 허브</li>
-                    <li>• 대규모 트래픽 처리 필요</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">9. 배달의민족 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 배달 서비스 업계</li>
-                    <li>• 한국 기업으로 서비스 이해</li>
-                    <li>• 뭄바이 시장 진출</li>
-                    <li>• 실시간 위치 기반 서비스</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">10. 토스 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 핀테크 업계</li>
-                    <li>• 한국 기업으로 금융 서비스 이해</li>
-                    <li>• 뭄바이 금융센터</li>
+                    <li>• 첸나이 시장 진출</li>
                     <li>• 보안 네트워크 요구</li>
+                  </ul>
+                </div>
+                <div className="bg-white p-3 rounded-lg border">
+                  <h5 className="font-semibold text-gray-800 mb-2">8. CJ대한통운 첸나이</h5>
+                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 물류업계</li>
+                    <li>• 한국 기업으로 물류 이해</li>
+                    <li>• 첸나이 물류 허브</li>
+                    <li>• 실시간 추적 시스템</li>
                   </ul>
                 </div>
               </div>
@@ -935,7 +925,7 @@ export function BusinessFeasibilitySectionRevenue() {
 
             {/* 2027-2029년 추가 고객 */}
             <div className="bg-purple-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-purple-800 mb-3">2027-2029년 추가 타겟 고객 (15-25개사)</h4>
+              <h4 className="font-semibold text-purple-800 mb-3">2027-2029년 추가 타겟 고객 (12-20개사)</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-3 rounded-lg border">
                   <h5 className="font-semibold text-gray-800 mb-2">추가 대상 업종</h5>
@@ -973,7 +963,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 첸나이 근교 스리페룸부두르에 제조공장 운영 (1998년)</li>
                     <li>• <strong>업종 성장세:</strong> 첸나이 자동차 클러스터 연평균 10% 성장, 전기차 생산 확대</li>
                     <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 생산 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 최대 한국 기업, 연생산 70만대, 연매출 $8B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 중심 기업, 연생산 70만대, 연매출 $8B+</li>
                     <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터 중심, 부품업체 200개 이상 집적</li>
                   </ul>
                 </div>
@@ -984,7 +974,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 첸나이 근교 아난탈루르에 제조공장 운영 (2019년)</li>
                     <li>• <strong>업종 성장세:</strong> 첸나이 자동차 시장 연평균 12% 성장, SUV 수요 급증</li>
                     <li>• <strong>네트워크 수요:</strong> 현대자동차와 공유하는 부품 공급망 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 시장 점유율 3위, 연생산 30만대</li>
+                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 내 주요 기업, 연생산 30만대</li>
                     <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터 내 현대자동차와 시너지</li>
                   </ul>
                 </div>
@@ -995,7 +985,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 첸나이 근교 마하발리푸람에 화학공장 운영 (2020년)</li>
                     <li>• <strong>업종 성장세:</strong> 첸나이 화학산업 연평균 8% 성장, 전기차 배터리 수요 급증</li>
                     <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 안전 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 화학업계 선도기업, 연매출 $2B+</li>
+                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 연계 화학업계, 연매출 $2B+</li>
                     <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터와 배터리 공급망 연계</li>
                   </ul>
                 </div>
@@ -1006,7 +996,7 @@ export function BusinessFeasibilitySectionRevenue() {
                     <li>• <strong>진출 현황:</strong> 첸나이 근교 엔노르에 철강공장 운영 (2018년)</li>
                     <li>• <strong>업종 성장세:</strong> 첸나이 제조업 연평균 7% 성장, 건설붐 지속</li>
                     <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 물류센터 간 실시간 재고 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 철강업계 1위, 연생산 500만톤</li>
+                    <li>• <strong>KOTRA 자료:</strong> 첸나이 제조업 클러스터 주요 기업, 연생산 500만톤</li>
                     <li>• <strong>지역 특성:</strong> 첸나이 제조업 클러스터와 철강 수요 연계</li>
                   </ul>
                 </div>
