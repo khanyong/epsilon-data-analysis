@@ -65,7 +65,7 @@ export function BusinessFeasibilitySectionDcf() {
   // Base 매출 데이터 (매출 추정에서 계산된 실제 값)
   const getBaseRevenueData = (region: 'mumbai' | 'chennai') => {
     const basePrice = 1160;
-    const baseCustomers = region === 'mumbai' ? 5 : 3;
+    const baseCustomers = region === 'mumbai' ? 5 : 5; // 첸나이 고객 수를 5로 증가
     const baseProduct = 10;
     const capex = 41000; // 투자 비용 분석에서 가져온 값
     const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
