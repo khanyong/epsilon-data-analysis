@@ -604,14 +604,14 @@ export function BusinessFeasibilitySectionRevenue() {
             
             <div className="mt-4 p-3 bg-green-50 rounded-lg">
               <p className="font-semibold text-green-800">✅ 결론</p>
-              <p>"기업이 많이 진출했다 = 매력적인 시장"이라는 직관은 틀릴 수 있습니다.</p>
+              <p>"기업이 많은 진출 = 시장 매력도 상승"이라고 판단이 가능하나,</p>
               <p>실제로는:</p>
               <ul className="ml-4 space-y-1">
                 <li>• 과도한 경쟁은 새로운 진출자에게 불리</li>
                 <li>• 시장 다양성이 더 큰 기회 제공</li>
                 <li>• 성장 잠재력이 현재 규모보다 중요</li>
               </ul>
-              <p className="font-semibold mt-2">따라서 뭄바이가 첸나이보다 더 매력적인 시장이라는 분석이 논리적으로 타당합니다!</p>
+              <p className="font-semibold mt-2">따라서 뭄바이가 첸나이보다 더 매력적인 시장으로 판단됩니다.</p>
             </div>
           </div>
         </div>

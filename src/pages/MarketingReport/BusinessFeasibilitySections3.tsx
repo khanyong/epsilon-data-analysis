@@ -92,14 +92,25 @@ export function BusinessFeasibilitySectionDcf() {
       pessimistic: 0.75  // -25%
     };
     
+    // 연도별 COGS (이미지 데이터 기반)
+    const cogsByYear = [
+      55110,  // 2025: $55,110
+      135485, // 2026: $135,485
+      153430, // 2027: $153,430
+      164114, // 2028: $164,114
+      175874  // 2029: $175,874
+    ];
+    
     const adjustment = revenueAdjustments[scenario];
     const cashFlows: number[] = [-capex]; // 초기 투자
     
     for (let year = 1; year <= 5; year++) {
       const adjustedRevenue = revenues[year - 1] * adjustment;
+      const cogs = cogsByYear[year - 1]; // 실제 COGS 데이터 사용
+      const grossProfit = adjustedRevenue - cogs;
       const opex = annualOpex * Math.pow(1.03, year); // 3% 증가
-      const ebitda = adjustedRevenue - opex;
-      const tax = ebitda * 0.25; // 25% 세율
+      const ebitda = grossProfit - opex;
+      const tax = ebitda > 0 ? ebitda * 0.25 : 0; // EBITDA가 양수일 때만 세금 계산
       const netIncome = ebitda - tax;
       const depreciation = capex / 5; // 5년 상각
       const operatingCashFlow = netIncome + depreciation;
@@ -123,6 +134,8 @@ export function BusinessFeasibilitySectionDcf() {
     const details: Array<{
       year: number;
       revenue: number;
+      cogs: number;
+      grossProfit: number;
       opex: number;
       ebitda: number;
       tax: number;
@@ -131,11 +144,31 @@ export function BusinessFeasibilitySectionDcf() {
       operatingCashFlow: number;
     }> = [];
     
+    // COGS 구성 요소 (이미지 데이터 기반)
+    const cogsComponents = {
+      backbone: { mrc: 2500, arc: 30000 },
+      fiberXc: { mrc: 1800, arc: 21600 },
+      colocation: { mrc: 1350, arc: 16200 },
+      supportHw: { mrc: 167, arc: 2004 },
+      localLoop: { mrc: 3400, arc: 40800 }
+    };
+    
+    // 연도별 COGS 계산 (이미지 데이터 기반)
+    const cogsByYear = [
+      55110,  // 2025: $55,110
+      135485, // 2026: $135,485
+      153430, // 2027: $153,430
+      164114, // 2028: $164,114
+      175874  // 2029: $175,874
+    ];
+    
     for (let year = 1; year <= 5; year++) {
       const adjustedRevenue = revenues[year - 1] * adjustment;
+      const cogs = cogsByYear[year - 1]; // 실제 COGS 데이터 사용
+      const grossProfit = adjustedRevenue - cogs;
       const opex = annualOpex * Math.pow(1.03, year);
-      const ebitda = adjustedRevenue - opex;
-      const tax = ebitda * 0.25;
+      const ebitda = grossProfit - opex;
+      const tax = ebitda > 0 ? ebitda * 0.25 : 0;
       const netIncome = ebitda - tax;
       const depreciation = capex / 5;
       const operatingCashFlow = netIncome + depreciation;
@@ -143,6 +176,8 @@ export function BusinessFeasibilitySectionDcf() {
       details.push({
         year,
         revenue: adjustedRevenue,
+        cogs,
+        grossProfit,
         opex,
         ebitda,
         tax,
@@ -313,6 +348,203 @@ export function BusinessFeasibilitySectionDcf() {
             </div>
           </div>
 
+          {/* COGS 상세 분석 */}
+          <div className="mb-8">
+            <h3 className="text-lg font-bold mb-4 text-gray-800">📊 COGS (매출원가) 상세 분석</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      COGS 항목
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      공급업체
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      용량
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      MRC (USD)
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      ARC (USD)
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      2025
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      2026
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      2027
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      2028
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      2029
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {/* On net Backbone 섹션 */}
+                  <tr className="bg-blue-50">
+                    <td className="px-4 py-3 text-sm font-semibold text-blue-800 border-b" colSpan={10}>
+                      On net Backbone
+                    </td>
+                  </tr>
+                  {/* Backbone */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Sify</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">1G</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,500</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$30,000</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$22,500</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$57,000</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$71,250</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$85,500</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$99,750</td>
+                  </tr>
+                  {/* Fiber XC */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Fiber XC</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$150</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$900</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,672</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,543</td>
+                  </tr>
+                  {/* Colocation */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Colocation</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Digital Realty</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,350</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$8,100</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
+                  </tr>
+                  {/* Support HW */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Support (HW)</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$167</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,002</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,851</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,718</td>
+                  </tr>
+                  {/* On net Backbone 합계 */}
+                  <tr className="bg-blue-100 font-semibold">
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b" colSpan={5}>On net Backbone 합계</td>
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$32,502</td>
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$77,004</td>
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$91,254</td>
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$104,077</td>
+                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$116,901</td>
+                  </tr>
+
+                  {/* Local Loop (Cloud Connect) 섹션 */}
+                  <tr className="bg-green-50">
+                    <td className="px-4 py-3 text-sm font-semibold text-green-800 border-b" colSpan={10}>
+                      Local Loop (Cloud Connect)
+                    </td>
+                  </tr>
+                  {/* Cloud Connect */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Cloud Connect</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">FTP</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$12,408</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$17,681</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$22,396</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$21,277</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$20,213</td>
+                  </tr>
+                  {/* Local Loop (Cloud Connect) 합계 */}
+                  <tr className="bg-green-100 font-semibold">
+                    <td className="px-4 py-3 text-sm text-green-800 border-b" colSpan={5}>Local Loop (Cloud Connect) 합계</td>
+                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$12,408</td>
+                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$17,681</td>
+                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$22,396</td>
+                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$21,277</td>
+                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$20,213</td>
+                  </tr>
+
+                  {/* Local Loop (KT VPN) 섹션 */}
+                  <tr className="bg-orange-50">
+                    <td className="px-4 py-3 text-sm font-semibold text-orange-800 border-b" colSpan={10}>
+                      Local Loop (KT VPN)
+                    </td>
+                  </tr>
+                  {/* KT VPN */}
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">KT VPN</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">CMI</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">1G</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$3,400</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$40,800</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$10,200</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$40,800</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$39,780</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$38,760</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$38,760</td>
+                  </tr>
+                  {/* Local Loop (KT VPN) 합계 */}
+                  <tr className="bg-orange-100 font-semibold">
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b" colSpan={5}>Local Loop (KT VPN) 합계</td>
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$10,200</td>
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$40,800</td>
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$39,780</td>
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$38,760</td>
+                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$38,760</td>
+                  </tr>
+
+                  {/* 총 COGS */}
+                  <tr className="bg-purple-50 font-semibold">
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b" colSpan={5}>총 COGS</td>
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$55,110</td>
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$135,485</td>
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$153,430</td>
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$164,114</td>
+                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$175,874</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            {/* COGS 설명 */}
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">📋 COGS 구성 요소 설명</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>
+                  <p><strong>• On net Backbone:</strong> Sify Chennai 02 - Siruseri, SIPCOT IT Park Campus</p>
+                  <p><strong>• Local Loop (Cloud Connect):</strong> 클라우드 연결을 위한 지역 네트워크</p>
+                  <p><strong>• Local Loop (KT VPN):</strong> KT VPN 서비스를 위한 지역 네트워크</p>
+                </div>
+                <div>
+                  <p><strong>• 총 COGS:</strong> 매출원가의 약 65-70% 차지</p>
+                  <p><strong>• 연도별 변동:</strong> 1년차 마이그레이션 및 Local Loop 비용 감소 반영</p>
+                  <p><strong>• 공급업체:</strong> Sify, Epsilon, Digital Realty, CMI, FTP</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 현금흐름 분석 */}
           <div className="mb-8">
             <h3 className="text-lg font-bold mb-4 text-gray-800">💸 현금흐름 분석</h3>
@@ -325,6 +557,12 @@ export function BusinessFeasibilitySectionDcf() {
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                       매출
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      매출원가
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                      매출총이익
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                       OPEX
@@ -350,10 +588,16 @@ export function BusinessFeasibilitySectionDcf() {
                   {(activeRegion === 'mumbai' ? generateCalculationDetails('mumbai', 'base') : generateCalculationDetails('chennai', 'base')).map((item, index) => (
                     <tr key={index} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {2025 + item.year}
+                        {2024 + item.year}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                         {formatCurrency(item.revenue)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                        {formatCurrency(item.cogs)}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                        {formatCurrency(item.grossProfit)}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                         {formatCurrency(item.opex)}
