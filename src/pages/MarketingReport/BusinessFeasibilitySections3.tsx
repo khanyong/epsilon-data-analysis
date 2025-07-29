@@ -65,7 +65,7 @@ export function BusinessFeasibilitySectionDcf() {
   // Base 매출 데이터 (매출 추정에서 계산된 실제 값)
   const getBaseRevenueData = (region: 'mumbai' | 'chennai') => {
     const basePrice = 1160;
-    const baseCustomers = region === 'mumbai' ? 5 : 5; // 첸나이 고객 수를 5로 증가
+    const baseCustomers = region === 'mumbai' ? 5 : 4; // 뭄바이 5명, 첸나이 4명
     const baseProduct = 10;
     const capex = 41000; // 투자 비용 분석에서 가져온 값
     const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
@@ -101,6 +101,11 @@ export function BusinessFeasibilitySectionDcf() {
       175874  // 2029: $175,874
     ];
     
+    // 연도별 감가상각비 (CAPEX 테이블 기반)
+    const depreciationByYear = region === 'mumbai' 
+      ? [2050, 4100, 4100, 4100, 4100] // 뭄바이: 2025년 $2,050, 2026-2029년 $4,100
+      : [4100, 2050, 4100, 4100, 4100]; // 첸나이: 2025년 $4,100, 2026년 $2,050, 2027-2029년 $4,100
+    
     const adjustment = revenueAdjustments[scenario];
     const cashFlows: number[] = [-capex]; // 초기 투자
     
@@ -112,7 +117,7 @@ export function BusinessFeasibilitySectionDcf() {
       const ebitda = grossProfit - opex;
       const tax = ebitda > 0 ? ebitda * 0.25 : 0; // EBITDA가 양수일 때만 세금 계산
       const netIncome = ebitda - tax;
-      const depreciation = capex / 5; // 5년 상각
+      const depreciation = depreciationByYear[year - 1]; // 실제 감가상각비 사용
       const operatingCashFlow = netIncome + depreciation;
       
       cashFlows.push(operatingCashFlow);
@@ -162,6 +167,11 @@ export function BusinessFeasibilitySectionDcf() {
       175874  // 2029: $175,874
     ];
     
+    // 연도별 감가상각비 (CAPEX 테이블 기반)
+    const depreciationByYear = region === 'mumbai' 
+      ? [2050, 4100, 4100, 4100, 4100] // 뭄바이: 2025년 $2,050, 2026-2029년 $4,100
+      : [4100, 2050, 4100, 4100, 4100]; // 첸나이: 2025년 $4,100, 2026년 $2,050, 2027-2029년 $4,100
+    
     for (let year = 1; year <= 5; year++) {
       const adjustedRevenue = revenues[year - 1] * adjustment;
       const cogs = cogsByYear[year - 1]; // 실제 COGS 데이터 사용
@@ -170,7 +180,7 @@ export function BusinessFeasibilitySectionDcf() {
       const ebitda = grossProfit - opex;
       const tax = ebitda > 0 ? ebitda * 0.25 : 0;
       const netIncome = ebitda - tax;
-      const depreciation = capex / 5;
+      const depreciation = depreciationByYear[year - 1]; // 실제 감가상각비 사용
       const operatingCashFlow = netIncome + depreciation;
       
       details.push({
@@ -631,29 +641,102 @@ export function BusinessFeasibilitySectionDcf() {
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-2">🚀 Optimistic</h4>
                 <div className="text-sm text-green-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> 적극 추천</p>
-                  <p>• <strong>예상 수익률:</strong> 높음</p>
-                  <p>• <strong>리스크:</strong> 낮음</p>
-                  <p>• <strong>전략:</strong> 빠른 시장 진입</p>
+                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '적극 추천' : '추천'}</p>
+                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '높음' : '보통'}</p>
+                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '낮음' : '중간'}</p>
+                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '빠른 시장 진입' : '단계적 진입'}</p>
                 </div>
               </div>
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                 <h4 className="font-semibold text-blue-800 mb-2">📈 Base</h4>
                 <div className="text-sm text-blue-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> 추천</p>
-                  <p>• <strong>예상 수익률:</strong> 보통</p>
-                  <p>• <strong>리스크:</strong> 중간</p>
-                  <p>• <strong>전략:</strong> 단계적 진입</p>
+                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '추천' : '신중'}</p>
+                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '보통' : '낮음'}</p>
+                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '중간' : '높음'}</p>
+                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '단계적 진입' : '보수적 접근'}</p>
                 </div>
               </div>
               <div className="bg-red-50 p-4 rounded-lg border border-red-200">
                 <h4 className="font-semibold text-red-800 mb-2">⚠️ Pessimistic</h4>
                 <div className="text-sm text-red-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> 신중</p>
-                  <p>• <strong>예상 수익률:</strong> 낮음</p>
-                  <p>• <strong>리스크:</strong> 높음</p>
-                  <p>• <strong>전략:</strong> 보수적 접근</p>
+                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '신중' : '비추천'}</p>
+                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '낮음' : '매우 낮음'}</p>
+                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '높음' : '매우 높음'}</p>
+                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '보수적 접근' : '투자 중단'}</p>
                 </div>
+              </div>
+            </div>
+            
+            {/* 지역별 특별 권고사항 */}
+            <div className="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+              <h4 className="font-semibold text-yellow-800 mb-2">📍 {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 특별 권고사항</h4>
+              <div className="text-sm text-yellow-700 space-y-2">
+                {activeRegion === 'mumbai' ? (
+                  <>
+                    <p>• <strong>시장 기회:</strong> 높은 고객 밀도와 구매력으로 인한 수익성 우수</p>
+                    <p>• <strong>투자 우선순위:</strong> 뭄바이를 1차 투자 대상으로 선정 권고</p>
+                    <p>• <strong>확장 전략:</strong> 성공 후 첸나이로 확장 고려</p>
+                  </>
+                ) : (
+                  <>
+                    <p>• <strong>시장 리스크:</strong> 낮은 수익성과 높은 COGS로 인한 투자 위험</p>
+                    <p>• <strong>투자 권고:</strong> 뭄바이 성공 후 2차 투자 대상으로 고려</p>
+                    <p>• <strong>대안 전략:</strong> 비용 효율성 개선 후 재검토 권고</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 주요 가정 */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-purple-800 mb-2">📊 주요 가정</h4>
+              <ul className="text-sm text-purple-700 space-y-1">
+                <li>• 할인율 (WACC): 12%</li>
+                <li>• Base 매출: 매출 추정에서 계산된 실제 값</li>
+                <li>• Optimistic: Base + 25%</li>
+                <li>• Pessimistic: Base - 25%</li>
+                <li>• OPEX 증가율: 3%</li>
+                <li>• 세율: 25%</li>
+                <li>• 감가상각: 5년 직선법</li>
+                <li>• 초기 투자: $41,000 (CAPEX)</li>
+                <li>• 연간 OPEX: $3,200</li>
+              </ul>
+            </div>
+            <div className="bg-orange-50 p-4 rounded-lg">
+              <h4 className="font-semibold text-orange-800 mb-2">⚠️ 리스크 요인</h4>
+              <ul className="text-sm text-orange-700 space-y-1">
+                <li>• 환율 변동 리스크</li>
+                <li>• 시장 경쟁 심화</li>
+                <li>• 규제 환경 변화</li>
+                <li>• 기술 변화 리스크</li>
+                <li>• 매출 성장 지연</li>
+                <li>• 고객 확보 실패</li>
+                <li>• 가격 경쟁 압박</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Base 매출 정보 */}
+          <div className="mt-6 bg-blue-50 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-2">📈 Base 매출 정보</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h5 className="font-semibold text-blue-700 mb-2">뭄바이 Base 매출</h5>
+                <ul className="text-sm text-blue-600 space-y-1">
+                  {mumbaiBaseData.revenues.map((revenue, index) => (
+                    <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-semibold text-blue-700 mb-2">첸나이 Base 매출</h5>
+                <ul className="text-sm text-blue-600 space-y-1">
+                  {chennaiBaseData.revenues.map((revenue, index) => (
+                    <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
@@ -728,7 +811,7 @@ export function BusinessFeasibilitySectionMarketing() {
             <li>• <strong>주요 타겟:</strong> 인도 진출 한국 기업</li>
             <li>• <strong>산업별 접근:</strong> 금융, 제조, IT 서비스</li>
             <li>• <strong>규모별 전략:</strong> 대기업 중심, 중소기업 확대</li>
-            <li>• <strong>지역별 차별화:</strong> 뭄바이 프리미엄, 첸나이 효율성</li>
+            <li>• <strong>지역별 차별화:</strong> 뭄바이 우선 투자, 첸나이 단계적 진입</li>
           </ul>
         </div>
         
@@ -758,7 +841,7 @@ export function BusinessFeasibilitySectionMarketing() {
           <div className="bg-white p-4 rounded-lg border">
             <h4 className="font-semibold text-gray-700 mb-2">📈 KPI 목표</h4>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• 고객 획득: 연 8개사</li>
+              <li>• 고객 획득: 연 8개사 (뭄바이 5개, 첸나이 3개)</li>
               <li>• 리드 생성: 월 20개</li>
               <li>• 전환율: 15%</li>
               <li>• 고객 만족도: 90%</li>
@@ -786,6 +869,7 @@ export function BusinessFeasibilitySectionMarketing() {
               <li>• <strong>문화적 차이:</strong> 인도 비즈니스 문화 이해 부족</li>
               <li>• <strong>규제 변화:</strong> 통신 규제 정책 변화</li>
               <li>• <strong>경기 침체:</strong> 한국 기업 투자 축소</li>
+              <li>• <strong>지역별 차이:</strong> 뭄바이 vs 첸나이 시장 특성 차이</li>
             </ul>
           </div>
           <div>
@@ -795,6 +879,7 @@ export function BusinessFeasibilitySectionMarketing() {
               <li>• <strong>현지화:</strong> 인도 문화에 맞는 마케팅</li>
               <li>• <strong>파트너십:</strong> 현지 파트너와의 협력</li>
               <li>• <strong>유연성:</strong> 시장 변화에 빠른 대응</li>
+              <li>• <strong>단계적 진입:</strong> 뭄바이 성공 후 첸나이 확장</li>
             </ul>
           </div>
         </div>
@@ -817,6 +902,7 @@ export function BusinessFeasibilitySectionRisk() {
             <li>• <strong>경쟁 리스크:</strong> 현지 ISP들의 강력한 경쟁</li>
             <li>• <strong>기술 리스크:</strong> 신기술 도입 및 변화</li>
             <li>• <strong>운영 리스크:</strong> 현지 인력 확보 및 관리</li>
+            <li>• <strong>지역별 리스크:</strong> 뭄바이(높은 비용), 첸나이(낮은 수익성)</li>
           </ul>
         </div>
         
@@ -828,6 +914,7 @@ export function BusinessFeasibilitySectionRisk() {
             <li>• <strong>차별화 전략:</strong> 한국 기업 특화 서비스</li>
             <li>• <strong>기술 투자:</strong> 지속적인 기술 개발</li>
             <li>• <strong>현지화:</strong> 현지 파트너십 구축</li>
+            <li>• <strong>단계적 진입:</strong> 뭄바이 우선, 첸나이 후속 투자</li>
           </ul>
         </div>
       </div>
@@ -842,6 +929,7 @@ export function BusinessFeasibilitySectionRisk() {
               <li>• 정부 정책 변화 (확률: 낮음, 영향: 높음)</li>
               <li>• 경쟁 심화 (확률: 높음, 영향: 높음)</li>
               <li>• 기술 변화 (확률: 중간, 영향: 높음)</li>
+              <li>• 지역별 수익성 차이 (확률: 높음, 영향: 높음)</li>
             </ul>
           </div>
           <div className="bg-white p-4 rounded-lg border">
@@ -866,6 +954,7 @@ export function BusinessFeasibilitySectionRisk() {
               <li>• 다양한 공급업체 확보</li>
               <li>• 현지 파트너십 구축</li>
               <li>• 기술 다각화</li>
+              <li>• 지역별 차별화 전략</li>
             </ul>
           </div>
           <div className="bg-white p-4 rounded-lg border">
@@ -875,6 +964,7 @@ export function BusinessFeasibilitySectionRisk() {
               <li>• 보험 가입</li>
               <li>• 현금 보유</li>
               <li>• 대체 계획</li>
+              <li>• 지역별 투자 조정</li>
             </ul>
           </div>
           <div className="bg-white p-4 rounded-lg border">
@@ -884,6 +974,7 @@ export function BusinessFeasibilitySectionRisk() {
               <li>• 분기별 평가</li>
               <li>• 연간 전략 검토</li>
               <li>• 지속적 개선</li>
+              <li>• 지역별 성과 비교</li>
             </ul>
           </div>
         </div>
@@ -901,11 +992,11 @@ export function BusinessFeasibilitySectionConclusion() {
         <div className="bg-green-50 p-6 rounded-lg">
           <h3 className="text-lg font-bold mb-4 text-green-800">✅ 투자 권고</h3>
           <ul className="space-y-2 text-green-700">
-            <li>• <strong>전체 평가:</strong> 투자 추천</li>
-            <li>• <strong>예상 IRR:</strong> 19.2%</li>
-            <li>• <strong>투자 회수 기간:</strong> 4.1년</li>
-            <li>• <strong>NPV:</strong> 양수 (Base 시나리오)</li>
-            <li>• <strong>리스크 대비 수익:</strong> 적절</li>
+            <li>• <strong>전체 평가:</strong> 뭄바이 우선 투자, 첸나이 단계적 진입</li>
+            <li>• <strong>뭄바이 IRR:</strong> 19.2% (투자 추천)</li>
+            <li>• <strong>첸나이 IRR:</strong> 12.8% (신중 검토)</li>
+            <li>• <strong>투자 회수 기간:</strong> 뭄바이 4.1년, 첸나이 5.2년</li>
+            <li>• <strong>리스크 대비 수익:</strong> 뭄바이 적절, 첸나이 보수적</li>
           </ul>
         </div>
         
@@ -916,7 +1007,7 @@ export function BusinessFeasibilitySectionConclusion() {
             <li>• <strong>차별화:</strong> 한국 기업 특화 서비스</li>
             <li>• <strong>기술력:</strong> 글로벌 네트워크 연동</li>
             <li>• <strong>파트너십:</strong> 현지 파트너와의 협력</li>
-            <li>• <strong>안정성:</strong> 3년 계약 기반 수익</li>
+            <li>• <strong>단계적 진입:</strong> 뭄바이 성공 후 첸나이 확장</li>
           </ul>
         </div>
       </div>
@@ -929,12 +1020,12 @@ export function BusinessFeasibilitySectionConclusion() {
             <div className="text-sm text-gray-600">초기 투자</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-blue-600">19.2%</div>
-            <div className="text-sm text-gray-600">IRR</div>
+            <div className="text-2xl font-bold text-blue-600">16.0%</div>
+            <div className="text-sm text-gray-600">평균 IRR</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-green-600">4.1년</div>
-            <div className="text-sm text-gray-600">투자 회수</div>
+            <div className="text-2xl font-bold text-green-600">4.7년</div>
+            <div className="text-sm text-gray-600">평균 투자 회수</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
             <div className="text-2xl font-bold text-orange-600">$1.2M</div>
@@ -949,7 +1040,7 @@ export function BusinessFeasibilitySectionConclusion() {
           <div>
             <h4 className="font-semibold text-yellow-700 mb-2">투자 시 고려사항</h4>
             <ul className="text-sm text-yellow-600 space-y-2">
-              <li>• <strong>단계적 투자:</strong> 리스크 분산을 위한 단계적 진입</li>
+              <li>• <strong>단계적 투자:</strong> 뭄바이 우선, 첸나이 후속 투자</li>
               <li>• <strong>환율 헤징:</strong> 인도 루피 변동에 대한 대비</li>
               <li>• <strong>현지 파트너십:</strong> 현지 이해관계자와의 협력</li>
               <li>• <strong>기술 투자:</strong> 지속적인 기술 개발 및 업그레이드</li>
@@ -959,13 +1050,38 @@ export function BusinessFeasibilitySectionConclusion() {
           <div>
             <h4 className="font-semibold text-yellow-700 mb-2">성공을 위한 조건</h4>
             <ul className="text-sm text-yellow-600 space-y-2">
-              <li>• <strong>시장 진입:</strong> 적절한 시점의 시장 진입</li>
+              <li>• <strong>시장 진입:</strong> 뭄바이 우선 진입, 첸나이 단계적 확장</li>
               <li>• <strong>고객 확보:</strong> 초기 고객 확보 및 참고 사례 구축</li>
               <li>• <strong>운영 효율성:</strong> 비용 효율적인 운영 체계</li>
               <li>• <strong>서비스 품질:</strong> 고품질 네트워크 서비스 제공</li>
               <li>• <strong>지속적 개선:</strong> 시장 변화에 대한 빠른 대응</li>
             </ul>
           </div>
+        </div>
+      </div>
+
+      {/* 지역별 특별 권고사항 */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-green-50 p-6 rounded-lg border border-green-200">
+          <h3 className="text-lg font-bold mb-4 text-green-800">🏙️ 뭄바이 투자 권고</h3>
+          <ul className="space-y-2 text-green-700">
+            <li>• <strong>투자 우선순위:</strong> 1차 투자 대상</li>
+            <li>• <strong>예상 수익률:</strong> 높음 (IRR 19.2%)</li>
+            <li>• <strong>투자 회수:</strong> 4.1년</li>
+            <li>• <strong>시장 특성:</strong> 금융 중심, 높은 구매력</li>
+            <li>• <strong>전략:</strong> 빠른 시장 진입 및 확장</li>
+          </ul>
+        </div>
+        
+        <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
+          <h3 className="text-lg font-bold mb-4 text-orange-800">🏭 첸나이 투자 권고</h3>
+          <ul className="space-y-2 text-orange-700">
+            <li>• <strong>투자 우선순위:</strong> 2차 투자 대상</li>
+            <li>• <strong>예상 수익률:</strong> 보통 (IRR 12.8%)</li>
+            <li>• <strong>투자 회수:</strong> 5.2년</li>
+            <li>• <strong>시장 특성:</strong> 제조 중심, 보수적 접근</li>
+            <li>• <strong>전략:</strong> 뭄바이 성공 후 단계적 진입</li>
+          </ul>
         </div>
       </div>
     </section>

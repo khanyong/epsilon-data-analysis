@@ -109,7 +109,6 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$40,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
@@ -123,7 +122,6 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$50</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
@@ -134,9 +132,8 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$41,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
@@ -197,7 +194,6 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$40,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
@@ -211,7 +207,6 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$50</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
@@ -222,9 +217,8 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$41,000</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
