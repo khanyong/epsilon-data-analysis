@@ -70,19 +70,19 @@ export function BusinessFeasibilitySectionInvestment() {
                     항목 (Item)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    세부 항목 (Specific Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     지점 (Point)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     비용 소유자 (Cost Owner)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    CAPEX (USD)
+                    CAPEX(USD)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각 연수 (Dep yr)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각비 (Dep)
+                    감가상각 연수(DEP YR)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2025
@@ -129,11 +129,10 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                 </tr>
                 <tr className="bg-blue-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$41,000</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={5}>총계</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,100</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
@@ -155,19 +154,19 @@ export function BusinessFeasibilitySectionInvestment() {
                     항목 (Item)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    세부 항목 (Specific Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     지점 (Point)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     비용 소유자 (Cost Owner)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    CAPEX (USD)
+                    CAPEX(USD)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각 연수 (Dep yr)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각비 (Dep)
+                    감가상각 연수(DEP YR)
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2025
@@ -214,11 +213,10 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
                 </tr>
                 <tr className="bg-orange-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$41,000</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={5}>총계</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,100</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>

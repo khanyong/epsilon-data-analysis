@@ -56,27 +56,24 @@ export function DetailedCostTable({ title, data, type, currency = 'USD' }: Detai
           <thead className="bg-gray-50">
             <tr>
               <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Item
+                항목 (Item)
               </th>
               <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Specific Item
+                세부 항목 (Specific Item)
               </th>
               <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Point
+                지점 (Point)
               </th>
               <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Cost Owner
+                비용 소유자 (Cost Owner)
               </th>
               {type === 'capex' && (
                 <>
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    CAPEX
+                    CAPEX(USD)
                   </th>
                   <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Dep Yr
-                  </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Dep
+                    감가상각 연수(DEP YR)
                   </th>
                 </>
               )}
@@ -125,9 +122,6 @@ export function DetailedCostTable({ title, data, type, currency = 'USD' }: Detai
                     <td className="px-3 py-2 text-sm text-gray-900 border-b">
                       {item.depYr}
                     </td>
-                    <td className="px-3 py-2 text-sm text-gray-900 border-b">
-                      {formatCurrency(item.dep || 0)}
-                    </td>
                   </>
                 )}
                 {type === 'opex' && (
@@ -154,8 +148,8 @@ export function DetailedCostTable({ title, data, type, currency = 'USD' }: Detai
             ))}
             {/* Total Row */}
             <tr className="bg-gray-100 font-semibold">
-              <td className="px-3 py-2 text-sm text-gray-900 border-b" colSpan={type === 'capex' ? 7 : 5}>
-                Total
+              <td className="px-3 py-2 text-sm text-gray-900 border-b" colSpan={type === 'capex' ? 6 : 5}>
+                총계
               </td>
               <td className="px-3 py-2 text-sm text-gray-900 border-b font-medium">
                 {formatCurrency(calculateTotal('cost2025'))}

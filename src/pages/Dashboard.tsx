@@ -10,6 +10,7 @@ import { EpsilonFactbook, toc as factbookToc } from './EpsilonFactbook/EpsilonFa
 import { BusinessFeasibilityReport } from './MarketingReport/BusinessFeasibilityReport';
 import { businessFeasibilityToc } from './MarketingReport/BusinessFeasibilityTocData';
 import { investmentStrategyToc } from './InvestmentStrategyReport/InvestmentStrategyTocData';
+import { SynergySales, toc as synergySalesToc } from './SynergySales/SynergySales';
 
 type MenuType =
   | 'RFQ'
@@ -19,7 +20,8 @@ type MenuType =
   | 'INVEST_REPORT'
   | 'MARKETING_REPORT'
   | 'NY_DISCOUNT_REPORT'
-  | 'EPSILON_FACTBOOK';
+  | 'EPSILON_FACTBOOK'
+  | 'SYNERGY_SALES';
 
 export function Dashboard() {
   const [selectedMenu, setSelectedMenu] = useState<MenuType>('RFQ');
@@ -38,6 +40,10 @@ export function Dashboard() {
   const [investmentStrategyOpen, setInvestmentStrategyOpen] = useState(true);
   const [investmentStrategySection, setInvestmentStrategySection] = useState('preprocessing');
   const [investmentStrategyViewMode, setInvestmentStrategyViewMode] = useState<'section' | 'all'>('section');
+  // 시너지 매출 보고서 상태
+  const [synergySalesOpen, setSynergySalesOpen] = useState(true);
+  const [synergySalesSection, setSynergySalesSection] = useState('overview');
+  const [synergySalesViewMode, setSynergySalesViewMode] = useState<'section' | 'all' | 'dashboard'>('dashboard');
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -119,6 +125,25 @@ export function Dashboard() {
               </button>
             </div>
             <EpsilonFactbook sectionId={factbookSection} viewMode={factbookViewMode} />
+          </>
+        );
+      case 'SYNERGY_SALES':
+        return (
+          <>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setSynergySalesViewMode(v => {
+                  if (v === 'dashboard') return 'section';
+                  if (v === 'section') return 'all';
+                  return 'dashboard';
+                })}
+                className="px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 border border-blue-300"
+              >
+                {synergySalesViewMode === 'dashboard' ? '목차별 보기' : 
+                 synergySalesViewMode === 'section' ? '전체 보기' : '대시보드'}
+              </button>
+            </div>
+            <SynergySales sectionId={synergySalesSection} viewMode={synergySalesViewMode} />
           </>
         );
       default:
@@ -324,6 +349,61 @@ export function Dashboard() {
                           factbookSection === item.id ? 'font-bold underline' : ''
                         }`}
                         onClick={() => setFactbookSection(item.id)}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+            {/* Synergy Sales */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'SYNERGY_SALES'
+                    ? 'bg-blue-500 text-white'
+                    : 'hover:bg-gray-300 text-gray-900'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('SYNERGY_SALES');
+                  setSynergySalesOpen((v) => (selectedMenu === 'SYNERGY_SALES' ? !v : true));
+                }}
+                aria-expanded={selectedMenu === 'SYNERGY_SALES' && synergySalesOpen}
+                aria-controls="synergysales-toc-list"
+              >
+                <span>Synergy Sales</span>
+                <span className="ml-2">
+                  {selectedMenu === 'SYNERGY_SALES' && synergySalesOpen ? '▲' : '▼'}
+                </span>
+              </button>
+              {selectedMenu === 'SYNERGY_SALES' && synergySalesOpen && (
+                <ul id="synergysales-toc-list" className="pl-4 mt-1 space-y-1">
+                  {synergySalesToc.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${
+                          synergySalesSection === item.id ? 'font-bold underline' : ''
+                        }`}
+                        onClick={() => {
+                          console.log('🔍 메뉴 클릭:', item.id, item.label);
+                          if (item.id === 'db-analysis') {
+                            console.log('🔄 2번 메뉴 클릭 - DB Analysis로 이동');
+                            setSelectedMenu('SYNERGY_SALES');
+                            setSynergySalesSection('db-analysis');
+                            setSynergySalesViewMode('section');
+                            setSynergySalesOpen(true);
+                          } else if (item.id === 'annual-data') {
+                            console.log('🔄 3번 메뉴 클릭 - Annual Data로 이동');
+                            setSelectedMenu('SYNERGY_SALES');
+                            setSynergySalesSection('annual-data');
+                            setSynergySalesViewMode('section');
+                            setSynergySalesOpen(true);
+                          } else {
+                            console.log('🔄 일반 메뉴 클릭:', item.id);
+                            setSynergySalesSection(item.id);
+                          }
+                        }}
                       >
                         {item.label}
                       </button>
