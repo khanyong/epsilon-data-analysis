@@ -12,6 +12,7 @@ import {
   BusinessFeasibilitySectionConclusion,
   BusinessFeasibilitySectionTargetCustomers,
   BusinessFeasibilitySectionAppendix,
+  BusinessFeasibilitySectionSimulation,
 } from './BusinessFeasibilitySections';
 
 export function BusinessFeasibilityReport({
@@ -38,6 +39,7 @@ export function BusinessFeasibilityReport({
           <BusinessFeasibilitySectionConclusion />
           <BusinessFeasibilitySectionTargetCustomers />
           <BusinessFeasibilitySectionAppendix />
+          <BusinessFeasibilitySectionSimulation />
         </div>
       ) : (
         <>
@@ -53,6 +55,7 @@ export function BusinessFeasibilityReport({
           {sectionId === 'conclusion' && <BusinessFeasibilitySectionConclusion />}
           {sectionId === 'target-customers' && <BusinessFeasibilitySectionTargetCustomers />}
           {sectionId === 'appendix' && <BusinessFeasibilitySectionAppendix />}
+          {sectionId === 'simulation' && <BusinessFeasibilitySectionSimulation />}
         </>
       )}
     </div>

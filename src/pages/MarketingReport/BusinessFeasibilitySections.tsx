@@ -15,7 +15,8 @@ import {
   BusinessFeasibilitySectionDcf,
   BusinessFeasibilitySectionMarketing,
   BusinessFeasibilitySectionRisk,
-  BusinessFeasibilitySectionConclusion
+  BusinessFeasibilitySectionConclusion,
+  BusinessFeasibilitySectionSimulation
 } from './BusinessFeasibilitySections3';
 
 import {
@@ -36,6 +37,7 @@ export {
   BusinessFeasibilitySectionRisk,
   BusinessFeasibilitySectionConclusion,
   BusinessFeasibilitySectionTargetCustomers,
-  BusinessFeasibilitySectionAppendix
+  BusinessFeasibilitySectionAppendix,
+  BusinessFeasibilitySectionSimulation
 };
 

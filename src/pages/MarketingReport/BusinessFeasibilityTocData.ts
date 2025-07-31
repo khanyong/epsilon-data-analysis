@@ -12,4 +12,5 @@ export const businessFeasibilityToc = [
   { id: 'conclusion', label: '10. 결론 및 권고사항' },
   { id: 'target-customers', label: '11. 타겟 고객리스트' },
   { id: 'appendix', label: '12. 부록' },
+  { id: 'simulation', label: '13. Simulation' },
 ];
