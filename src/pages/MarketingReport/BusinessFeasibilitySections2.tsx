@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 유틸리티 함수들
 const formatCurrency = (amount: number) => {
@@ -14,8 +14,232 @@ const formatPercentage = (value: number) => {
   return `${(value * 100).toFixed(1)}%`;
 };
 
+// 투자 비용 시뮬레이션을 위한 타입 정의
+interface InvestmentParameters {
+  backboneDeviceCapex: number;
+  dcnOdfCapex: number;
+  depreciationYears: number;
+  backboneMaintenanceOpex: number;
+  dcnOdfMaintenanceOpex: number;
+}
+
+// 수익 추정 시뮬레이션을 위한 타입 정의
+interface RevenueParameters {
+  baseCustomers: number;
+  customerGrowthRate: number;
+  basePrice: number;
+  priceDeclineRate: number;
+  mbpsPerCustomer: number;
+}
+
+// 전역 상태로 투자 비용 파라미터 관리
+let globalInvestmentParams: { mumbai: InvestmentParameters; chennai: InvestmentParameters } = {
+  mumbai: {
+    backboneDeviceCapex: 40000,
+    dcnOdfCapex: 2000,
+    depreciationYears: 6,
+    backboneMaintenanceOpex: 1600,
+    dcnOdfMaintenanceOpex: 1600
+  },
+  chennai: {
+    backboneDeviceCapex: 40000,
+    dcnOdfCapex: 2000,
+    depreciationYears: 6,
+    backboneMaintenanceOpex: 1600,
+    dcnOdfMaintenanceOpex: 1600
+  }
+};
+
+// 전역 상태로 수익 파라미터 관리
+let globalRevenueParams: { mumbai: RevenueParameters; chennai: RevenueParameters } = {
+  mumbai: {
+    baseCustomers: 3,
+    customerGrowthRate: 1.0, // 연간 100% 증가
+    basePrice: 1160,
+    priceDeclineRate: 0.08, // 연간 8% 감소
+    mbpsPerCustomer: 10
+  },
+  chennai: {
+    baseCustomers: 8,
+    customerGrowthRate: 1.0, // 연간 100% 증가
+    basePrice: 1160,
+    priceDeclineRate: 0.08, // 연간 8% 감소
+    mbpsPerCustomer: 10
+  }
+};
+
+// 단계별 실행 여부 추적
+let globalInvestmentExecuted: { mumbai: boolean; chennai: boolean } = {
+  mumbai: false,
+  chennai: false
+};
+
+let globalRevenueExecuted: { mumbai: boolean; chennai: boolean } = {
+  mumbai: false,
+  chennai: false
+};
+
+// 전역 함수로 투자 비용 파라미터 업데이트
+export const updateGlobalInvestmentParams = (region: 'mumbai' | 'chennai', params: InvestmentParameters) => {
+  globalInvestmentParams[region] = params;
+};
+
+// 전역 함수로 투자 비용 파라미터 가져오기
+export const getGlobalInvestmentParams = (region: 'mumbai' | 'chennai') => {
+  return globalInvestmentParams[region];
+};
+
+// 전역 함수로 수익 파라미터 업데이트
+export const updateGlobalRevenueParams = (region: 'mumbai' | 'chennai', params: RevenueParameters) => {
+  globalRevenueParams[region] = params;
+};
+
+// 전역 함수로 수익 파라미터 가져오기
+export const getGlobalRevenueParams = (region: 'mumbai' | 'chennai') => {
+  return globalRevenueParams[region];
+};
+
+// 단계별 실행 여부 관리 함수들
+export const setInvestmentExecuted = (region: 'mumbai' | 'chennai') => {
+  globalInvestmentExecuted[region] = true;
+};
+
+export const setRevenueExecuted = (region: 'mumbai' | 'chennai') => {
+  globalRevenueExecuted[region] = true;
+};
+
+export const isInvestmentExecuted = (region: 'mumbai' | 'chennai') => {
+  return globalInvestmentExecuted[region];
+};
+
+export const isRevenueExecuted = (region: 'mumbai' | 'chennai') => {
+  return globalRevenueExecuted[region];
+};
+
+// 투자 비용 계산 함수
+export const calculateInvestmentCosts = (region: 'mumbai' | 'chennai') => {
+  const params = globalInvestmentParams[region];
+  
+  const totalCapex = params.backboneDeviceCapex + params.dcnOdfCapex;
+  const totalAnnualOpex = params.backboneMaintenanceOpex + params.dcnOdfMaintenanceOpex;
+  
+  // 감가상각 계산 (직선법)
+  const annualDepreciation = totalCapex / params.depreciationYears;
+  
+  // 연도별 감가상각 (2025년은 반년, 2026-2029년은 1년)
+  const depreciationByYear = [
+    annualDepreciation * 0.5, // 2025년 (반년)
+    annualDepreciation,       // 2026년
+    annualDepreciation,       // 2027년
+    annualDepreciation,       // 2028년
+    annualDepreciation        // 2029년
+  ];
+  
+  return {
+    totalCapex,
+    totalAnnualOpex,
+    annualDepreciation,
+    depreciationByYear,
+    params
+  };
+};
+
+// 수익 계산 함수
+export const calculateRevenue = (region: 'mumbai' | 'chennai') => {
+  const params = globalRevenueParams[region];
+  const revenues: number[] = [];
+  const customers: number[] = [];
+  const salesUnits: number[] = [];
+  const prices: number[] = [];
+
+  for (let year = 0; year < 5; year++) {
+    const customerCount = params.baseCustomers * Math.pow(1 + params.customerGrowthRate, year);
+    const price = params.basePrice * Math.pow(1 - params.priceDeclineRate, year);
+    const salesUnit = customerCount * params.mbpsPerCustomer;
+    const revenue = salesUnit * price;
+
+    customers.push(customerCount);
+    salesUnits.push(salesUnit);
+    prices.push(price);
+    revenues.push(revenue);
+  }
+
+  return { revenues, customers, salesUnits, prices };
+};
+
 export function BusinessFeasibilitySectionInvestment() {
   const [activeRegion, setActiveRegion] = useState('mumbai');
+  
+  // 투자 비용 시뮬레이션 파라미터 상태
+  const [investmentParams, setInvestmentParams] = useState<InvestmentParameters>({
+    backboneDeviceCapex: 40000,
+    dcnOdfCapex: 2000,
+    depreciationYears: 6,
+    backboneMaintenanceOpex: 1600,
+    dcnOdfMaintenanceOpex: 1600
+  });
+
+  // 지역 변경 시 파라미터 업데이트
+  useEffect(() => {
+    const currentParams = getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai');
+    setInvestmentParams(currentParams);
+  }, [activeRegion]);
+
+  // 파라미터 업데이트 핸들러
+  const handleParameterChange = (param: keyof InvestmentParameters, value: number) => {
+    setInvestmentParams(prev => ({
+      ...prev,
+      [param]: value
+    }));
+  };
+
+  // 실행 버튼 핸들러
+  const handleApplyChanges = () => {
+    updateGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai', investmentParams);
+    setInvestmentExecuted(activeRegion as 'mumbai' | 'chennai');
+    alert(`${activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 투자 비용 파라미터가 업데이트되었습니다.`);
+  };
+
+  // 새로고침 핸들러 (NPV 계산 즉시 반영)
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  // 기본값 리셋 핸들러
+  const resetToDefaults = () => {
+    const defaultParams = {
+      backboneDeviceCapex: 40000,
+      dcnOdfCapex: 2000,
+      depreciationYears: 6,
+      backboneMaintenanceOpex: 1600,
+      dcnOdfMaintenanceOpex: 1600
+    };
+    setInvestmentParams(defaultParams);
+  };
+
+  // 현재 파라미터로 투자 비용 계산
+  const calculateCurrentInvestment = () => {
+    const totalCapex = investmentParams.backboneDeviceCapex + investmentParams.dcnOdfCapex;
+    const totalAnnualOpex = investmentParams.backboneMaintenanceOpex + investmentParams.dcnOdfMaintenanceOpex;
+    const annualDepreciation = totalCapex / investmentParams.depreciationYears;
+    
+    const depreciationByYear = [
+      annualDepreciation * 0.5, // 2025년 (반년)
+      annualDepreciation,       // 2026년
+      annualDepreciation,       // 2027년
+      annualDepreciation,       // 2028년
+      annualDepreciation        // 2029년
+    ];
+
+    return {
+      totalCapex,
+      totalAnnualOpex,
+      annualDepreciation,
+      depreciationByYear
+    };
+  };
+
+  const currentResults = calculateCurrentInvestment();
 
   return (
     <section id="investment">
@@ -33,378 +257,350 @@ export function BusinessFeasibilitySectionInvestment() {
       </div>
 
       {/* 지역 선택 탭 */}
-      <div className="mb-6">
-        <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveRegion('mumbai')}
-            className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
-              activeRegion === 'mumbai'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900 bg-gray-100'
-            }`}
-          >
-            뭄바이
-          </button>
-          <button
-            onClick={() => setActiveRegion('chennai')}
-            className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
-              activeRegion === 'chennai'
-                ? 'bg-orange-600 text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900 bg-gray-100'
-            }`}
-          >
-            첸나이
-          </button>
+      <div className="bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl shadow-lg p-6 mb-8">
+        <div className="mb-6">
+          <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
+            <button
+              onClick={() => setActiveRegion('mumbai')}
+              className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
+                activeRegion === 'mumbai'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900 bg-gray-100'
+              }`}
+            >
+              🏙️ 뭄바이
+            </button>
+            <button
+              onClick={() => setActiveRegion('chennai')}
+              className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
+                activeRegion === 'chennai'
+                  ? 'bg-orange-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900 bg-gray-100'
+              }`}
+            >
+              🏭 첸나이
+            </button>
+          </div>
+        </div>
+
+        {/* 투자 비용 시뮬레이션 폼 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">🎯 투자 비용 시뮬레이션</h3>
+            <div className="flex space-x-2">
+              <button
+                onClick={resetToDefaults}
+                className="text-gray-600 hover:text-gray-800 text-sm underline"
+              >
+                기본값으로 리셋
+              </button>
+              <button
+                onClick={handleApplyChanges}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                실행
+              </button>
+            </div>
+          </div>
+          
+          <div className="mb-4 p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-green-700">
+              💡 <strong>시뮬레이션 흐름 1단계:</strong> 이곳에서 투자 비용 파라미터를 설정한 후 "실행" 버튼을 클릭하세요. 
+              이 단계가 완료되어야 다음 단계인 수익 추정으로 진행할 수 있습니다.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
+            {/* Backbone Device CAPEX */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Backbone Device CAPEX ($)
+              </label>
+              <input
+                type="number"
+                value={investmentParams.backboneDeviceCapex}
+                onChange={(e) => handleParameterChange('backboneDeviceCapex', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="1000"
+              />
+            </div>
+
+            {/* DCN/ODF CAPEX */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                DCN/ODF CAPEX ($)
+              </label>
+              <input
+                type="number"
+                value={investmentParams.dcnOdfCapex}
+                onChange={(e) => handleParameterChange('dcnOdfCapex', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="100"
+              />
+            </div>
+
+            {/* 감가상각 연수 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                감가상각 연수
+              </label>
+              <input
+                type="number"
+                value={investmentParams.depreciationYears}
+                onChange={(e) => handleParameterChange('depreciationYears', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="1"
+                max="20"
+                step="1"
+              />
+            </div>
+
+            {/* Backbone Maintenance OPEX */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Backbone OPEX ($/년)
+              </label>
+              <input
+                type="number"
+                value={investmentParams.backboneMaintenanceOpex}
+                onChange={(e) => handleParameterChange('backboneMaintenanceOpex', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="100"
+              />
+            </div>
+
+            {/* DCN/ODF Maintenance OPEX */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                DCN/ODF OPEX ($/년)
+              </label>
+              <input
+                type="number"
+                value={investmentParams.dcnOdfMaintenanceOpex}
+                onChange={(e) => handleParameterChange('dcnOdfMaintenanceOpex', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="100"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 투자 비용 요약 */}
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg mb-6">
+          <h3 className="text-lg font-bold mb-4 text-gray-800">📊 투자 비용 요약 - {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-4 rounded-lg border">
+              <h4 className="font-semibold text-gray-700 mb-2">총 CAPEX</h4>
+              <div className="text-2xl font-bold text-blue-600">{formatCurrency(currentResults.totalCapex)}</div>
+              <div className="text-sm text-gray-600 mt-1">초기 투자 비용</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg border">
+              <h4 className="font-semibold text-gray-700 mb-2">연간 OPEX</h4>
+              <div className="text-2xl font-bold text-green-600">{formatCurrency(currentResults.totalAnnualOpex)}</div>
+              <div className="text-sm text-gray-600 mt-1">유지보수 비용</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg border">
+              <h4 className="font-semibold text-gray-700 mb-2">감가상각비</h4>
+              <div className="text-2xl font-bold text-purple-600">{formatCurrency(currentResults.annualDepreciation)}</div>
+              <div className="text-sm text-gray-600 mt-1">연간 감가상각 (총 CAPEX ÷ {investmentParams.depreciationYears}년)</div>
+            </div>
+          </div>
+        </div>
+
+        {/* CAPEX 상세 테이블 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">🏗️ CAPEX(HW) - On net HW (자본적 지출 - 네트워크 하드웨어) - {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'}</h4>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    항목 (Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    세부 항목 (Specific Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    지점 (Point)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    비용 소유자 (Cost Owner)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    CAPEX(USD)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    감가상각 연수(DEP YR)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2025
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2026
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2027
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2028
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2029
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{activeRegion === 'mumbai' ? 'Mumbai' : 'Chennai'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.backboneDeviceCapex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{investmentParams.depreciationYears}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.backboneDeviceCapex / investmentParams.depreciationYears) * 0.5)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{activeRegion === 'mumbai' ? 'Mumbai' : 'Chennai'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.dcnOdfCapex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{investmentParams.depreciationYears}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.dcnOdfCapex / investmentParams.depreciationYears) * 0.5)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
+                </tr>
+                <tr className={`font-semibold ${activeRegion === 'mumbai' ? 'bg-blue-50' : 'bg-orange-50'}`}>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={5}>총계</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.depreciationByYear[0])}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.depreciationByYear[1])}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.depreciationByYear[2])}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.depreciationByYear[3])}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.depreciationByYear[4])}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* OPEX 상세 테이블 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">💼 OPEX(운영비용) - {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'}</h4>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    항목 (Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    세부 항목 (Specific Item)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    지점 (Point)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    비용 소유자 (Cost Owner)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    OPEX(yr) (USD)
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2025
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2026
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2027
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2028
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2029
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{activeRegion === 'mumbai' ? 'Mumbai' : 'Chennai'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{activeRegion === 'mumbai' ? 'Mumbai' : 'Chennai'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
+                </tr>
+                <tr className={`font-semibold ${activeRegion === 'mumbai' ? 'bg-blue-50' : 'bg-orange-50'}`}>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      {/* CAPEX 테이블 */}
-      {activeRegion === 'mumbai' && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold mb-4 text-blue-800">🏗️ CAPEX(HW) - On net HW (자본적 지출 - 네트워크 하드웨어) - 뭄바이</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead className="bg-blue-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    항목 (Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    세부 항목 (Specific Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    지점 (Point)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    비용 소유자 (Cost Owner)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    CAPEX(USD)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각 연수(DEP YR)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2025
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2026
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2027
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2028
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2029
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Mumbai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$40,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Mumbai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$50</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                </tr>
-                <tr className="bg-blue-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={5}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      {/* 주요 특징 및 전략 */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <h4 className="font-semibold text-blue-800 mb-2">💰 가격 전략</h4>
+          <ul className="text-sm text-blue-700 space-y-1">
+            <li>• 초기 가격: $1,160/월</li>
+            <li>• 네트워크 사업 특성: 연 8% 단가 감소</li>
+            <li>• 기술 발전 및 경쟁 심화 반영</li>
+            <li>• 지역 차별화 없음</li>
+          </ul>
         </div>
-      )}
-
-      {activeRegion === 'chennai' && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold mb-4 text-orange-800">🏗️ CAPEX(HW) - On net HW (자본적 지출 - 네트워크 하드웨어) - 첸나이</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead className="bg-orange-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    항목 (Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    세부 항목 (Specific Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    지점 (Point)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    비용 소유자 (Cost Owner)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    CAPEX(USD)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    감가상각 연수(DEP YR)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2025
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2026
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2027
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2028
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2029
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Chennai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$40,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$4,000</td>
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">On net HW</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Chennai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,000</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">10</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$50</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$100</td>
-                </tr>
-                <tr className="bg-orange-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={5}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$2,050</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$4,100</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div className="bg-green-50 p-4 rounded-lg">
+          <h4 className="font-semibold text-green-800 mb-2">📊 수익 인식</h4>
+          <ul className="text-sm text-green-700 space-y-1">
+            <li>• 모든 계약: 3년 장기 계약</li>
+            <li>• 단순 인식: 고객수 × 가격</li>
+            <li>• 누적 고객 기반</li>
+            <li>• 재계약으로 유지</li>
+          </ul>
         </div>
-      )}
-
-      {/* OPEX 테이블 */}
-      {activeRegion === 'mumbai' && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold mb-4 text-blue-800">💼 OPEX(운영비용) - 뭄바이</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead className="bg-blue-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    항목 (Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    세부 항목 (Specific Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    지점 (Point)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    비용 소유자 (Cost Owner)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    OPEX(yr) (USD)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2025
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2026
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2027
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2028
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2029
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Mumbai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Mumbai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                </tr>
-                <tr className="bg-blue-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {activeRegion === 'chennai' && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold mb-4 text-orange-800">💼 OPEX(운영비용) - 첸나이</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead className="bg-orange-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    항목 (Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    세부 항목 (Specific Item)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    지점 (Point)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    비용 소유자 (Cost Owner)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    OPEX(yr) (USD)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2025
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2026
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2027
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2028
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    2029
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone device</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Chennai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Chennai</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,600</td>
-                </tr>
-                <tr className="bg-orange-50 font-semibold">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">$3,200</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* 투자 비용 요약 */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg mb-8">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">📊 투자 비용 요약 - {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-4 rounded-lg border">
-            <h4 className="font-semibold text-gray-700 mb-2">총 CAPEX</h4>
-            <div className="text-2xl font-bold text-blue-600">$41,000</div>
-            <div className="text-sm text-gray-600 mt-1">초기 투자 비용</div>
-          </div>
-          <div className="bg-white p-4 rounded-lg border">
-            <h4 className="font-semibold text-gray-700 mb-2">연간 OPEX</h4>
-            <div className="text-2xl font-bold text-green-600">$3,200</div>
-            <div className="text-sm text-gray-600 mt-1">유지보수 비용</div>
-          </div>
-          <div className="bg-white p-4 rounded-lg border">
-            <h4 className="font-semibold text-gray-700 mb-2">감가상각비</h4>
-            <div className="text-2xl font-bold text-purple-600">$8,200</div>
-            <div className="text-sm text-gray-600 mt-1">연간 감가상각 ($41,000 ÷ 5년)</div>
-          </div>
+        <div className="bg-purple-50 p-4 rounded-lg">
+          <h4 className="font-semibold text-purple-800 mb-2">🎯 고객 확보</h4>
+          <ul className="text-sm text-purple-700 space-y-1">
+            <li>• <strong>첸나이 우선</strong>: 연 8개사 누적 (영업조직 매칭 기반)</li>
+            <li>• <strong>뭄바이 후순위</strong>: 연 3개사 누적 (인프라 구축 후)</li>
+            <li>• 3년 계약 유지</li>
+            <li>• 기존 영업조직 활용</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -413,249 +609,107 @@ export function BusinessFeasibilitySectionInvestment() {
 
 export function BusinessFeasibilitySectionRevenue() {
   const [activeRegion, setActiveRegion] = useState('mumbai');
+  
+  // 수익 시뮬레이션 파라미터 상태
+  const [revenueParams, setRevenueParams] = useState<RevenueParameters>({
+    baseCustomers: 3,
+    customerGrowthRate: 1.0,
+    basePrice: 1160,
+    priceDeclineRate: 0.08,
+    mbpsPerCustomer: 10
+  });
+
+  // 지역 변경 시 파라미터 업데이트
+  useEffect(() => {
+    const currentParams = getGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai');
+    setRevenueParams(currentParams);
+  }, [activeRegion]);
+
+  // 파라미터 업데이트 핸들러
+  const handleParameterChange = (param: keyof RevenueParameters, value: number) => {
+    setRevenueParams(prev => ({
+      ...prev,
+      [param]: value
+    }));
+  };
+
+  // 실행 버튼 핸들러
+  const handleApplyChanges = () => {
+    // 투자 비용 분석이 실행되었는지 확인
+    if (!isInvestmentExecuted(activeRegion as 'mumbai' | 'chennai')) {
+      const confirmed = window.confirm(
+        `⚠️ 투자 비용 분석이 아직 실행되지 않았습니다.\n\n` +
+        `현재 ${activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 투자 비용 파라미터:\n` +
+        `• Backbone Device CAPEX: $${getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').backboneDeviceCapex.toLocaleString()}\n` +
+        `• DCN/ODF CAPEX: $${getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').dcnOdfCapex.toLocaleString()}\n` +
+        `• 연간 OPEX: $${(getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').backboneMaintenanceOpex + getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').dcnOdfMaintenanceOpex).toLocaleString()}\n\n` +
+        `이 값들을 확인하고 수익 추정을 진행하시겠습니까?`
+      );
+      
+      if (!confirmed) {
+        return;
+      }
+    }
+    
+    updateGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai', revenueParams);
+    setRevenueExecuted(activeRegion as 'mumbai' | 'chennai');
+    alert(`${activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 수익 파라미터가 업데이트되었습니다.`);
+  };
+
+  // 새로고침 핸들러 (NPV 계산 즉시 반영)
+  const handleRefresh = () => {
+    // 페이지 새로고침으로 NPV 계산에 즉시 반영
+    window.location.reload();
+  };
+
+  // 기본값 리셋 핸들러
+  const resetToDefaults = () => {
+    const defaultParams = {
+      baseCustomers: activeRegion === 'mumbai' ? 3 : 8,
+      customerGrowthRate: 1.0,
+      basePrice: 1160,
+      priceDeclineRate: 0.08,
+      mbpsPerCustomer: 10
+    };
+    setRevenueParams(defaultParams);
+  };
+
+  // 현재 파라미터로 수익 계산
+  const calculateCurrentRevenue = () => {
+    const revenues: number[] = [];
+    const customers: number[] = [];
+    const salesUnits: number[] = [];
+    const prices: number[] = [];
+
+    for (let year = 0; year < 5; year++) {
+      const customerCount = revenueParams.baseCustomers * Math.pow(1 + revenueParams.customerGrowthRate, year);
+      const price = revenueParams.basePrice * Math.pow(1 - revenueParams.priceDeclineRate, year);
+      const salesUnit = customerCount * revenueParams.mbpsPerCustomer;
+      const revenue = salesUnit * price;
+
+      customers.push(customerCount);
+      salesUnits.push(salesUnit);
+      prices.push(price);
+      revenues.push(revenue);
+    }
+
+    return { revenues, customers, salesUnits, prices };
+  };
+
+  const currentResults = calculateCurrentRevenue();
 
   return (
     <section id="revenue">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📈 수익 추정 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 수익 추정</h2>
       
-      {/* 매출 추정 방법론 */}
-      <div className="mb-8">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">📊 매출 추정 방법론</h3>
-        
-        {/* 논리적 근거 설명 */}
-        <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg">
-          <h4 className="font-semibold text-yellow-800 mb-3">🎯 시장 매력도 분석 논리</h4>
-          <div className="text-sm text-yellow-700 space-y-2">
-            <p><strong>현상:</strong> 첸나이(205개 기업) &gt; 뭄바이(68개 기업) 진출</p>
-            <p><strong>결론:</strong> 뭄바이가 더 매력적인 시장</p>
-            <p><strong>논리적 근거:</strong></p>
-            
-            {/* 흐름도 스타일 분석 */}
-            <div className="space-y-6">
-              {/* 1단계: 산업 집중도 vs 다양성 */}
-              <div className="bg-white border-2 border-blue-200 rounded-lg p-4 shadow-sm">
-                <div className="flex items-center mb-3">
-                  <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">1</div>
-                  <h5 className="font-semibold text-blue-800">산업 집중도 vs 다양성</h5>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-red-700 mb-2">첸나이 (205개 기업)</h6>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span>자동차 부품 제조업:</span>
-                        <span className="font-semibold">180개 (87%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>전자제품 제조업:</span>
-                        <span>15개 (7%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>기타 서비스업:</span>
-                        <span>10개 (6%)</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-green-700 mb-2">뭄바이 (68개 기업)</h6>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span>금융/보험업:</span>
-                        <span>20개 (29%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>IT/소프트웨어:</span>
-                        <span>15개 (22%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>물류/운수업:</span>
-                        <span>12개 (18%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>건설업:</span>
-                        <span>10개 (15%)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>제조업:</span>
-                        <span>11개 (16%)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 화살표 */}
-              <div className="flex justify-center">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-lg">↓</div>
-              </div>
-
-              {/* 2단계: 경쟁 강도 차이 */}
-              <div className="bg-white border-2 border-orange-200 rounded-lg p-4 shadow-sm">
-                <div className="flex items-center mb-3">
-                  <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">2</div>
-                  <h5 className="font-semibold text-orange-800">경쟁 강도 차이</h5>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-red-700 mb-2">첸나이: 과도 경쟁</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 현대, 기아 등 주요 OEM 모두 진출 완료</li>
-                      <li>• 180개 자동차 부품 업체가 동일 시장 공유</li>
-                      <li>• 가격 경쟁으로 마진 압박</li>
-                    </ul>
-                  </div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-green-700 mb-2">뭄바이: 적절한 경쟁</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 각 업종별로 적절한 경쟁 구도</li>
-                      <li>• 차별화된 서비스로 프리미엄 가격 가능</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* 화살표 */}
-              <div className="flex justify-center">
-                <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-lg">↓</div>
-              </div>
-
-              {/* 3단계: 시장 성숙도 vs 성장 잠재력 */}
-              <div className="bg-white border-2 border-purple-200 rounded-lg p-4 shadow-sm">
-                <div className="flex items-center mb-3">
-                  <div className="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">3</div>
-                  <h5 className="font-semibold text-purple-800">시장 성숙도 vs 성장 잠재력</h5>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-red-700 mb-2">첸나이: 성숙/포화 시장</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 자동차 부품: 성숙/포화 단계</li>
-                      <li>• 신규 진출 기회: 제한적</li>
-                      <li>• 성장 한계: 도달</li>
-                    </ul>
-                  </div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-green-700 mb-2">뭄바이: 성장 시장</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 금융 서비스: 성장 단계</li>
-                      <li>• IT 솔루션: 초기 단계</li>
-                      <li>• 물류 서비스: 확장 단계</li>
-                      <li>• 신규 기회: 다수 존재</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* 화살표 */}
-              <div className="flex justify-center">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-lg">↓</div>
-              </div>
-
-              {/* 4단계: 리스크 분산 관점 */}
-              <div className="bg-white border-2 border-teal-200 rounded-lg p-4 shadow-sm">
-                <div className="flex items-center mb-3">
-                  <div className="bg-teal-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">4</div>
-                  <h5 className="font-semibold text-teal-800">리스크 분산 관점</h5>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-red-700 mb-2">첸나이: 단일 산업 의존</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 자동차 산업 의존도 87%</li>
-                      <li>• 자동차 시장 변동에 취약</li>
-                      <li>• 단일 산업 리스크 집중</li>
-                    </ul>
-                  </div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                    <h6 className="font-semibold text-green-700 mb-2">뭄바이: 다각화된 구조</h6>
-                    <ul className="space-y-1 text-sm">
-                      <li>• 다양한 산업 분산</li>
-                      <li>• 산업별 리스크 분산</li>
-                      <li>• 안정적인 수익 구조</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 p-3 bg-blue-50 rounded-lg">
-              <p className="font-semibold text-blue-800">🎯 핵심 통찰</p>
-              <div className="space-y-2">
-                <p><strong>"양적 성장 vs 질적 성장"</strong></p>
-                <ul className="ml-4 space-y-1">
-                  <li>• 첸나이: 기업 수는 많지만 과도한 경쟁</li>
-                  <li>• 뭄바이: 기업 수는 적지만 다양한 기회</li>
-                </ul>
-                <p><strong>"시장 포화 vs 시장 기회"</strong></p>
-                <ul className="ml-4 space-y-1">
-                  <li>• 첸나이: 이미 성장 한계에 도달한 성숙 시장</li>
-                  <li>• 뭄바이: 새로운 시장 진출 기회가 풍부한 성장 시장</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="mt-4 p-3 bg-green-50 rounded-lg">
-              <p className="font-semibold text-green-800">✅ 결론</p>
-              <p>"기업이 많은 진출 = 시장 매력도 상승"이라고 판단이 가능하나,</p>
-              <p>실제로는:</p>
-              <ul className="ml-4 space-y-1">
-                <li>• 과도한 경쟁은 새로운 진출자에게 불리</li>
-                <li>• 시장 다양성이 더 큰 기회 제공</li>
-                <li>• 성장 잠재력이 현재 규모보다 중요</li>
-              </ul>
-              <p className="font-semibold mt-2">따라서 뭄바이가 첸나이보다 더 매력적인 시장으로 판단됩니다.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h4 className="font-semibold text-blue-700 mb-2">가격 전략</h4>
-            <ul className="text-sm text-blue-600 space-y-1">
-              <li>• 가격: $1,160/월</li>
-              <li>• 물가상승률 반영: 연 4% 가격 상승</li>
-              <li>• 인플레이션, GDP 등 고려</li>
-              <li>• 고객당 평균 10Mbps</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-green-700 mb-2">고객 확보 전략</h4>
-            <ul className="text-sm text-green-600 space-y-1">
-              <li>• 뭄바이: 연 5개사씩 누적 증가 (다양한 업종 기회)</li>
-              <li>• 첸나이: 연 3개사씩 누적 증가 (제한된 시장 기회)</li>
-              <li>• 3년 계약 유지 가정</li>
-              <li>• 재계약으로 고객 유지</li>
-            </ul>
-          </div>
-        </div>
+      <div className="mb-6">
+        <p className="text-gray-600 mb-4">
+          인도 뭄바이, 첸나이 지역 진출 시 예상 수익을 분석합니다. 
+          고객 수, 단가, 성장률 등의 변수를 조정하여 다양한 시나리오를 시뮬레이션할 수 있습니다.
+        </p>
       </div>
 
-      {/* 3년 계약 통일 모델 설명 */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">📋 3년 계약 단순 인식 모델</h3>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-blue-800 mb-3">🎯 계약 모델</h4>
-            <div className="space-y-2 text-sm text-blue-700">
-              <p><strong>• 모든 계약:</strong> 3년 장기 계약으로 통일</p>
-              <p><strong>• 수익 인식:</strong> 단순 인식 (고객수 × 가격)</p>
-              <p><strong>• 재계약 가정:</strong> 3년 후 재계약으로 고객 유지</p>
-              <p><strong>• 누적 효과:</strong> 매년 새로운 고객 추가</p>
-            </div>
-          </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-green-800 mb-3">💰 수익 구조</h4>
-            <div className="space-y-2 text-sm text-green-700">
-              <p><strong>• 단순 계산:</strong> 누적 고객수 × 가격</p>
-              <p><strong>• 누적 성장:</strong> 매년 고객 수 증가</p>
-              <p><strong>• 안정적 수익:</strong> 3년 계약으로 예측 가능</p>
-              <p><strong>• 지역 차별화:</strong> 고객 수로만 차별화</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 통합 지역 선택 탭 */}
+      {/* 지역 선택 탭 */}
       <div className="bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl shadow-lg p-6 mb-8">
         <div className="mb-6">
           <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
@@ -682,400 +736,177 @@ export function BusinessFeasibilitySectionRevenue() {
           </div>
         </div>
 
-        {/* 탭 콘텐츠 영역 */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-inner p-6">
-          {/* 수익 추정 테이블 */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">📈 연도별 수익 추정</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      연도
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      고객 수
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      판매 단위 (Mbps)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      단가 (USD)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      매출 (USD)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      Revenue (USD)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {activeRegion === 'mumbai' ? (
-                    <>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2025</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">5</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">50</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,160</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$58,000</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$58,000</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2026</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">10</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">100</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,206</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$120,600</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$120,600</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2027</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">15</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">150</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,254</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$188,100</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$188,100</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2028</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">20</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">200</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,304</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$260,800</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$260,800</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2029</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">25</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">250</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,356</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$339,000</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$339,000</td>
-                      </tr>
-                    </>
-                  ) : (
-                    <>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2025</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">4</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">40</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,160</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$46,400</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$46,400</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2026</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">8</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">80</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,206</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$96,480</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$96,480</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2027</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">12</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">120</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,254</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$150,480</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$150,480</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2028</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">16</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">160</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,304</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$208,640</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$208,640</td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">2029</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">20</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">200</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$1,356</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$271,200</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">$271,200</td>
-                      </tr>
-                    </>
-                  )}
-                </tbody>
-              </table>
+        {/* 수익 시뮬레이션 폼 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">🎯 수익 시뮬레이션</h3>
+            <div className="flex space-x-2">
+              <button
+                onClick={resetToDefaults}
+                className="text-gray-600 hover:text-gray-800 text-sm underline"
+              >
+                기본값으로 리셋
+              </button>
+              <button
+                onClick={handleApplyChanges}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                실행
+              </button>
+            </div>
+          </div>
+          
+          <div className="mb-4 p-4 bg-green-50 rounded-lg">
+            <p className="text-sm text-green-700">
+              💡 <strong>시뮬레이션 흐름 2단계:</strong> 이곳에서 수익 파라미터를 설정한 후 "실행" 버튼을 클릭하세요. 
+              투자 비용 분석이 먼저 실행되어야 하며, 이 단계가 완료되어야 최종 NPV 계산이 가능합니다.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
+            {/* 기본 고객 수 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                기본 고객 수
+              </label>
+              <input
+                type="number"
+                value={revenueParams.baseCustomers}
+                onChange={(e) => handleParameterChange('baseCustomers', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="1"
+                step="1"
+              />
+            </div>
+
+            {/* 고객 성장률 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                고객 성장률 (%)
+              </label>
+              <input
+                type="number"
+                value={(revenueParams.customerGrowthRate * 100).toFixed(1)}
+                onChange={(e) => handleParameterChange('customerGrowthRate', Number(e.target.value) / 100)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                max="200"
+                step="0.1"
+              />
+            </div>
+
+            {/* 기본 단가 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                기본 단가 ($/Mbps)
+              </label>
+              <input
+                type="number"
+                value={revenueParams.basePrice}
+                onChange={(e) => handleParameterChange('basePrice', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="10"
+              />
+            </div>
+
+            {/* 단가 감소율 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                단가 감소율 (%)
+              </label>
+              <input
+                type="number"
+                value={(revenueParams.priceDeclineRate * 100).toFixed(1)}
+                onChange={(e) => handleParameterChange('priceDeclineRate', Number(e.target.value) / 100)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                max="50"
+                step="0.1"
+              />
+            </div>
+
+            {/* 고객당 Mbps */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                고객당 Mbps
+              </label>
+              <input
+                type="number"
+                value={revenueParams.mbpsPerCustomer}
+                onChange={(e) => handleParameterChange('mbpsPerCustomer', Number(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="1"
+                step="1"
+              />
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 구체적인 타겟 고객 선정 */}
-      <div className="mb-8">
-        <h3 className="text-lg font-bold mb-4 text-gray-800">🎯 구체적인 타겟 고객 선정</h3>
-        
-        {activeRegion === 'mumbai' ? (
-          <div className="space-y-6">
-            {/* 2025년 타겟 고객 */}
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-3">2025년 타겟 고객 (5개사)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">1. 삼성전자 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 뭄바이 금융센터에 인도 본사 설립 (2018년)</li>
-                    <li>• <strong>업종 성장세:</strong> 인도 전자제품 시장 연평균 15% 성장</li>
-                    <li>• <strong>네트워크 수요:</strong> 글로벌 R&D센터 연동으로 고대역폭 필요</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 전자제품 시장 선도기업, 연매출 $10B+</li>
-                    <li>• <strong>지역 특성:</strong> 뭄바이 IT 허브와 금융센터 접근성 우수</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">2. 현대자동차 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 뭄바이에 인도 마케팅 본부 운영 (2020년)</li>
-                    <li>• <strong>업종 성장세:</strong> 인도 자동차 시장 연평균 8% 성장, 전기차 25%</li>
-                    <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 연동</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 자동차 시장 주요 기업, 연매출 $5B+</li>
-                    <li>• <strong>지역 특성:</strong> 뭄바이 물류 허브로 부품 공급망 관리</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">3. LG전자 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 뭄바이에 인도 본사 및 R&D센터 운영 (2019년)</li>
-                    <li>• <strong>업종 성장세:</strong> 인도 가전시장 연평균 12% 성장, 스마트홈 20%</li>
-                    <li>• <strong>네트워크 수요:</strong> IoT 디바이스 관리 플랫폼 운영</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 가전시장 주요 기업, 연매출 $3B+</li>
-                    <li>• <strong>지역 특성:</strong> 뭄바이 IT 인프라 활용한 디지털 전환 추진</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">4. SK하이닉스 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 뭄바이에 인도 사무소 개설 (2021년)</li>
-                    <li>• <strong>업종 성장세:</strong> 인도 반도체 시장 연평균 18% 성장</li>
-                    <li>• <strong>네트워크 수요:</strong> 글로벌 데이터센터와 초저지연 연결 필요</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 반도체 수요 급증, 연매출 $2B+</li>
-                    <li>• <strong>지역 특성:</strong> 뭄바이 IT 허브와 반도체 클러스터 연계</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">5. 포스코 인도</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 뭄바이에 인도 본사 및 물류센터 운영 (2017년)</li>
-                    <li>• <strong>업종 성장세:</strong> 인도 철강 시장 연평균 6% 성장, 건설붐 지속</li>
-                    <li>• <strong>네트워크 수요:</strong> 전국 물류센터와 실시간 재고 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 인도 철강 수입 주요 기업, 연매출 $4B+</li>
-                    <li>• <strong>지역 특성:</strong> 뭄바이 항만과 철도 연결로 물류 효율성 극대화</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 2026년 추가 타겟 고객 */}
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-800 mb-3">2026년 추가 타겟 고객 (8개사 누적)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">5. 대우건설 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 건설업계</li>
-                    <li>• 한국 기업으로 프로젝트 이해</li>
-                    <li>• 첸나이 인프라 개발</li>
-                    <li>• 현장 관리 네트워크</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">6. 현대건설 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 건설업계</li>
-                    <li>• 한국 기업으로 기술적 이해</li>
-                    <li>• 첸나이 개발 프로젝트</li>
-                    <li>• 안전 관리 시스템</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">7. 한화생명 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 보험업계</li>
-                    <li>• 한국 기업으로 서비스 이해</li>
-                    <li>• 첸나이 시장 진출</li>
-                    <li>• 보안 네트워크 요구</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">8. CJ대한통운 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 물류업계</li>
-                    <li>• 한국 기업으로 물류 이해</li>
-                    <li>• 첸나이 물류 허브</li>
-                    <li>• 실시간 추적 시스템</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 2027-2029년 추가 고객 */}
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-purple-800 mb-3">2027-2029년 추가 타겟 고객 (12-20개사)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">추가 대상 업종</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 건설업: 대우건설, 현대건설</li>
-                    <li>• 화학업: LG화학, 롯데케미칼</li>
-                    <li>• 제약업: 한화생명, 동아제약</li>
-                    <li>• 물류업: CJ대한통운, 한진</li>
-                    <li>• 에너지업: SK에너지, GS칼텍스</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">선정 기준</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 뭄바이 지역 진출 계획</li>
-                    <li>• 한국 기업 우선</li>
-                    <li>• 네트워크 수요 높음</li>
-                    <li>• 안정적 재무 상태</li>
-                    <li>• 장기 파트너십 가능</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+        {/* 수익 추정 테이블 */}
+        <div className="bg-white rounded-lg border border-gray-200 shadow-inner p-6">
+          <h4 className="text-lg font-semibold mb-4 text-gray-800">📊 연도별 수익 추정 - {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'}</h4>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    구분
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2025
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2026
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2027
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2028
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                    2029
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">고객 수</td>
+                  {currentResults.customers.map((customer, index) => (
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                      {customer.toFixed(0)}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">판매 단위 (Mbps)</td>
+                  {currentResults.salesUnits.map((unit, index) => (
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                      {unit.toFixed(0)}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">단가 (USD)</td>
+                  {currentResults.prices.map((price, index) => (
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                      {formatCurrency(price)}
+                    </td>
+                  ))}
+                </tr>
+                <tr className={`font-semibold ${activeRegion === 'mumbai' ? 'bg-blue-50' : 'bg-orange-50'}`}>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">매출 (USD)</td>
+                  {currentResults.revenues.map((revenue, index) => (
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b font-medium">
+                      {formatCurrency(revenue)}
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
           </div>
-        ) : (
-          <div className="space-y-6">
-            {/* 2025년 타겟 고객 */}
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-orange-800 mb-3">2025년 타겟 고객 (4개사)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">1. 현대자동차 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 첸나이 근교 스리페룸부두르에 제조공장 운영 (1998년)</li>
-                    <li>• <strong>업종 성장세:</strong> 첸나이 자동차 클러스터 연평균 10% 성장, 전기차 생산 확대</li>
-                    <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 생산 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 중심 기업, 연생산 70만대, 연매출 $8B+</li>
-                    <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터 중심, 부품업체 200개 이상 집적</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">2. 기아자동차 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 첸나이 근교 아난탈루르에 제조공장 운영 (2019년)</li>
-                    <li>• <strong>업종 성장세:</strong> 첸나이 자동차 시장 연평균 12% 성장, SUV 수요 급증</li>
-                    <li>• <strong>네트워크 수요:</strong> 현대자동차와 공유하는 부품 공급망 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 내 주요 기업, 연생산 30만대</li>
-                    <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터 내 현대자동차와 시너지</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">3. LG화학 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 첸나이 근교 마하발리푸람에 화학공장 운영 (2020년)</li>
-                    <li>• <strong>업종 성장세:</strong> 첸나이 화학산업 연평균 8% 성장, 전기차 배터리 수요 급증</li>
-                    <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 본사 간 실시간 안전 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 자동차 클러스터 연계 화학업계, 연매출 $2B+</li>
-                    <li>• <strong>지역 특성:</strong> 첸나이 자동차 클러스터와 배터리 공급망 연계</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">4. 포스코 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• <strong>진출 현황:</strong> 첸나이 근교 엔노르에 철강공장 운영 (2018년)</li>
-                    <li>• <strong>업종 성장세:</strong> 첸나이 제조업 연평균 7% 성장, 건설붐 지속</li>
-                    <li>• <strong>네트워크 수요:</strong> 첸나이 공장과 뭄바이 물류센터 간 실시간 재고 관리</li>
-                    <li>• <strong>KOTRA 자료:</strong> 첸나이 제조업 클러스터 주요 기업, 연생산 500만톤</li>
-                    <li>• <strong>지역 특성:</strong> 첸나이 제조업 클러스터와 철강 수요 연계</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 2026년 추가 타겟 고객 */}
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-800 mb-3">2026년 추가 타겟 고객 (8개사 누적)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">5. 대우건설 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 건설업계</li>
-                    <li>• 한국 기업으로 프로젝트 이해</li>
-                    <li>• 첸나이 인프라 개발</li>
-                    <li>• 현장 관리 네트워크</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">6. 현대건설 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 건설업계</li>
-                    <li>• 한국 기업으로 기술적 이해</li>
-                    <li>• 첸나이 개발 프로젝트</li>
-                    <li>• 안전 관리 시스템</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">7. 한화생명 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 보험업계</li>
-                    <li>• 한국 기업으로 서비스 이해</li>
-                    <li>• 첸나이 시장 진출</li>
-                    <li>• 보안 네트워크 요구</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">8. CJ대한통운 첸나이</h5>
-                  <p className="text-sm text-gray-600 mb-2"><strong>선정 근거:</strong></p>
-                  <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• 물류업계</li>
-                    <li>• 한국 기업으로 물류 이해</li>
-                    <li>• 첸나이 물류 허브</li>
-                    <li>• 실시간 추적 시스템</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 2027-2029년 추가 고객 */}
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-purple-800 mb-3">2027-2029년 추가 타겟 고객 (12-20개사)</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">추가 대상 업종</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 제조업: 삼성전자, LG전자</li>
-                    <li>• 화학업: 롯데케미칼, SK케미칼</li>
-                    <li>• 제약업: 동아제약, 유한양행</li>
-                    <li>• 물류업: 한진, 현대글로비스</li>
-                    <li>• 에너지업: SK에너지, GS칼텍스</li>
-                  </ul>
-                </div>
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="font-semibold text-gray-800 mb-2">선정 기준</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 첸나이 지역 진출 계획</li>
-                    <li>• 한국 기업 우선</li>
-                    <li>• 제조업 중심</li>
-                    <li>• 안정적 재무 상태</li>
-                    <li>• 장기 파트너십 가능</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
 
       {/* 주요 특징 및 전략 */}
@@ -1083,9 +914,9 @@ export function BusinessFeasibilitySectionRevenue() {
         <div className="bg-blue-50 p-4 rounded-lg">
           <h4 className="font-semibold text-blue-800 mb-2">💰 가격 전략</h4>
           <ul className="text-sm text-blue-700 space-y-1">
-            <li>• 가격: $1,160/월</li>
-            <li>• 물가상승률 반영: 연 4%</li>
-            <li>• 인플레이션, GDP 고려</li>
+            <li>• 초기 가격: $1,160/월</li>
+            <li>• 네트워크 사업 특성: 연 8% 단가 감소</li>
+            <li>• 기술 발전 및 경쟁 심화 반영</li>
             <li>• 지역 차별화 없음</li>
           </ul>
         </div>
@@ -1101,10 +932,10 @@ export function BusinessFeasibilitySectionRevenue() {
         <div className="bg-purple-50 p-4 rounded-lg">
           <h4 className="font-semibold text-purple-800 mb-2">🎯 고객 확보</h4>
           <ul className="text-sm text-purple-700 space-y-1">
-            <li>• 뭄바이: 연 5개사 누적</li>
-            <li>• 첸나이: 연 3개사 누적</li>
+            <li>• <strong>첸나이 우선</strong>: 연 8개사 누적 (영업조직 매칭 기반)</li>
+            <li>• <strong>뭄바이 후순위</strong>: 연 3개사 누적 (인프라 구축 후)</li>
             <li>• 3년 계약 유지</li>
-            <li>• 지역별 차별화</li>
+            <li>• 기존 영업조직 활용</li>
           </ul>
         </div>
       </div>

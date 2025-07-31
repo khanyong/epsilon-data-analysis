@@ -175,7 +175,7 @@ export function Dashboard() {
       </div>
 
       {/* 사이드바 */}
-      <aside className="w-64 bg-gray-200 text-gray-900 flex flex-col fixed left-0 top-16 h-full overflow-y-auto">
+      <aside className="w-80 bg-gray-200 text-gray-900 flex flex-col fixed left-0 top-16 h-full overflow-y-auto">
         <nav className="flex-1 px-4 py-6 space-y-2">
           {/* 데이터 분석 */}
           <div className="text-gray-500 text-xs mb-2">데이터 분석</div>
@@ -221,7 +221,7 @@ export function Dashboard() {
                 aria-controls="investmentstrategy-toc-list"
                 style={{ maxWidth: '100%' }}
               >
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '160px' }}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '200px' }}>
                   투자 전략 보고서
                 </span>
                 <span className="ml-2">{selectedMenu === 'INVEST_REPORT' && investmentStrategyOpen ? '▲' : '▼'}</span>
@@ -260,8 +260,8 @@ export function Dashboard() {
                 aria-controls="businessfeasibility-toc-list"
                 style={{ maxWidth: '100%' }}
               >
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '160px' }}>
-                  사업성 분석 보고서
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '200px' }}>
+                  사업성 분석 보고서 <span className="text-xs text-gray-500">(ugly kevin)</span>
                 </span>
                 <span className="ml-2">{selectedMenu === 'MARKETING_REPORT' && businessFeasibilityOpen ? '▲' : '▼'}</span>
               </button>
@@ -298,7 +298,7 @@ export function Dashboard() {
                 aria-controls="nydiscount-toc-list"
                 style={{ maxWidth: '100%' }}
               >
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '160px' }}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block" style={{ maxWidth: '200px' }}>
                   뉴욕법인 할인율 보고서
                 </span>
                 <span className="ml-2">{selectedMenu === 'NY_DISCOUNT_REPORT' && nyDiscountOpen ? '▲' : '▼'}</span>
@@ -417,7 +417,7 @@ export function Dashboard() {
       </aside>
 
       {/* 메인 콘텐츠 */}
-      <main className="flex-1 ml-64 mt-16 p-8">{renderContent()}</main>
+      <main className="flex-1 ml-80 mt-16 p-8">{renderContent()}</main>
     </div>
   );
 } 

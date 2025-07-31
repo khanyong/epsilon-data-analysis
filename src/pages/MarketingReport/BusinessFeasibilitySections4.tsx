@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
 
 // 유틸리티 함수들
 const formatCurrency = (amount: number) => {
@@ -14,303 +15,265 @@ const formatPercentage = (value: number) => {
   return `${(value * 100).toFixed(1)}%`;
 };
 
+// 기업 데이터 타입 정의
+interface Company {
+  id: number;
+  name: string;
+  industry: string;
+  entryType: string;
+  entryYear: string;
+  isTarget: boolean;
+  salesDivision: string;
+  description: string;
+  region: string;
+}
+
+// 타겟 통계 타입 정의
+interface TargetStats {
+  total: number;
+  withSalesDivision: number;
+  withoutSalesDivision: number;
+  targetRatio: number;
+}
+
 export function BusinessFeasibilitySectionTargetCustomers() {
   const [activeRegion, setActiveRegion] = useState('mumbai');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
+  const [sortField, setSortField] = useState('name'); // 정렬 필드
+  const [sortDirection, setSortDirection] = useState('asc'); // 정렬 방향
+  
+  // 필터링 상태 추가
+  const [filterType, setFilterType] = useState<'all' | 'withSalesDivision' | 'withoutSalesDivision'>('all');
+  
+  // 목표 수치 (이미지 기준) - 하드코딩
+  const targetNumbers = {
+    mumbai: {
+      total: 68,
+      withSalesDivision: 10,
+      targetRatio: 0.15 // 15%
+    },
+    chennai: {
+      total: 205,
+      withSalesDivision: 174,
+      targetRatio: 0.85 // 85%
+    }
+  };
 
-  // KOTRA 자료 기반 뭄바이 진출기업 리스트 (68개)
-  const mumbaiCompanies = [
-    { id: 1, name: '비엔엑스 쉬핑', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2018', isTarget: false, description: '물류 및 운송서비스' },
-    { id: 2, name: '이롬', industry: '도매 및 소매업', entryType: '판매법인', entryYear: '2019', isTarget: false, description: '웰니스 제품 판매' },
-    { id: 3, name: '이랜드패션 인디아', industry: '제조업', entryType: '기타(트레이딩)', entryYear: '2017', isTarget: false, description: '의류 제조 및 판매' },
-    { id: 4, name: '한국산업은행', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2015', isTarget: false, description: '금융 서비스' },
-    { id: 5, name: '인바디', industry: '제조업', entryType: '판매법인', entryYear: '2018', isTarget: false, description: '의료기기 제조' },
-    { id: 6, name: '엘지화학', industry: '제조업', entryType: '판매법인', entryYear: '2016', isTarget: false, description: '화학제품 제조' },
-    { id: 7, name: '미래에셋자산운용인도', industry: '금융·보험업', entryType: '생산법인', entryYear: '2019', isTarget: false, description: '자산운용 서비스' },
-    { id: 8, name: '켐트롤스 삼일', industry: '제조업', entryType: '생산법인', entryYear: '2017', isTarget: false, description: '화학제품 제조' },
-    { id: 9, name: '케이앤씨(인도법인)', industry: '제조업', entryType: '생산법인', entryYear: '2018', isTarget: false, description: '기계제조' },
-    { id: 10, name: '삼성전자 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '1995', isTarget: true, targetRank: 1, description: '전자제품 제조' },
-    { id: 11, name: 'LG전자 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '1997', isTarget: true, targetRank: 3, description: '가전제품 제조' },
-    { id: 12, name: '현대자동차 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '1998', isTarget: true, targetRank: 2, description: '자동차 제조' },
-    { id: 13, name: '기아자동차 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '2019', isTarget: false, description: '자동차 제조' },
-    { id: 14, name: '우리은행 뭄바이지점', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2016', isTarget: false, description: '은행업무' },
-    { id: 15, name: '신한은행 뭄바이지점', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2017', isTarget: false, description: '은행업무' },
-    { id: 16, name: 'KB국민은행 뭄바이지점', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2015', isTarget: false, description: '은행업무' },
-    { id: 17, name: '하나은행 뭄바이지점', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2018', isTarget: false, description: '은행업무' },
-    { id: 18, name: '한국투자증권', industry: '금융 및 보험업', entryType: '연락사무소', entryYear: '2016', isTarget: false, description: '증권업무' },
-    { id: 19, name: 'LG화학 인도법인', industry: '제조업', entryType: '판매법인', entryYear: '2017', isTarget: false, description: '화학제품 제조' },
-    { id: 20, name: '포스코 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '2005', isTarget: true, targetRank: 5, description: '철강제품 제조' },
-    { id: 21, name: 'SK하이닉스 인도법인', industry: '제조업', entryType: '생산법인', entryYear: '2011', isTarget: true, targetRank: 4, description: '반도체 제조' },
-    { id: 22, name: 'CJ대한통운 인도법인', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 23, name: '한화시스템 인도법인', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 솔루션' },
-    { id: 24, name: '롯데인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '식품 제조' },
-    { id: 25, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 26, name: '현대중공업', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '조선 및 해양플랜트' },
-    { id: 27, name: 'LS전선', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전선 및 케이블 제조' },
-    { id: 28, name: '한화케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 29, name: 'SK이노베이션', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 30, name: 'CJ제일제당', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '식품 제조' },
-    { id: 31, name: '롯데케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 32, name: '한화에어로스페이스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '항공우주 부품 제조' },
-    { id: 33, name: '삼성SDI', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '배터리 제조' },
-    { id: 34, name: 'LG디스플레이', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '디스플레이 패널 제조' },
-    { id: 35, name: '현대모비스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 36, name: '기아모비스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 37, name: '한화정밀기계', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '정밀기계 제조' },
-    { id: 38, name: '두산에너빌리티', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '에너지 장비 제조' },
-    { id: 39, name: '한화에어로스페이스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '항공우주 부품 제조' },
-    { id: 40, name: 'LS니꼬동제련', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '동제련' },
-    { id: 41, name: '포스코케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 42, name: 'SK케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 43, name: '롯데정보통신', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 44, name: '한화시스템', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 솔루션' },
-    { id: 45, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 46, name: '현대건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 47, name: '삼성물산', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 48, name: 'GS건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 49, name: '대우건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 50, name: '롯데건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 51, name: '한화건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 52, name: '두산건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 53, name: '현대엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 54, name: '삼성엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 55, name: 'GS엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 56, name: '대우엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 57, name: '롯데엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 58, name: '한화엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 59, name: '두산엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 60, name: '현대오토에버', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 61, name: '삼성SDS', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 62, name: 'LG CNS', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 63, name: 'SK C&C', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 64, name: '롯데정보통신', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 65, name: '한화시스템', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 솔루션' },
-    { id: 66, name: '두산디지털이노베이션', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 67, name: '현대글로비스', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 68, name: '삼성물산', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' }
-  ];
+  // 현재 Supabase 데이터 상태
+  const [mumbaiCompanies, setMumbaiCompanies] = useState<Company[]>([]);
+  const [chennaiCompanies, setChennaiCompanies] = useState<Company[]>([]);
+  const [targetStats, setTargetStats] = useState<{mumbai: TargetStats, chennai: TargetStats}>({
+    mumbai: { total: 0, withSalesDivision: 0, withoutSalesDivision: 0, targetRatio: 0 },
+    chennai: { total: 0, withSalesDivision: 0, withoutSalesDivision: 0, targetRatio: 0 }
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // KOTRA 자료 기반 첸나이 진출기업 리스트 (205개)
-  const chennaiCompanies = [
-    { id: 1, name: '롯데인디아', industry: '제조업', entryType: '생산법인', entryYear: '2018', isTarget: false, description: '식품 제조' },
-    { id: 2, name: '코인원 폴리텍 인디아', industry: '운수 및 창고업', entryType: '판매법인', entryYear: '2019', isTarget: false, description: '물류 서비스' },
-    { id: 3, name: '삼성전자', industry: '제조업', entryType: '생산법인', entryYear: '1995', isTarget: false, description: '전자제품 제조' },
-    { id: 4, name: '하이테코 티엠에스 인디아', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2017', isTarget: false, description: '공구 관리 서비스' },
-    { id: 5, name: '이랜드패션', industry: '제조업', entryType: '생산법인', entryYear: '2016', isTarget: false, description: '의류 제조' },
-    { id: 6, name: '코오롱글로텍', industry: '제조업', entryType: '해외지사', entryYear: '2018', isTarget: false, description: '기타 제품 제조' },
-    { id: 7, name: '포스코 인디아 첸나이 센터', industry: '제조업', entryType: '생산법인', entryYear: '2005', isTarget: false, description: '철강제품 제조' },
-    { id: 8, name: '리드 엔프라', industry: '제조업', entryType: '생산법인', entryYear: '2019', isTarget: false, description: '플라스틱 제품 제조' },
-    { id: 9, name: '씨와이뮤텍', industry: '제조업', entryType: '생산법인', entryYear: '2017', isTarget: false, description: '자동차 부품 제조' },
-    { id: 10, name: '엔브이에이치인디아', industry: '제조업', entryType: '생산법인', entryYear: '2018', isTarget: false, description: '자동차 부품 제조' },
-    { id: 11, name: '현대자동차', industry: '제조업', entryType: '생산법인', entryYear: '1998', isTarget: true, targetRank: 1, description: '자동차 제조' },
-    { id: 12, name: '노루오토코팅인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 13, name: '삼우 수출포장', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '포장재 제조' },
-    { id: 14, name: '극동인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 15, name: '현대모비스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 16, name: '화승기계', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '기계 제조' },
-    { id: 17, name: '두원전자 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전자제품 제조' },
-    { id: 18, name: '동우썰휘스테크 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 19, name: '대승오토파츠', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 20, name: '비지에프에코머티리얼즈', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '소재 제조' },
-    { id: 21, name: '대원인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 22, name: 'CEV 엔지니어링', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 23, name: 'KB오토시스 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 24, name: '노루비케미칼인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 25, name: '현대폴리텍인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 26, name: '두원인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 27, name: '신우엔지니어링', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 28, name: '경신마더슨', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 29, name: '현대오토에버시스템즈', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 30, name: '엘엑스판토스 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 31, name: '세아글로벌인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 32, name: 'MCNS', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 33, name: '아트에프엠 오토텍 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 34, name: '현대EP인도법인', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 35, name: '에이치티아이 엔지니어링', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 36, name: '인지 컨트롤스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 37, name: '이원정공', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 38, name: '세명인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 39, name: '탑런 오토모티브 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 40, name: '디와이오토', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 41, name: '두산밥캣 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 42, name: '에이치엘클레무브', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 43, name: '만도인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 44, name: 'KEB하나은행', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '은행 서비스' },
-    { id: 45, name: '명화공업', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 46, name: '인팩인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 47, name: '영범우인도회사', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 48, name: '씨와이뮤텍 아난드', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 49, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 50, name: '디알액시온 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 51, name: '두원오토모티브 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 52, name: '데스코', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 53, name: '현대케피코 인도사무소', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 54, name: '다스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 55, name: '다스 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 56, name: 'KOC 사운드 시스템 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 57, name: '삼성에스디에스 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전자제품 제조' },
-    { id: 58, name: '신한은행', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '은행 서비스' },
-    { id: 59, name: '테크툴스 트레이딩 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 60, name: '엘디에스/러버테크', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 61, name: '에버그린플러스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 62, name: '광진', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 63, name: '제이아크 로지스틱스', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 64, name: '에코 어드반스트 폴리테크 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 65, name: '로지스올', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 66, name: '롬로지스틱스', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 67, name: '온누리엔터프라이즈', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 68, name: 'hk 건축사무소', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건축 서비스' },
-    { id: 69, name: '오니스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 70, name: '케이지엘 네트워크', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 71, name: '진성엔지니어링', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 72, name: 'PHA인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 73, name: '하남전기', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전기제품 제조' },
-    { id: 74, name: '티에스에이알', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 75, name: '서연이화 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 76, name: '상신브레이크', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 77, name: '극동 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 78, name: '현대위아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 79, name: '광성인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 80, name: '대명월시스템', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 81, name: '우리은행 첸나이지점', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '은행 서비스' },
-    { id: 82, name: '경신마더슨_2공장', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 83, name: '롬 로지스틱스', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 84, name: '포스코 인터네셔널', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '철강제품 제조' },
-    { id: 85, name: '케이앤씨(인도법인 : 씨이브이)', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 86, name: '디와이오토 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 87, name: '효성전기인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전기제품 제조' },
-    { id: 88, name: '세명인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 89, name: '두원오토모티브시스템인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 90, name: '삼성SDS', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 91, name: '현대트랜시스리어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 92, name: '평화인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 93, name: '디에이씨', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 94, name: '대한통운', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 95, name: '인디아 세아 정밀 금속', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '정밀금속 제조' },
-    { id: 96, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 97, name: '동우썰휘스테크 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 98, name: '대원인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 99, name: '현대 글로비스', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 100, name: '정인', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 101, name: '기아자동차', industry: '제조업', entryType: '생산법인', entryYear: '2019', isTarget: true, targetRank: 2, description: '자동차 제조' },
-    { id: 102, name: 'LG화학', industry: '제조업', entryType: '생산법인', entryYear: '2017', isTarget: true, targetRank: 3, description: '화학제품 제조' },
-    { id: 103, name: '삼성SDI', industry: '제조업', entryType: '생산법인', entryYear: '2018', isTarget: false, description: '배터리 제조' },
-    { id: 104, name: 'LG디스플레이', industry: '제조업', entryType: '생산법인', entryYear: '2019', isTarget: false, description: '디스플레이 패널 제조' },
-    { id: 105, name: '포스코', industry: '제조업', entryType: '생산법인', entryYear: '2005', isTarget: true, targetRank: 4, description: '철강제품 제조' },
-    { id: 106, name: '한화케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 107, name: 'SK이노베이션', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 108, name: 'CJ제일제당', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '식품 제조' },
-    { id: 109, name: '롯데케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 110, name: '한화에어로스페이스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '항공우주 부품 제조' },
-    { id: 111, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 112, name: '현대중공업', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '조선 및 해양플랜트' },
-    { id: 113, name: '한화시스템', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: 'IT 솔루션' },
-    { id: 114, name: 'LS전선', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전선 및 케이블 제조' },
-    { id: 115, name: '현대모비스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 116, name: '기아모비스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 117, name: '한화정밀기계', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '정밀기계 제조' },
-    { id: 118, name: '두산에너빌리티', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '에너지 장비 제조' },
-    { id: 119, name: 'LS니꼬동제련', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '동제련' },
-    { id: 120, name: '포스코케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 121, name: 'SK케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 122, name: '롯데정보통신', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 123, name: '한화시스템', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: 'IT 솔루션' },
-    { id: 124, name: '두산인프라코어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '건설장비 제조' },
-    { id: 125, name: '현대건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 126, name: '엔브이에이치인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 127, name: '동우썰휘스테크 인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 128, name: '두원인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 129, name: '현대EP인도법인', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 130, name: '이원정공', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 131, name: '에이치엘클레무브', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 132, name: '명화공업', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 133, name: '인팩인디아', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 134, name: '영범우인도회사', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 135, name: '씨와이뮤텍 아난드', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 부품 제조' },
-    { id: 136, name: '한국타이어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '타이어 제조' },
-    { id: 137, name: '넥센타이어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '타이어 제조' },
-    { id: 138, name: '금호타이어', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '타이어 제조' },
-    { id: 139, name: '한화에어로스페이스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '항공우주 부품 제조' },
-    { id: 140, name: '두산에어로스페이스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '항공우주 부품 제조' },
-    { id: 141, name: '한화정밀기계', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '정밀기계 제조' },
-    { id: 142, name: '두산정밀기계', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '정밀기계 제조' },
-    { id: 143, name: '한화에너빌리티', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '에너지 장비 제조' },
-    { id: 144, name: '두산에너빌리티', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '에너지 장비 제조' },
-    { id: 145, name: '한화케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 146, name: '두산케미칼', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '화학제품 제조' },
-    { id: 147, name: '한화철강', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '철강제품 제조' },
-    { id: 148, name: '두산철강', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '철강제품 제조' },
-    { id: 149, name: '한화전자', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전자제품 제조' },
-    { id: 150, name: '두산전자', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '전자제품 제조' },
-    { id: 151, name: '한화반도체', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '반도체 제조' },
-    { id: 152, name: '두산반도체', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '반도체 제조' },
-    { id: 153, name: '한화디스플레이', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '디스플레이 제조' },
-    { id: 154, name: '두산디스플레이', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '디스플레이 제조' },
-    { id: 155, name: '한화배터리', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '배터리 제조' },
-    { id: 156, name: '두산배터리', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '배터리 제조' },
-    { id: 157, name: '한화모터스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 제조' },
-    { id: 158, name: '두산모터스', industry: '제조업', entryType: '생산법인', entryYear: '2022', isTarget: false, description: '자동차 제조' },
-    { id: 159, name: '한화건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 160, name: '두산건설', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '건설 서비스' },
-    { id: 161, name: '한화엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 162, name: '두산엔지니어링', industry: '건설업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '엔지니어링 서비스' },
-    { id: 163, name: '한화IT', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 164, name: '두산IT', industry: '전문, 과학 및 기술 서비스업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: 'IT 서비스' },
-    { id: 165, name: '한화물류', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 166, name: '두산물류', industry: '운수 및 창고업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '물류 서비스' },
-    { id: 167, name: '한화금융', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '금융 서비스' },
-    { id: 168, name: '두산금융', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '금융 서비스' },
-    { id: 169, name: '한화보험', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '보험 서비스' },
-    { id: 170, name: '두산보험', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '보험 서비스' },
-    { id: 171, name: '한화증권', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '증권 서비스' },
-    { id: 172, name: '두산증권', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '증권 서비스' },
-    { id: 173, name: '한화자산운용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '자산운용 서비스' },
-    { id: 174, name: '두산자산운용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '자산운용 서비스' },
-    { id: 175, name: '한화투자증권', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자증권 서비스' },
-    { id: 176, name: '두산투자증권', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자증권 서비스' },
-    { id: 177, name: '한화생명', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '생명보험 서비스' },
-    { id: 178, name: '두산생명', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '생명보험 서비스' },
-    { id: 179, name: '한화손해보험', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '손해보험 서비스' },
-    { id: 180, name: '두산손해보험', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '손해보험 서비스' },
-    { id: 181, name: '한화카드', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '신용카드 서비스' },
-    { id: 182, name: '두산카드', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '신용카드 서비스' },
-    { id: 183, name: '한화캐피탈', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '캐피탈 서비스' },
-    { id: 184, name: '두산캐피탈', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '캐피탈 서비스' },
-    { id: 185, name: '한화저축은행', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '저축은행 서비스' },
-    { id: 186, name: '두산저축은행', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '저축은행 서비스' },
-    { id: 187, name: '한화투자신탁', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자신탁 서비스' },
-    { id: 188, name: '두산투자신탁', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자신탁 서비스' },
-    { id: 189, name: '한화투자자문', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자자문 서비스' },
-    { id: 190, name: '두산투자자문', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자자문 서비스' },
-    { id: 191, name: '한화투자개발', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자개발 서비스' },
-    { id: 192, name: '두산투자개발', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자개발 서비스' },
-    { id: 193, name: '한화투자운용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자운용 서비스' },
-    { id: 194, name: '두산투자운용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자운용 서비스' },
-    { id: 195, name: '한화투자신용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자신용 서비스' },
-    { id: 196, name: '두산투자신용', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자신용 서비스' },
-    { id: 197, name: '한화투자보증', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자보증 서비스' },
-    { id: 198, name: '두산투자보증', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자보증 서비스' },
-    { id: 199, name: '한화투자리스', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자리스 서비스' },
-    { id: 200, name: '두산투자리스', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자리스 서비스' },
-    { id: 201, name: '한화투자파이낸스', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자파이낸스 서비스' },
-    { id: 202, name: '두산투자파이낸스', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자파이낸스 서비스' },
-    { id: 203, name: '한화투자리서치', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자리서치 서비스' },
-    { id: 204, name: '두산투자리서치', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자리서치 서비스' },
-    { id: 205, name: '한화투자컨설팅', industry: '금융 및 보험업', entryType: '서비스법인', entryYear: '2022', isTarget: false, description: '투자컨설팅 서비스' }
-  ];
+  // Supabase에서 기업 데이터 가져오기
+  const fetchCompanies = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  // 페이지네이션 계산
+      // 뭄바이 기업 데이터 가져오기
+      const { data: mumbaiData, error: mumbaiError } = await supabase
+        .from('kotra')
+        .select('*')
+        .eq('office', '뭄바이');
+
+      if (mumbaiError) throw mumbaiError;
+
+      // 첸나이 기업 데이터 가져오기 (첸나이 + 첸나이무역관 포함)
+      const { data: chennaiData, error: chennaiError } = await supabase
+        .from('kotra')
+        .select('*')
+        .in('office', ['첸나이', '첸나이무역관']);
+
+      if (chennaiError) throw chennaiError;
+
+      // 데이터 변환 함수
+      const transformCompanyData = (companies: any[], region: string): Company[] => {
+        return companies.map((company, index) => ({
+          id: company.id || index + 1,
+          name: company.company_name_kr || '',
+          industry: company.industry_major || '',
+          entryType: company.entry_type || '',
+          entryYear: '2024', // 기본값
+          isTarget: Boolean(company.sales_division),
+          salesDivision: company.sales_division || '',
+          description: `${company.industry_minor || ''} ${company.entry_type || ''}`.trim(),
+          region: region
+        }));
+      };
+
+      // 통계 계산 함수
+      const calculateStats = (companies: any[]): TargetStats => {
+        const total = companies.length;
+        const withSalesDivision = companies.filter(c => c.sales_division).length;
+        const withoutSalesDivision = total - withSalesDivision;
+        const targetRatio = total > 0 ? withSalesDivision / total : 0;
+
+        return {
+          total,
+          withSalesDivision,
+          withoutSalesDivision,
+          targetRatio
+        };
+      };
+
+      // 데이터 변환 및 설정
+      const transformedMumbai = transformCompanyData(mumbaiData || [], 'mumbai');
+      const transformedChennai = transformCompanyData(chennaiData || [], 'chennai');
+
+      setMumbaiCompanies(transformedMumbai);
+      setChennaiCompanies(transformedChennai);
+
+      // 통계 계산 및 설정
+      setTargetStats({
+        mumbai: calculateStats(mumbaiData || []),
+        chennai: calculateStats(chennaiData || [])
+      });
+
+    } catch (err) {
+      console.error('기업 데이터 가져오기 오류:', err);
+      setError('데이터를 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 컴포넌트 마운트 시 데이터 가져오기
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
+  // 정렬 함수
+  const sortCompanies = (companies: Company[]) => {
+    return [...companies].sort((a, b) => {
+      let aValue = a[sortField as keyof Company] || '';
+      let bValue = b[sortField as keyof Company] || '';
+      
+      // 영업조직 정렬 시 빈 문자열을 맨 뒤로
+      if (sortField === 'salesDivision') {
+        const aHasValue = Boolean(aValue);
+        const bHasValue = Boolean(bValue);
+        
+        // 둘 다 값이 있거나 둘 다 없으면 알파벳 순 정렬
+        if (aHasValue === bHasValue) {
+          if (sortDirection === 'asc') {
+            return String(aValue).localeCompare(String(bValue), 'ko');
+          } else {
+            return String(bValue).localeCompare(String(aValue), 'ko');
+          }
+        }
+        
+        // 값이 있는 것이 앞으로 (오름차순) 또는 뒤로 (내림차순)
+        if (sortDirection === 'asc') {
+          return aHasValue ? -1 : 1;
+        } else {
+          return aHasValue ? 1 : -1;
+        }
+      }
+      
+      // 다른 필드들은 기존 로직
+      if (sortDirection === 'asc') {
+        return String(aValue).localeCompare(String(bValue), 'ko');
+      } else {
+        return String(bValue).localeCompare(String(aValue), 'ko');
+      }
+    });
+  };
+
+  // 정렬 핸들러
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1); // 정렬 시 첫 페이지로 이동
+  };
+
+  // 정렬 아이콘 렌더링
+  const renderSortIcon = (field: string) => {
+    if (sortField !== field) {
+      return <span className="text-gray-400">↕</span>;
+    }
+    return sortDirection === 'asc' ? <span className="text-blue-600">↑</span> : <span className="text-blue-600">↓</span>;
+  };
+
+  // 현재 활성 지역의 기업 데이터
   const currentCompanies = activeRegion === 'mumbai' ? mumbaiCompanies : chennaiCompanies;
-  const totalPages = Math.ceil(currentCompanies.length / itemsPerPage);
+  
+  // 필터링 적용
+  const filteredCompanies = currentCompanies.filter(company => {
+    switch (filterType) {
+      case 'withSalesDivision':
+        return Boolean(company.salesDivision);
+      case 'withoutSalesDivision':
+        return !Boolean(company.salesDivision);
+      default:
+        return true; // 'all' - 모든 기업 표시
+    }
+  });
+  
+  const sortedCompanies = sortCompanies(filteredCompanies);
+  
+  // 페이지네이션
+  const totalPages = Math.ceil(sortedCompanies.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentPageCompanies = currentCompanies.slice(startIndex, endIndex);
+  const currentCompaniesPage = sortedCompanies.slice(startIndex, endIndex);
 
   // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  // 로딩 상태 렌더링
+  if (loading) {
+    return (
+      <section id="target-customers">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 지역별 한국기업 진출현황</h2>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">데이터를 불러오는 중...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 에러 상태 렌더링
+  if (error) {
+    return (
+      <section id="target-customers">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 지역별 한국기업 진출현황</h2>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <div className="flex items-center">
+            <div className="text-red-600 mr-3">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-red-800 font-medium">데이터 로드 오류</h3>
+              <p className="text-red-700 text-sm">{error}</p>
+              <button 
+                onClick={fetchCompanies}
+                className="mt-2 text-red-600 hover:text-red-800 underline text-sm"
+              >
+                다시 시도
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="target-customers">
@@ -321,7 +284,22 @@ export function BusinessFeasibilitySectionTargetCustomers() {
           KOTRA 자료를 기반으로 한 인도 뭄바이, 첸나이 지역 진출 한국기업 현황입니다. 
           각 지역별로 진출한 모든 한국기업의 리스트와 함께, 
           타겟고객으로 선정된 기업들의 정보를 포함하여 제공합니다.
+          <br />
+          <span className="text-sm text-blue-600">
+            📊 Supabase 데이터 기준: 첸나이 {targetStats.chennai.total}개, 뭄바이 {targetStats.mumbai.total}개
+          </span>
         </p>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            📊 실시간 Supabase 데이터 연동
+          </div>
+          <button 
+            onClick={fetchCompanies}
+            className="text-blue-600 hover:text-blue-800 text-sm underline"
+          >
+            새로고침
+          </button>
+        </div>
       </div>
 
       {/* 지역 선택 탭 */}
@@ -332,6 +310,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
               onClick={() => {
                 setActiveRegion('mumbai');
                 setCurrentPage(1);
+                setFilterType('all');
               }}
               className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
                 activeRegion === 'mumbai'
@@ -345,6 +324,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
               onClick={() => {
                 setActiveRegion('chennai');
                 setCurrentPage(1);
+                setFilterType('all');
               }}
               className={`flex-1 py-3 px-6 rounded-md text-sm font-medium transition-colors ${
                 activeRegion === 'chennai'
@@ -358,176 +338,262 @@ export function BusinessFeasibilitySectionTargetCustomers() {
         </div>
 
         {/* 탭 콘텐츠 영역 */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-inner p-6">
-          {/* 타겟고객 선정 기업 안내 */}
-          <div className="mb-6 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <h3 className="text-lg font-bold mb-2 text-yellow-800">🎯 타겟고객 선정 기업</h3>
-            <p className="text-sm text-yellow-700">
-              {activeRegion === 'mumbai' ? '뭄바이 지역' : '첸나이 지역'}에서 타겟고객으로 선정된 기업들은 
-              <span className="font-semibold text-yellow-800"> 노란색 배경</span>으로 표시됩니다.
-            </p>
+        <div className="space-y-6">
+          {/* 통계 카드 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">총 기업 수</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {activeRegion === 'mumbai' ? targetStats.mumbai.total : targetStats.chennai.total}개
+                  </p>
+                </div>
+                <div className="text-blue-500">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">타겟 기업</p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {activeRegion === 'mumbai' ? targetStats.mumbai.withSalesDivision : targetStats.chennai.withSalesDivision}개
+                  </p>
+                </div>
+                <div className="text-green-500">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+              </div>
           </div>
 
-          {/* 진출기업 리스트 테이블 */}
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">순번</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">기업명</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">업종</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">진출형태</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">진출연도</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">타겟고객</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left font-semibold">설명</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentPageCompanies.map((company, index) => (
-                  <tr 
-                    key={company.id} 
-                    className={`border border-gray-300 ${
-                      company.isTarget ? 'bg-yellow-50' : 'bg-white'
-                    } hover:bg-gray-50`}
-                  >
-                    <td className="border border-gray-300 px-4 py-2 text-center">{startIndex + index + 1}</td>
-                    <td className="border border-gray-300 px-4 py-2 font-medium">
-                      {company.name}
-                      {company.isTarget && (
-                        <span className="ml-2 inline-block bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded">
-                          타겟 {company.targetRank}위
-                        </span>
-                      )}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">{company.industry}</td>
-                    <td className="border border-gray-300 px-4 py-2">{company.entryType}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{company.entryYear}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      {company.isTarget ? '✓' : '-'}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-sm">{company.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">타겟 비율</p>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {formatPercentage(activeRegion === 'mumbai' ? targetStats.mumbai.targetRatio : targetStats.chennai.targetRatio)}
+                  </p>
+                </div>
+                <div className="text-blue-500">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* 페이지네이션 */}
-          {totalPages > 1 && (
-            <div className="mt-6 flex justify-center">
+          {/* 필터링 버튼 */}
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-medium text-gray-700">필터링:</div>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    currentPage === 1
-                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  onClick={() => {
+                    setFilterType('all');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                    filterType === 'all'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  이전
+                  전체 ({filteredCompanies.length}개)
                 </button>
-                
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-                  
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-2 rounded-md text-sm font-medium ${
-                        currentPage === pageNum
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-                
                 <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
-                    currentPage === totalPages
-                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  onClick={() => {
+                    setFilterType('withSalesDivision');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                    filterType === 'withSalesDivision'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  다음
+                  영업조직 있음 ({filteredCompanies.filter(c => Boolean(c.salesDivision)).length}개)
+                </button>
+                <button
+                  onClick={() => {
+                    setFilterType('withoutSalesDivision');
+                    setCurrentPage(1);
+                  }}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                    filterType === 'withoutSalesDivision'
+                      ? 'bg-orange-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  영업조직 없음 ({filteredCompanies.filter(c => !Boolean(c.salesDivision)).length}개)
                 </button>
               </div>
             </div>
-          )}
-
-          {/* 페이지 정보 */}
-          <div className="mt-4 text-center text-sm text-gray-600">
-            {startIndex + 1} - {Math.min(endIndex, currentCompanies.length)} / {currentCompanies.length}개 기업
-            (페이지 {currentPage} / {totalPages})
           </div>
 
-          {/* 통계 정보 */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-blue-600">
-                {currentCompanies.length}
-              </div>
-              <div className="text-sm text-blue-700">총 진출기업 수</div>
+          {/* 기업 리스트 테이블 */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('name')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>기업명</span>
+                        {renderSortIcon('name')}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('salesDivision')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>영업조직</span>
+                        {renderSortIcon('salesDivision')}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('industry')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>업종</span>
+                        {renderSortIcon('industry')}
+                      </div>
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('entryType')}
+                    >
+                      <div className="flex items-center space-x-1">
+                        <span>진출형태</span>
+                        {renderSortIcon('entryType')}
+                      </div>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      타겟여부
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentCompaniesPage.map((company) => (
+                    <tr key={company.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{company.name}</div>
+                        <div className="text-sm text-gray-500">{company.description}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {company.salesDivision ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            {company.salesDivision}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            미배정
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {company.industry}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {company.entryType}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {company.isTarget ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            타겟
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            일반
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-green-600">
-                {currentCompanies.filter(c => c.isTarget).length}
+            
+            {/* 페이지네이션 */}
+            {totalPages > 1 && (
+              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div className="flex-1 flex justify-between sm:hidden">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    이전
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    다음
+                  </button>
+                </div>
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm text-gray-700">
+                      <span className="font-medium">{startIndex + 1}</span> - <span className="font-medium">{Math.min(endIndex, sortedCompanies.length)}</span> / <span className="font-medium">{sortedCompanies.length}</span>개
+                    </p>
+                  </div>
+                  <div>
+                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="sr-only">이전</span>
+                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                            page === currentPage
+                              ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                              : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="sr-only">다음</span>
+                        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </nav>
+                  </div>
+                </div>
               </div>
-              <div className="text-sm text-green-700">타겟고객 선정</div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg text-center">
-              <div className="text-2xl font-bold text-purple-600">
-                {new Set(currentCompanies.map(c => c.industry)).size}
-              </div>
-              <div className="text-sm text-purple-700">진출 업종 수</div>
-            </div>
+            )}
           </div>
-        </div>
-      </div>
-
-      {/* 주요 특징 및 전략 */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <h4 className="font-semibold text-blue-800 mb-2">📊 진출 현황 특징</h4>
-          <ul className="text-sm text-blue-700 space-y-1">
-            <li>• 뭄바이: 금융, IT 서비스 중심</li>
-            <li>• 첸나이: 제조업, 공장 중심</li>
-            <li>• 1990년대 후반부터 진출 시작</li>
-            <li>• 대기업 중심의 진출 패턴</li>
-          </ul>
-        </div>
-        <div className="bg-green-50 p-4 rounded-lg">
-          <h4 className="font-semibold text-green-800 mb-2">🎯 타겟고객 선정 기준</h4>
-          <ul className="text-sm text-green-700 space-y-1">
-            <li>• 글로벌 네트워크 니즈</li>
-            <li>• 지역 성장성</li>
-            <li>• 진출 시기 적절성</li>
-            <li>• 업종 특성</li>
-          </ul>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg">
-          <h4 className="font-semibold text-purple-800 mb-2">💡 접근 전략</h4>
-          <ul className="text-sm text-purple-700 space-y-1">
-            <li>• 1:1 직접 영업</li>
-            <li>• 파트너십 활용</li>
-            <li>• 참고 사례 구축</li>
-            <li>• 단계적 확대</li>
-          </ul>
         </div>
       </div>
     </section>

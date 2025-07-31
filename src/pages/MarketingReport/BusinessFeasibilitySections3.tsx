@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getGlobalRevenueParams, calculateRevenue, isInvestmentExecuted, isRevenueExecuted } from './BusinessFeasibilitySections2';
+import { getGlobalInvestmentParams, calculateInvestmentCosts } from './BusinessFeasibilitySections2';
 
 // 유틸리티 함수들
 const formatCurrency = (amount: number) => {
@@ -14,15 +16,36 @@ const formatPercentage = (value: number) => {
   return `${(value * 100).toFixed(1)}%`;
 };
 
+// NPV 시뮬레이션을 위한 타입 정의
+interface NPVParameters {
+  discountRate: number;
+  taxRate: number;
+}
+
 export function BusinessFeasibilitySectionDcf() {
   const [activeRegion, setActiveRegion] = useState('mumbai');
   const [showWaccModal, setShowWaccModal] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('');
+  
+  // NPV 시뮬레이션 파라미터 상태
+  const [npvParams, setNpvParams] = useState<NPVParameters>({
+    discountRate: 0.12,
+    taxRate: 0.25
+  });
 
   const openWaccModal = (componentKey: string) => {
     setSelectedComponent(componentKey);
     setShowWaccModal(true);
   };
+
+  // 지역 변경 시 파라미터 업데이트 (수익 추정과 투자 비용 연동)
+  useEffect(() => {
+    // 지역이 변경되면 수익 추정과 투자 비용의 전역 파라미터를 확인
+    const revenueParams = getGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai');
+    const investmentParams = getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai');
+    console.log(`${activeRegion} 지역 수익 파라미터:`, revenueParams);
+    console.log(`${activeRegion} 지역 투자 비용 파라미터:`, investmentParams);
+  }, [activeRegion]);
 
   // DCF 계산 함수들
   const calculateFinancialMetrics = (cashFlows: number[], discountRate: number) => {
@@ -62,12 +85,86 @@ export function BusinessFeasibilitySectionDcf() {
     };
   };
 
+  // 수익 추정과 투자 비용에서 가져온 데이터를 사용한 현금흐름 생성
+  const generateSimulationCashFlows = () => {
+    // 수익 추정에서 계산된 매출 데이터 가져오기
+    const revenueData = calculateRevenue(activeRegion as 'mumbai' | 'chennai');
+    const revenues = revenueData.revenues;
+
+    // 투자 비용에서 계산된 비용 데이터 가져오기
+    const investmentData = calculateInvestmentCosts(activeRegion as 'mumbai' | 'chennai');
+    const totalCapex = investmentData.totalCapex;
+    const totalAnnualOpex = investmentData.totalAnnualOpex;
+    const depreciationByYear = investmentData.depreciationByYear;
+
+    const cashFlows: number[] = [];
+    const costs: number[] = [];
+    const profits: number[] = [];
+    const taxes: number[] = [];
+    const netCashFlows: number[] = [];
+
+    for (let year = 0; year < 5; year++) {
+      // 매출은 수익 추정에서 가져온 값 사용
+      const revenue = revenues[year];
+
+      // 비용은 투자 비용에서 가져온 값 사용
+      const cost = totalAnnualOpex;
+      costs.push(cost);
+
+      // 이익 계산
+      const profit = revenue - cost;
+      profits.push(profit);
+
+      // 세금 계산
+      const tax = profit * npvParams.taxRate;
+      taxes.push(tax);
+
+      // 순현금흐름 계산 (감가상각 포함)
+      const netCashFlow = profit - tax + depreciationByYear[year];
+      netCashFlows.push(netCashFlow);
+    }
+
+    // 초기 투자 비용을 첫 번째 현금흐름에 반영
+    cashFlows.push(-totalCapex);
+    cashFlows.push(...netCashFlows);
+
+    return {
+      cashFlows,
+      revenues,
+      costs,
+      profits,
+      taxes,
+      netCashFlows,
+      depreciationByYear
+    };
+  };
+
+  // 시뮬레이션 결과 계산
+  const simulationResults = generateSimulationCashFlows();
+  const metrics = calculateFinancialMetrics(simulationResults.cashFlows.slice(1), npvParams.discountRate);
+
+  // 파라미터 업데이트 핸들러
+  const handleParameterChange = (param: keyof NPVParameters, value: number) => {
+    setNpvParams(prev => ({
+      ...prev,
+      [param]: value
+    }));
+  };
+
+  // 파라미터 리셋 핸들러
+  const resetToDefaults = () => {
+    setNpvParams({
+      discountRate: 0.12,
+      taxRate: 0.25
+    });
+  };
+
   // Base 매출 데이터 (매출 추정에서 계산된 실제 값)
   const getBaseRevenueData = (region: 'mumbai' | 'chennai') => {
     const basePrice = 1160;
-    const baseCustomers = region === 'mumbai' ? 5 : 4; // 뭄바이 5명, 첸나이 4명
+    const baseCustomers = region === 'mumbai' ? 3 : 8; // 뭄바이 3명, 첸나이 8명 (영업조직 매칭 기반)
     const baseProduct = 10;
-    const capex = 41000; // 투자 비용 분석에서 가져온 값
+    const capex = 42000; // 투자 비용 분석에서 가져온 값 (감가상각 6년 기준)
     const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
     
     const revenues: number[] = [];
@@ -92,19 +189,27 @@ export function BusinessFeasibilitySectionDcf() {
       pessimistic: 0.75  // -25%
     };
     
-    // 연도별 COGS (이미지 데이터 기반)
-    const cogsByYear = [
-      55110,  // 2025: $55,110
-      135485, // 2026: $135,485
-      153430, // 2027: $153,430
-      164114, // 2028: $164,114
-      175874  // 2029: $175,874
-    ];
+    // 연도별 COGS (새로운 매출 전망 기반)
+    const cogsByYear = region === 'mumbai' 
+      ? [
+          20820,  // 2025: $20,820 (뭄바이 3명 고객 기준)
+          43440,  // 2026: $43,440 (뭄바이 6명 고객 기준)
+          67740,  // 2027: $67,740 (뭄바이 9명 고객 기준)
+          93840,  // 2028: $93,840 (뭄바이 12명 고객 기준)
+          122040  // 2029: $122,040 (뭄바이 15명 고객 기준)
+        ]
+      : [
+          55520,  // 2025: $55,520 (첸나이 8명 고객 기준)
+          111040, // 2026: $111,040 (첸나이 16명 고객 기준)
+          166560, // 2027: $166,560 (첸나이 24명 고객 기준)
+          222080, // 2028: $222,080 (첸나이 32명 고객 기준)
+          277600  // 2029: $277,600 (첸나이 40명 고객 기준)
+        ];
     
     // 연도별 감가상각비 (CAPEX 테이블 기반)
     const depreciationByYear = region === 'mumbai' 
-      ? [2050, 4100, 4100, 4100, 4100] // 뭄바이: 2025년 $2,050, 2026-2029년 $4,100
-      : [4100, 2050, 4100, 4100, 4100]; // 첸나이: 2025년 $4,100, 2026년 $2,050, 2027-2029년 $4,100
+      ? [3500, 7000, 7000, 7000, 7000] // 뭄바이: 2025년 $3,500, 2026-2029년 $7,000
+      : [3500, 7000, 7000, 7000, 7000]; // 첸나이: 2025년 $3,500, 2026-2029년 $7,000
     
     const adjustment = revenueAdjustments[scenario];
     const cashFlows: number[] = [-capex]; // 초기 투자
@@ -158,19 +263,27 @@ export function BusinessFeasibilitySectionDcf() {
       localLoop: { mrc: 3400, arc: 40800 }
     };
     
-    // 연도별 COGS 계산 (이미지 데이터 기반)
-    const cogsByYear = [
-      55110,  // 2025: $55,110
-      135485, // 2026: $135,485
-      153430, // 2027: $153,430
-      164114, // 2028: $164,114
-      175874  // 2029: $175,874
-    ];
+    // 연도별 COGS 계산 (새로운 매출 전망 기반)
+    const cogsByYear = region === 'mumbai' 
+      ? [
+          20820,  // 2025: $20,820 (뭄바이 3명 고객 기준)
+          43440,  // 2026: $43,440 (뭄바이 6명 고객 기준)
+          67740,  // 2027: $67,740 (뭄바이 9명 고객 기준)
+          93840,  // 2028: $93,840 (뭄바이 12명 고객 기준)
+          122040  // 2029: $122,040 (뭄바이 15명 고객 기준)
+        ]
+      : [
+          55520,  // 2025: $55,520 (첸나이 8명 고객 기준)
+          111040, // 2026: $111,040 (첸나이 16명 고객 기준)
+          166560, // 2027: $166,560 (첸나이 24명 고객 기준)
+          222080, // 2028: $222,080 (첸나이 32명 고객 기준)
+          277600  // 2029: $277,600 (첸나이 40명 고객 기준)
+        ];
     
     // 연도별 감가상각비 (CAPEX 테이블 기반)
     const depreciationByYear = region === 'mumbai' 
-      ? [2050, 4100, 4100, 4100, 4100] // 뭄바이: 2025년 $2,050, 2026-2029년 $4,100
-      : [4100, 2050, 4100, 4100, 4100]; // 첸나이: 2025년 $4,100, 2026년 $2,050, 2027-2029년 $4,100
+      ? [3500, 7000, 7000, 7000, 7000] // 뭄바이: 2025년 $3,500, 2026-2029년 $7,000
+      : [3500, 7000, 7000, 7000, 7000]; // 첸나이: 2025년 $3,500, 2026-2029년 $7,000
     
     for (let year = 1; year <= 5; year++) {
       const adjustedRevenue = revenues[year - 1] * adjustment;
@@ -221,17 +334,10 @@ export function BusinessFeasibilitySectionDcf() {
 
   return (
     <section id="dcf">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 DCF (Discounted Cash Flow) 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 DCF 분석 기반 NPV/IRR 분석</h2>
       
-      <div className="mb-6">
-        <p className="text-gray-600 mb-4">
-          현금흐름 할인법을 통한 투자 가치 평가를 수행합니다. 
-          뭄바이와 첸나이 지역별로 시나리오 분석을 통해 투자 위험과 수익성을 종합적으로 평가합니다.
-        </p>
-      </div>
-
       {/* 지역 선택 탭 */}
-      <div className="bg-gradient-to-br from-gray-50 to-green-50 border-2 border-gray-200 rounded-xl shadow-lg p-6 mb-8">
+      <div className="bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl shadow-lg p-6 mb-8">
         <div className="mb-6">
           <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
             <button
@@ -242,7 +348,7 @@ export function BusinessFeasibilitySectionDcf() {
                   : 'text-gray-600 hover:text-gray-900 bg-gray-100'
               }`}
             >
-              🏙️ 뭄바이 DCF 분석
+              🏙️ 뭄바이
             </button>
             <button
               onClick={() => setActiveRegion('chennai')}
@@ -252,546 +358,198 @@ export function BusinessFeasibilitySectionDcf() {
                   : 'text-gray-600 hover:text-gray-900 bg-gray-100'
               }`}
             >
-              🏭 첸나이 DCF 분석
+              🏭 첸나이
             </button>
           </div>
         </div>
 
-        {/* 탭 콘텐츠 영역 */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-inner p-6">
-          {/* 시나리오별 분석 */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">📊 시나리오별 분석</h3>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Optimistic */}
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-3">🚀 Optimistic</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-700">NPV:</span>
-                    <span className="font-semibold text-green-800">
-                      {formatCurrency(activeRegion === 'mumbai' ? mumbaiOptimistic.npv : chennaiOptimistic.npv)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-700">IRR:</span>
-                    <span className="font-semibold text-green-800">
-                      {formatPercentage(activeRegion === 'mumbai' ? mumbaiOptimistic.irr : chennaiOptimistic.irr)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-700">Payback:</span>
-                    <span className="font-semibold text-green-800">
-                      {(activeRegion === 'mumbai' ? mumbaiOptimistic.paybackPeriod : chennaiOptimistic.paybackPeriod).toFixed(1)}년
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-700">PI:</span>
-                    <span className="font-semibold text-green-800">
-                      {(activeRegion === 'mumbai' ? mumbaiOptimistic.profitabilityIndex : chennaiOptimistic.profitabilityIndex).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              </div>
+        {/* NPV 시뮬레이션 폼 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-800">🎯 NPV 시뮬레이션</h3>
+            <div className="flex space-x-2">
+              <button
+                onClick={resetToDefaults}
+                className="text-gray-600 hover:text-gray-800 text-sm underline"
+              >
+                기본값으로 리셋
+              </button>
+              <button
+                onClick={() => {
+                  // 단계별 실행 여부 확인
+                  const investmentExecuted = isInvestmentExecuted(activeRegion as 'mumbai' | 'chennai');
+                  const revenueExecuted = isRevenueExecuted(activeRegion as 'mumbai' | 'chennai');
+                  
+                  if (!investmentExecuted || !revenueExecuted) {
+                    let warningMessage = '⚠️ 다음 단계들이 아직 실행되지 않았습니다:\n\n';
+                    
+                    if (!investmentExecuted) {
+                      warningMessage += '❌ 투자 비용 분석 실행 필요\n';
+                    }
+                    if (!revenueExecuted) {
+                      warningMessage += '❌ 수익 추정 실행 필요\n';
+                    }
+                    
+                    warningMessage += '\n정확한 NPV 계산을 위해 모든 단계를 순서대로 실행해주세요.';
+                    
+                    alert(warningMessage);
+                    return;
+                  }
+                  
+                  // 최종 NPV 계산 실행
+                  const finalResults = generateSimulationCashFlows();
+                  const finalMetrics = calculateFinancialMetrics(finalResults.cashFlows.slice(1), npvParams.discountRate);
+                  alert(`최종 NPV 계산이 완료되었습니다!\n\nNPV: ${formatCurrency(finalMetrics.npv)}\nIRR: ${formatPercentage(finalMetrics.irr)}\n회수기간: ${finalMetrics.paybackPeriod}년\n수익성지수: ${finalMetrics.profitabilityIndex.toFixed(2)}`);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                최종 계산 실행
+              </button>
+            </div>
+          </div>
+          
+          <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-700">
+              💡 <strong>시뮬레이션 흐름 (순서 필수):</strong><br/>
+              1️⃣ <strong>투자 비용 분석</strong>에서 CAPEX/OPEX 입력 후 "실행" 버튼 클릭<br/>
+              2️⃣ <strong>수익 추정</strong>에서 고객수/단가 입력 후 "실행" 버튼 클릭<br/>
+              3️⃣ <strong>이곳에서</strong> 할인율/세율 조정 후 "최종 계산 실행" 버튼 클릭<br/>
+              → 모든 단계가 순서대로 실행되어야 정확한 NPV, IRR, 회수기간, 수익성지수가 계산됩니다.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            {/* 할인율 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                할인율 (%)
+              </label>
+              <input
+                type="number"
+                value={(npvParams.discountRate * 100).toFixed(1)}
+                onChange={(e) => handleParameterChange('discountRate', Number(e.target.value) / 100)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                max="100"
+                step="0.1"
+              />
+            </div>
 
-              {/* Base */}
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-semibold text-blue-800 mb-3">📈 Base</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">NPV:</span>
-                    <span className="font-semibold text-blue-800">
-                      {formatCurrency(activeRegion === 'mumbai' ? mumbaiBase.npv : chennaiBase.npv)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">IRR:</span>
-                    <span className="font-semibold text-blue-800">
-                      {formatPercentage(activeRegion === 'mumbai' ? mumbaiBase.irr : chennaiBase.irr)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">Payback:</span>
-                    <span className="font-semibold text-blue-800">
-                      {(activeRegion === 'mumbai' ? mumbaiBase.paybackPeriod : chennaiBase.paybackPeriod).toFixed(1)}년
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-blue-700">PI:</span>
-                    <span className="font-semibold text-blue-800">
-                      {(activeRegion === 'mumbai' ? mumbaiBase.profitabilityIndex : chennaiBase.profitabilityIndex).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              </div>
+            {/* 세율 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                세율 (%)
+              </label>
+              <input
+                type="number"
+                value={(npvParams.taxRate * 100).toFixed(1)}
+                onChange={(e) => handleParameterChange('taxRate', Number(e.target.value) / 100)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                max="100"
+                step="0.1"
+              />
+            </div>
+          </div>
+        </div>
 
-              {/* Pessimistic */}
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-semibold text-red-800 mb-3">⚠️ Pessimistic</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-red-700">NPV:</span>
-                    <span className="font-semibold text-red-800">
-                      {formatCurrency(activeRegion === 'mumbai' ? mumbaiPessimistic.npv : chennaiPessimistic.npv)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-red-700">IRR:</span>
-                    <span className="font-semibold text-red-800">
-                      {formatPercentage(activeRegion === 'mumbai' ? mumbaiPessimistic.irr : chennaiPessimistic.irr)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-red-700">Payback:</span>
-                    <span className="font-semibold text-red-800">
-                      {(activeRegion === 'mumbai' ? mumbaiPessimistic.paybackPeriod : chennaiPessimistic.paybackPeriod).toFixed(1)}년
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-red-700">PI:</span>
-                    <span className="font-semibold text-red-800">
-                      {(activeRegion === 'mumbai' ? mumbaiPessimistic.profitabilityIndex : chennaiPessimistic.profitabilityIndex).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
+        {/* 실시간 NPV 결과 */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {formatCurrency(metrics.npv)}
+              </div>
+              <div className="text-sm text-gray-600">NPV</div>
+              <div className="text-xs text-gray-500">
+                {metrics.npv >= 0 ? '✅ 투자 가치 있음' : '❌ 투자 가치 없음'}
               </div>
             </div>
           </div>
-
-          {/* COGS 상세 분석 */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">📊 COGS (매출원가) 상세 분석</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      COGS 항목
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      공급업체
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      용량
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      MRC (USD)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      ARC (USD)
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      2025
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      2026
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      2027
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      2028
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      2029
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {/* On net Backbone 섹션 */}
-                  <tr className="bg-blue-50">
-                    <td className="px-4 py-3 text-sm font-semibold text-blue-800 border-b" colSpan={10}>
-                      On net Backbone
-                    </td>
-                  </tr>
-                  {/* Backbone */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Backbone</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Sify</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">1G</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,500</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$30,000</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$22,500</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$57,000</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$71,250</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$85,500</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$99,750</td>
-                  </tr>
-                  {/* Fiber XC */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Fiber XC</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$150</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$900</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,800</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,672</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,543</td>
-                  </tr>
-                  {/* Colocation */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Colocation</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Digital Realty</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,350</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$8,100</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$16,200</td>
-                  </tr>
-                  {/* Support HW */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Support (HW)</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$167</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,002</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$2,004</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,851</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$1,718</td>
-                  </tr>
-                  {/* On net Backbone 합계 */}
-                  <tr className="bg-blue-100 font-semibold">
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b" colSpan={5}>On net Backbone 합계</td>
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$32,502</td>
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$77,004</td>
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$91,254</td>
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$104,077</td>
-                    <td className="px-4 py-3 text-sm text-blue-800 border-b font-medium">$116,901</td>
-                  </tr>
-
-                  {/* Local Loop (Cloud Connect) 섹션 */}
-                  <tr className="bg-green-50">
-                    <td className="px-4 py-3 text-sm font-semibold text-green-800 border-b" colSpan={10}>
-                      Local Loop (Cloud Connect)
-                    </td>
-                  </tr>
-                  {/* Cloud Connect */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">Cloud Connect</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">FTP</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">-</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$12,408</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$17,681</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$22,396</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$21,277</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$20,213</td>
-                  </tr>
-                  {/* Local Loop (Cloud Connect) 합계 */}
-                  <tr className="bg-green-100 font-semibold">
-                    <td className="px-4 py-3 text-sm text-green-800 border-b" colSpan={5}>Local Loop (Cloud Connect) 합계</td>
-                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$12,408</td>
-                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$17,681</td>
-                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$22,396</td>
-                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$21,277</td>
-                    <td className="px-4 py-3 text-sm text-green-800 border-b font-medium">$20,213</td>
-                  </tr>
-
-                  {/* Local Loop (KT VPN) 섹션 */}
-                  <tr className="bg-orange-50">
-                    <td className="px-4 py-3 text-sm font-semibold text-orange-800 border-b" colSpan={10}>
-                      Local Loop (KT VPN)
-                    </td>
-                  </tr>
-                  {/* KT VPN */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">KT VPN</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">CMI</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">1G</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$3,400</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$40,800</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$10,200</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$40,800</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$39,780</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$38,760</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 border-b">$38,760</td>
-                  </tr>
-                  {/* Local Loop (KT VPN) 합계 */}
-                  <tr className="bg-orange-100 font-semibold">
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b" colSpan={5}>Local Loop (KT VPN) 합계</td>
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$10,200</td>
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$40,800</td>
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$39,780</td>
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$38,760</td>
-                    <td className="px-4 py-3 text-sm text-orange-800 border-b font-medium">$38,760</td>
-                  </tr>
-
-                  {/* 총 COGS */}
-                  <tr className="bg-purple-50 font-semibold">
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b" colSpan={5}>총 COGS</td>
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$55,110</td>
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$135,485</td>
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$153,430</td>
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$164,114</td>
-                    <td className="px-4 py-3 text-sm text-purple-800 border-b font-medium">$175,874</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            {/* COGS 설명 */}
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold text-gray-800 mb-2">📋 COGS 구성 요소 설명</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                <div>
-                  <p><strong>• On net Backbone:</strong> Sify Chennai 02 - Siruseri, SIPCOT IT Park Campus</p>
-                  <p><strong>• Local Loop (Cloud Connect):</strong> 클라우드 연결을 위한 지역 네트워크</p>
-                  <p><strong>• Local Loop (KT VPN):</strong> KT VPN 서비스를 위한 지역 네트워크</p>
-                </div>
-                <div>
-                  <p><strong>• 총 COGS:</strong> 매출원가의 약 65-70% 차지</p>
-                  <p><strong>• 연도별 변동:</strong> 1년차 마이그레이션 및 Local Loop 비용 감소 반영</p>
-                  <p><strong>• 공급업체:</strong> Sify, Epsilon, Digital Realty, CMI, FTP</p>
-                </div>
+          
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {formatPercentage(metrics.irr)}
+              </div>
+              <div className="text-sm text-gray-600">IRR</div>
+              <div className="text-xs text-gray-500">
+                {metrics.irr >= npvParams.discountRate ? '✅ 기준 초과' : '❌ 기준 미달'}
               </div>
             </div>
           </div>
-
-          {/* 현금흐름 분석 */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">💸 현금흐름 분석</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      연도
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      매출
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      매출원가
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      매출총이익
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      OPEX
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      EBITDA
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      세금
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      순이익
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      감가상각
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                      영업현금흐름
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {(activeRegion === 'mumbai' ? generateCalculationDetails('mumbai', 'base') : generateCalculationDetails('chennai', 'base')).map((item, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {2024 + item.year}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.revenue)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.cogs)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.grossProfit)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.opex)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.ebitda)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.tax)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.netIncome)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.depreciation)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(item.operatingCashFlow)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* 투자 권고사항 */}
-          <div className="mb-8">
-            <h3 className="text-lg font-bold mb-4 text-gray-800">🎯 투자 권고사항</h3>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-2">🚀 Optimistic</h4>
-                <div className="text-sm text-green-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '적극 추천' : '추천'}</p>
-                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '높음' : '보통'}</p>
-                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '낮음' : '중간'}</p>
-                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '빠른 시장 진입' : '단계적 진입'}</p>
-                </div>
+          
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">
+                {metrics.paybackPeriod}년
               </div>
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-semibold text-blue-800 mb-2">📈 Base</h4>
-                <div className="text-sm text-blue-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '추천' : '신중'}</p>
-                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '보통' : '낮음'}</p>
-                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '중간' : '높음'}</p>
-                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '단계적 진입' : '보수적 접근'}</p>
-                </div>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                <h4 className="font-semibold text-red-800 mb-2">⚠️ Pessimistic</h4>
-                <div className="text-sm text-red-700 space-y-1">
-                  <p>• <strong>투자 권고:</strong> {activeRegion === 'mumbai' ? '신중' : '비추천'}</p>
-                  <p>• <strong>예상 수익률:</strong> {activeRegion === 'mumbai' ? '낮음' : '매우 낮음'}</p>
-                  <p>• <strong>리스크:</strong> {activeRegion === 'mumbai' ? '높음' : '매우 높음'}</p>
-                  <p>• <strong>전략:</strong> {activeRegion === 'mumbai' ? '보수적 접근' : '투자 중단'}</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* 지역별 특별 권고사항 */}
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-              <h4 className="font-semibold text-yellow-800 mb-2">📍 {activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 특별 권고사항</h4>
-              <div className="text-sm text-yellow-700 space-y-2">
-                {activeRegion === 'mumbai' ? (
-                  <>
-                    <p>• <strong>시장 기회:</strong> 높은 고객 밀도와 구매력으로 인한 수익성 우수</p>
-                    <p>• <strong>투자 우선순위:</strong> 뭄바이를 1차 투자 대상으로 선정 권고</p>
-                    <p>• <strong>확장 전략:</strong> 성공 후 첸나이로 확장 고려</p>
-                  </>
-                ) : (
-                  <>
-                    <p>• <strong>시장 리스크:</strong> 낮은 수익성과 높은 COGS로 인한 투자 위험</p>
-                    <p>• <strong>투자 권고:</strong> 뭄바이 성공 후 2차 투자 대상으로 고려</p>
-                    <p>• <strong>대안 전략:</strong> 비용 효율성 개선 후 재검토 권고</p>
-                  </>
-                )}
+              <div className="text-sm text-gray-600">회수 기간</div>
+              <div className="text-xs text-gray-500">
+                {metrics.paybackPeriod <= 5 ? '✅ 적정 수준' : '⚠️ 장기 투자'}
               </div>
             </div>
           </div>
-
-          {/* 주요 가정 */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-purple-800 mb-2">📊 주요 가정</h4>
-              <ul className="text-sm text-purple-700 space-y-1">
-                <li>• 할인율 (WACC): 12%</li>
-                <li>• Base 매출: 매출 추정에서 계산된 실제 값</li>
-                <li>• Optimistic: Base + 25%</li>
-                <li>• Pessimistic: Base - 25%</li>
-                <li>• OPEX 증가율: 3%</li>
-                <li>• 세율: 25%</li>
-                <li>• 감가상각: 5년 직선법</li>
-                <li>• 초기 투자: $41,000 (CAPEX)</li>
-                <li>• 연간 OPEX: $3,200</li>
-              </ul>
-            </div>
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-orange-800 mb-2">⚠️ 리스크 요인</h4>
-              <ul className="text-sm text-orange-700 space-y-1">
-                <li>• 환율 변동 리스크</li>
-                <li>• 시장 경쟁 심화</li>
-                <li>• 규제 환경 변화</li>
-                <li>• 기술 변화 리스크</li>
-                <li>• 매출 성장 지연</li>
-                <li>• 고객 확보 실패</li>
-                <li>• 가격 경쟁 압박</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Base 매출 정보 */}
-          <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-blue-800 mb-2">📈 Base 매출 정보</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h5 className="font-semibold text-blue-700 mb-2">뭄바이 Base 매출</h5>
-                <ul className="text-sm text-blue-600 space-y-1">
-                  {mumbaiBaseData.revenues.map((revenue, index) => (
-                    <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
-                  ))}
-                </ul>
+          
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">
+                {metrics.profitabilityIndex.toFixed(2)}
               </div>
-              <div>
-                <h5 className="font-semibold text-blue-700 mb-2">첸나이 Base 매출</h5>
-                <ul className="text-sm text-blue-600 space-y-1">
-                  {chennaiBaseData.revenues.map((revenue, index) => (
-                    <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
-                  ))}
-                </ul>
+              <div className="text-sm text-gray-600">수익성 지수</div>
+              <div className="text-xs text-gray-500">
+                {metrics.profitabilityIndex >= 1 ? '✅ 수익성 양호' : '❌ 수익성 부족'}
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 주요 가정 */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-purple-50 p-4 rounded-lg">
-          <h4 className="font-semibold text-purple-800 mb-2">📊 주요 가정</h4>
-          <ul className="text-sm text-purple-700 space-y-1">
-            <li>• 할인율 (WACC): 12%</li>
-            <li>• Base 매출: 매출 추정에서 계산된 실제 값</li>
-            <li>• Optimistic: Base + 25%</li>
-            <li>• Pessimistic: Base - 25%</li>
-            <li>• OPEX 증가율: 3%</li>
-            <li>• 세율: 25%</li>
-            <li>• 감가상각: 5년 직선법</li>
-            <li>• 초기 투자: $41,000 (CAPEX)</li>
-            <li>• 연간 OPEX: $3,200</li>
-          </ul>
-        </div>
-        <div className="bg-orange-50 p-4 rounded-lg">
-          <h4 className="font-semibold text-orange-800 mb-2">⚠️ 리스크 요인</h4>
-          <ul className="text-sm text-orange-700 space-y-1">
-            <li>• 환율 변동 리스크</li>
-            <li>• 시장 경쟁 심화</li>
-            <li>• 규제 환경 변화</li>
-            <li>• 기술 변화 리스크</li>
-            <li>• 매출 성장 지연</li>
-            <li>• 고객 확보 실패</li>
-            <li>• 가격 경쟁 압박</li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Base 매출 정보 */}
-      <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-        <h4 className="font-semibold text-blue-800 mb-2">📈 Base 매출 정보</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h5 className="font-semibold text-blue-700 mb-2">뭄바이 Base 매출</h5>
-            <ul className="text-sm text-blue-600 space-y-1">
-              {mumbaiBaseData.revenues.map((revenue, index) => (
-                <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
-              ))}
-            </ul>
+        {/* 현금흐름 상세 테이블 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h4 className="text-lg font-semibold text-gray-800">📊 연도별 현금흐름 상세</h4>
           </div>
-          <div>
-            <h5 className="font-semibold text-blue-700 mb-2">첸나이 Base 매출</h5>
-            <ul className="text-sm text-blue-600 space-y-1">
-              {chennaiBaseData.revenues.map((revenue, index) => (
-                <li key={index}>• {2025 + index}년: {formatCurrency(revenue)}</li>
-              ))}
-            </ul>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">연도</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">매출</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">비용</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이익</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">세금</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">감가상각</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">순현금흐름</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {simulationResults.revenues.map((revenue, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {2025 + index}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(revenue)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(simulationResults.costs[index])}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(simulationResults.profits[index])}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(simulationResults.taxes[index])}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatCurrency(simulationResults.depreciationByYear[index])}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {formatCurrency(simulationResults.netCashFlows[index])}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
