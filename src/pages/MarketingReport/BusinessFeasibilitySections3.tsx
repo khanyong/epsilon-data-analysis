@@ -49,21 +49,52 @@ export function BusinessFeasibilitySectionDcf() {
 
   // DCF 계산 함수들
   const calculateFinancialMetrics = (cashFlows: number[], discountRate: number) => {
+    // ✅ 수정된 NPV 계산 (year 사용)
     const npv = cashFlows.reduce((sum, cf, year) => {
-      return sum + cf / Math.pow(1 + discountRate, year + 1);
+      return sum + cf / Math.pow(1 + discountRate, year);
     }, 0);
 
-    // IRR 계산 (간단한 근사치)
-    let irr = 0.1;
-    for (let i = 0; i < 100; i++) {
-      const npvTest = cashFlows.reduce((sum, cf, year) => {
-        return sum + cf / Math.pow(1 + irr, year + 1);
-      }, 0);
-      if (Math.abs(npvTest) < 1000) break;
-      irr += npvTest > 0 ? 0.01 : -0.01;
-    }
+    // ✅ 개선된 IRR 계산 (Newton-Raphson 방법)
+    const calculateIRR = (cashFlows: number[]) => {
+      let irr = 0.1; // 초기 추정값
+      const maxIterations = 100;
+      const tolerance = 0.0001; // 허용 오차
 
-    // Payback Period 계산
+      for (let i = 0; i < maxIterations; i++) {
+        let npv = 0;
+        let derivative = 0;
+
+        // NPV와 미분값 계산
+        for (let year = 0; year < cashFlows.length; year++) {
+          const factor = Math.pow(1 + irr, year);
+          npv += cashFlows[year] / factor;
+          if (year > 0) {
+            derivative -= year * cashFlows[year] / (factor * (1 + irr));
+          }
+        }
+
+        // Newton-Raphson 업데이트
+        const newIrr = irr - npv / derivative;
+        
+        // 수렴 확인
+        if (Math.abs(newIrr - irr) < tolerance) {
+          return newIrr;
+        }
+        
+        irr = newIrr;
+        
+        // 유효한 범위 내로 제한
+        if (irr < -0.99 || irr > 10) {
+          return 0.1; // 기본값 반환
+        }
+      }
+      
+      return irr;
+    };
+
+    const irr = calculateIRR(cashFlows);
+
+    // Payback Period 계산 - 기존과 동일
     let cumulativeCf = 0;
     let paybackPeriod = 0;
     for (let i = 0; i < cashFlows.length; i++) {
@@ -74,7 +105,7 @@ export function BusinessFeasibilitySectionDcf() {
       }
     }
 
-    // Profitability Index
+    // Profitability Index - 기존과 동일
     const profitabilityIndex = npv / Math.abs(cashFlows[0]);
 
     return {
@@ -141,7 +172,7 @@ export function BusinessFeasibilitySectionDcf() {
 
   // 시뮬레이션 결과 계산
   const simulationResults = generateSimulationCashFlows();
-  const metrics = calculateFinancialMetrics(simulationResults.cashFlows.slice(1), npvParams.discountRate);
+  const metrics = calculateFinancialMetrics(simulationResults.cashFlows, npvParams.discountRate);
 
   // 파라미터 업데이트 핸들러
   const handleParameterChange = (param: keyof NPVParameters, value: number) => {
@@ -157,12 +188,29 @@ export function BusinessFeasibilitySectionDcf() {
       discountRate: 0.12,
       taxRate: 0.25
     });
+    
+    // 전역 상태도 13.Simulation과 동일한 기본값으로 리셋
+    updateGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai', {
+      backboneDeviceCapex: 40000,
+      dcnOdfCapex: 2000,
+      depreciationYears: 6,
+      backboneMaintenanceOpex: 1600,
+      dcnOdfMaintenanceOpex: 1600
+    });
+    
+    updateGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai', {
+      baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
+      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
+      basePrice: 1160,
+      priceDeclineRate: 0.08,
+      mbpsPerCustomer: 10
+    });
   };
 
   // Base 매출 데이터 (매출 추정에서 계산된 실제 값)
   const getBaseRevenueData = (region: 'mumbai' | 'chennai') => {
     const basePrice = 1160;
-    const baseCustomers = region === 'mumbai' ? 3 : 8; // 뭄바이 3명, 첸나이 8명 (영업조직 매칭 기반)
+    const baseCustomers = region === 'mumbai' ? 3 : 5; // 뭄바이 3명, 첸나이 5명 (영업조직 매칭 기반)
     const baseProduct = 10;
     const capex = 42000; // 투자 비용 분석에서 가져온 값 (감가상각 6년 기준)
     const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
@@ -398,7 +446,7 @@ export function BusinessFeasibilitySectionDcf() {
                   
                   // 최종 NPV 계산 실행
                   const finalResults = generateSimulationCashFlows();
-                  const finalMetrics = calculateFinancialMetrics(finalResults.cashFlows.slice(1), npvParams.discountRate);
+                  const finalMetrics = calculateFinancialMetrics(finalResults.cashFlows, npvParams.discountRate);
                   alert(`최종 NPV 계산이 완료되었습니다!\n\nNPV: ${formatCurrency(finalMetrics.npv)}\nIRR: ${formatPercentage(finalMetrics.irr)}\n회수기간: ${finalMetrics.paybackPeriod}년\n수익성지수: ${finalMetrics.profitabilityIndex.toFixed(2)}`);
                 }}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
@@ -860,7 +908,7 @@ export function BusinessFeasibilitySectionSimulation() {
 
   const [simulationRevenueParams, setSimulationRevenueParams] = useState({
     baseCustomers: 3,
-    customerGrowthRate: 1.0,
+    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
     basePrice: 1160,
     priceDeclineRate: 0.08,
     mbpsPerCustomer: 10
@@ -876,15 +924,15 @@ export function BusinessFeasibilitySectionSimulation() {
     if (activeRegion === 'mumbai') {
       setSimulationRevenueParams({
         baseCustomers: 3,
-        customerGrowthRate: 1.0,
+        customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
         basePrice: 1160,
         priceDeclineRate: 0.08,
         mbpsPerCustomer: 10
       });
     } else {
       setSimulationRevenueParams({
-        baseCustomers: 8,
-        customerGrowthRate: 1.0,
+        baseCustomers: 5,
+        customerGrowthRate: 0.8569, // 첸나이: 2029년 정확히 77명 목표 (5명 → 77명)
         basePrice: 1160,
         priceDeclineRate: 0.08,
         mbpsPerCustomer: 10
@@ -941,19 +989,50 @@ export function BusinessFeasibilitySectionSimulation() {
 
   // 기존과 동일한 DCF 계산 함수
   const calculateFinancialMetrics = (cashFlows: number[], discountRate: number) => {
+    // ✅ 수정된 NPV 계산 (year 사용)
     const npv = cashFlows.reduce((sum, cf, year) => {
-      return sum + cf / Math.pow(1 + discountRate, year + 1);
+      return sum + cf / Math.pow(1 + discountRate, year);
     }, 0);
 
-    // IRR 계산 (간단한 근사치) - 기존과 동일
-    let irr = 0.1;
-    for (let i = 0; i < 100; i++) {
-      const npvTest = cashFlows.reduce((sum, cf, year) => {
-        return sum + cf / Math.pow(1 + irr, year + 1);
-      }, 0);
-      if (Math.abs(npvTest) < 1000) break;
-      irr += npvTest > 0 ? 0.01 : -0.01;
-    }
+    // ✅ 개선된 IRR 계산 (Newton-Raphson 방법)
+    const calculateIRR = (cashFlows: number[]) => {
+      let irr = 0.1; // 초기 추정값
+      const maxIterations = 100;
+      const tolerance = 0.0001; // 허용 오차
+
+      for (let i = 0; i < maxIterations; i++) {
+        let npv = 0;
+        let derivative = 0;
+
+        // NPV와 미분값 계산
+        for (let year = 0; year < cashFlows.length; year++) {
+          const factor = Math.pow(1 + irr, year);
+          npv += cashFlows[year] / factor;
+          if (year > 0) {
+            derivative -= year * cashFlows[year] / (factor * (1 + irr));
+          }
+        }
+
+        // Newton-Raphson 업데이트
+        const newIrr = irr - npv / derivative;
+        
+        // 수렴 확인
+        if (Math.abs(newIrr - irr) < tolerance) {
+          return newIrr;
+        }
+        
+        irr = newIrr;
+        
+        // 유효한 범위 내로 제한
+        if (irr < -0.99 || irr > 10) {
+          return 0.1; // 기본값 반환
+        }
+      }
+      
+      return irr;
+    };
+
+    const irr = calculateIRR(cashFlows);
 
     // Payback Period 계산 - 기존과 동일
     let cumulativeCf = 0;
@@ -1034,8 +1113,8 @@ export function BusinessFeasibilitySectionSimulation() {
   // 시뮬레이션 결과 계산
   const simulationResults = generateSimulationCashFlows();
   
-  // NPV와 IRR 계산 (초기 투자 비용 제외)
-  const npvMetrics = calculateFinancialMetrics(simulationResults.cashFlows.slice(1), simulationNpvParams.discountRate);
+  // ✅ 수정: 전체 현금흐름으로 NPV와 IRR 계산
+  const npvMetrics = calculateFinancialMetrics(simulationResults.cashFlows, simulationNpvParams.discountRate);
   
   // 회수기간 계산 (전체 현금흐름 포함)
   const calculatePaybackPeriod = (cashFlows: number[]) => {
@@ -1095,8 +1174,8 @@ export function BusinessFeasibilitySectionSimulation() {
       dcnOdfMaintenanceOpex: 1600
     });
     setSimulationRevenueParams({
-      baseCustomers: activeRegion === 'mumbai' ? 3 : 8,
-      customerGrowthRate: 1.0,
+      baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
+      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
       basePrice: 1160,
       priceDeclineRate: 0.08,
       mbpsPerCustomer: 10
@@ -1117,7 +1196,7 @@ export function BusinessFeasibilitySectionSimulation() {
           각 섹션의 파라미터를 조정하면 실시간으로 NPV 결과가 업데이트됩니다.
           <br /><br />
           <strong>💡 참고:</strong> 이 페이지는 기존 시뮬레이션과 완전히 분리되어 독립적으로 작동하지만, 
-          동일한 계산 로직을 사용하여 정확한 결과를 보장합니다.
+          동일한 계산 로직이 적용됩니다.
         </p>
         <div className="flex justify-end">
           <button

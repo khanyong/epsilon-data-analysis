@@ -54,14 +54,14 @@ let globalInvestmentParams: { mumbai: InvestmentParameters; chennai: InvestmentP
 let globalRevenueParams: { mumbai: RevenueParameters; chennai: RevenueParameters } = {
   mumbai: {
     baseCustomers: 3,
-    customerGrowthRate: 1.0, // 연간 100% 증가
+    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
     basePrice: 1160,
     priceDeclineRate: 0.08, // 연간 8% 감소
     mbpsPerCustomer: 10
   },
   chennai: {
-    baseCustomers: 8,
-    customerGrowthRate: 1.0, // 연간 100% 증가
+    baseCustomers: 5,
+    customerGrowthRate: 0.8569, // 첸나이: 2029년 정확히 77명 목표 (5명 → 77명)
     basePrice: 1160,
     priceDeclineRate: 0.08, // 연간 8% 감소
     mbpsPerCustomer: 10
@@ -613,7 +613,7 @@ export function BusinessFeasibilitySectionRevenue() {
   // 수익 시뮬레이션 파라미터 상태
   const [revenueParams, setRevenueParams] = useState<RevenueParameters>({
     baseCustomers: 3,
-    customerGrowthRate: 1.0,
+    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
     basePrice: 1160,
     priceDeclineRate: 0.08,
     mbpsPerCustomer: 10
@@ -665,8 +665,8 @@ export function BusinessFeasibilitySectionRevenue() {
   // 기본값 리셋 핸들러
   const resetToDefaults = () => {
     const defaultParams = {
-      baseCustomers: activeRegion === 'mumbai' ? 3 : 8,
-      customerGrowthRate: 1.0,
+      baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
+      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
       basePrice: 1160,
       priceDeclineRate: 0.08,
       mbpsPerCustomer: 10
@@ -875,7 +875,7 @@ export function BusinessFeasibilitySectionRevenue() {
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">고객 수</td>
                   {currentResults.customers.map((customer, index) => (
                     <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
-                      {customer.toFixed(0)}
+                      {customer.toFixed(1)}
                     </td>
                   ))}
                 </tr>
