@@ -3,7 +3,7 @@
 
 // 공통 기본 설정
 export const COMMON_CONFIG = {
-  basePrice: 900,                    // 기본 단가 (Mbps당)
+  basePrice: 1000,                    // 기본 단가 (Mbps당)
   priceDeclineRate: 0.05,            // 가격 하락률 (5%)
   mbpsPerCustomer: 10,               // 고객당 Mbps
   discountRate: 0.12,                // 할인율 (12% WACC)

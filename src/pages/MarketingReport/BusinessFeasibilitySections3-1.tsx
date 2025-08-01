@@ -273,6 +273,31 @@ export function BusinessFeasibilitySectionDcf() {
     }
   }, [activeRegion]);
 
+  // 매출 추정의 전역 데이터를 가져와서 시뮬레이션 파라미터에 반영
+  useEffect(() => {
+    const updateRevenueParams = () => {
+      try {
+        const globalRevenueParams = getGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai');
+        if (globalRevenueParams) {
+          setSimulationRevenueParams({
+            basePrice: globalRevenueParams.basePrice,
+            priceDeclineRate: globalRevenueParams.priceDeclineRate,
+            customersByYear: globalRevenueParams.customersByYear
+          });
+        }
+      } catch (error) {
+        console.log('전역 매출 데이터를 가져올 수 없습니다.');
+      }
+    };
+
+    // 주기적으로 매출 데이터 확인 (1초마다)
+    const interval = setInterval(updateRevenueParams, 1000);
+    
+    return () => {
+      clearInterval(interval);
+    };
+  }, [activeRegion]);
+
   // COGS 데이터 변경 감지 및 업데이트
   useEffect(() => {
     const updateCogsData = () => {
@@ -372,15 +397,22 @@ export function BusinessFeasibilitySectionDcf() {
 
     const irr = calculateIRR(cashFlows);
 
-    // Payback Period 계산 - 기존과 동일
+    // Payback Period 계산 - 수정된 로직
+    const initialInvestment = Math.abs(cashFlows[0]); // 초기 투자 비용 (양수로 변환)
     let cumulativeCf = 0;
     let paybackPeriod = 0;
-    for (let i = 0; i < cashFlows.length; i++) {
+    
+    for (let i = 1; i < cashFlows.length; i++) { // i=1부터 시작 (연간 현금흐름만)
       cumulativeCf += cashFlows[i];
-      if (cumulativeCf >= 0) {
-        paybackPeriod = i + 1;
+      if (cumulativeCf >= initialInvestment) {
+        paybackPeriod = i; // 연도 수 (초기 투자 비용 제외)
         break;
       }
+    }
+    
+    // 만약 5년 내에 회수되지 않으면 -1로 표시 (UI에서 "5년 초과"로 표시)
+    if (paybackPeriod === 0) {
+      paybackPeriod = -1; // 5년 초과를 의미
     }
 
     // Profitability Index - 기존과 동일
@@ -782,11 +814,12 @@ export function BusinessFeasibilitySectionDcf() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  {metrics.paybackPeriod}년
+                  {metrics.paybackPeriod === -1 ? '5년 초과' : `${metrics.paybackPeriod}년`}
                 </div>
                 <div className="text-sm text-gray-600">회수 기간</div>
                 <div className="text-xs text-gray-500">
-                  {metrics.paybackPeriod <= 5 ? '✅ 적정 수준' : '⚠️ 장기 투자'}
+                  {metrics.paybackPeriod === -1 ? '❌ 회수 불가' : 
+                   metrics.paybackPeriod <= 5 ? '✅ 적정 수준' : '⚠️ 장기 투자'}
                 </div>
               </div>
             </div>

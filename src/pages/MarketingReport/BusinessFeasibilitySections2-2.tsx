@@ -62,8 +62,8 @@ export const getGlobalRevenueParams = (region: 'mumbai' | 'chennai') => {
 // COGS 데이터 전역 관리 (CogsSection에서 사용)
 // 기본 COGS 데이터 정의
 const DEFAULT_COGS_DATA = {
-  mumbai: [20820, 43440, 67740, 93840, 122040],
-  chennai: [55520, 111040, 166560, 222080, 277600]
+  mumbai: [8317, 103554, 113934, 141219, 152811],
+  chennai: [8317, 103554, 113934, 141219, 152811]
 };
 
 let globalCogsData: { mumbai: number[]; chennai: number[] } = {

@@ -283,7 +283,7 @@ export function CogsSection({ region }: CogsSectionProps) {
     const supportQty = supportItem ? supportItem.quantity : 1;
     
     salesUnits.forEach((salesUnit, yearIndex) => {
-      let cost: number;
+      let cost: number = 0; // 기본값 설정
       
       if (itemId === 'fiber-1') {
         if (yearIndex === 0) {
@@ -342,30 +342,32 @@ export function CogsSection({ region }: CogsSectionProps) {
         if (yearIndex === 0) {
           // KT VPN 2025년: MRC × 12 × 1yr apply % revenue
           cost = mrc * 12 * oneYearApplyPercentRevenue;
+        } else if (yearIndex === 1) {
+          // KT VPN 2026년: MRC × 12
+          cost = mrc * 12;
+        } else if (yearIndex === 2) {
+          // KT VPN 2027년: MRC × 12 × (1 - (CircuitDiscount % / 2))
+          cost = mrc * 12 * (1 - (cogsAssumption.circuitDiscountPercent / 100 / 2));
         } else if (yearIndex === 3) {
           // KT VPN 2028년: MRC × 12 × (1 - circuit discount %)
           cost = mrc * 12 * (1 - cogsAssumption.circuitDiscountPercent / 100);
         } else if (yearIndex === 4) {
           // KT VPN 2029년: MRC × 12 × (1 - circuit discount %)
           cost = mrc * 12 * (1 - cogsAssumption.circuitDiscountPercent / 100);
-        } else {
-          // KT VPN 2026년, 2027년: MRC × 12
-          cost = mrc * 12;
+        }
+      } else if (itemId === 'backbone-1') {
+        if (yearIndex === 0) {
+          // 2025년: (MRC × 12) × (1yr apply % revenue) × (판매단위 + 100) ÷ 100
+          cost = (mrc * 12) * (oneYearApplyPercentRevenue) * (salesUnit + 100) / 100;
+        } else if (yearIndex === 1 || yearIndex === 2 || yearIndex === 3 || yearIndex === 4) {
+          // 2026년, 2027년, 2028년, 2029년: MRC × 12 × (판매단위 + 100)/100 × (1 - CircuitDiscount %)
+          cost = mrc * 12 * (salesUnit + 100) / 100 * (1 - cogsAssumption.circuitDiscountPercent / 100);
         }
       } else if (yearIndex === 0) {
-        // 2025년 (Fiber XC 제외): (MRC × 12) × (1yr apply % revenue) × (판매단위 + 100) ÷ 100
+        // 2025년 (기타 항목): (MRC × 12) × (1yr apply % revenue) × (판매단위 + 100) ÷ 100
         cost = (mrc * 12) * (oneYearApplyPercentRevenue) * (salesUnit + 100) / 100;
-      } else if (yearIndex === 3) {
-        // 2028년: MRC × 12 - 2025년 COGS + MRC × 12 × (1-Circuit discount %)^3 × (1-1yr apply % revenue)
-        const year2025Cost = (mrc * 12) * (oneYearApplyPercentRevenue) * (salesUnits[0] + 100) / 100;
-        const circuitDiscountFactor = Math.pow(1 - cogsAssumption.circuitDiscountPercent / 100, 3);
-        cost = (mrc * 12) - year2025Cost + (mrc * 12) * circuitDiscountFactor * (1 - oneYearApplyPercentRevenue);
-      } else if (yearIndex === 4) {
-        // 2029년: MRC × 12 × (1 - Circuit discount %)^3
-        const circuitDiscountFactor = Math.pow(1 - cogsAssumption.circuitDiscountPercent / 100, 3);
-        cost = mrc * 12 * circuitDiscountFactor;
       } else {
-        // 2026년부터 (2028년, 2029년 제외): MRC × 12
+        // 2026년부터 (기타 항목): MRC × 12
         cost = mrc * 12;
       }
       
@@ -385,6 +387,21 @@ export function CogsSection({ region }: CogsSectionProps) {
           ...item,
           yearlyCosts: calculateYearlyCosts(item.mrc, item.id)
         }));
+      });
+      
+      // 전역 COGS 데이터도 자동으로 업데이트
+      const totalYearlyCosts = [0, 0, 0, 0, 0];
+      Object.values(updated).forEach(section => {
+        section.forEach(item => {
+          item.yearlyCosts.forEach((cost, index) => {
+            totalYearlyCosts[index] += cost;
+          });
+        });
+      });
+      
+      // 전역 상태 업데이트
+      import('../pages/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
+        updateGlobalCogsData(region, totalYearlyCosts);
       });
       
       return updated;

@@ -225,7 +225,19 @@ const validateFinancialMetrics = (metrics: {
   }
   
   return true;
-};export function BusinessFeasibilitySectionSimulation() {
+};
+
+// COGS Assumption 인터페이스 추가
+interface CogsAssumption {
+  capacityToLease: { value: number; unit: string };
+  circuitDiscountPercent: number;
+  colocationGrowthPercent: number;
+  targetRfsMonths: number;
+  oneYearApplyPercentRevenue: number;
+  churnPercent: number;
+}
+
+export function BusinessFeasibilitySectionSimulation() {
   const [activeRegion, setActiveRegion] = useState('mumbai');
   
   // 각 시뮬레이션 박스의 접기/펼치기 상태
@@ -283,6 +295,31 @@ const validateFinancialMetrics = (metrics: {
       'Churn %': [3, 3, 3, 3, 3]
     }
   });
+
+  // COGS Assumption 상태 추가
+  const [cogsAssumption, setCogsAssumption] = useState<CogsAssumption>({
+    capacityToLease: { value: 350, unit: 'Mbps' },
+    circuitDiscountPercent: 5,
+    colocationGrowthPercent: 5.8,
+    targetRfsMonths: 12,
+    oneYearApplyPercentRevenue: 5,
+    churnPercent: 0
+  });
+
+  // COGS Assumption 핸들러 함수들 추가
+  const handleAssumptionChange = (field: keyof CogsAssumption, value: any) => {
+    setCogsAssumption(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleAssumptionNumericChange = (field: keyof CogsAssumption, value: number) => {
+    setCogsAssumption(prev => ({
+      ...prev,
+      [field]: field === 'capacityToLease' ? { ...prev.capacityToLease, value } : value
+    }));
+  };
 
   // 지역 변경 시 파라미터 업데이트
   useEffect(() => {
@@ -1028,32 +1065,92 @@ const validateFinancialMetrics = (metrics: {
                       <tbody className="bg-white divide-y divide-gray-200">
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">Capacity to lease</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">80%</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <div className="flex items-center">
+                              <input
+                                type="number"
+                                value={cogsAssumption.capacityToLease.value}
+                                onChange={(e) => handleAssumptionNumericChange('capacityToLease', Number(e.target.value))}
+                                className="w-20 px-2 py-1 border border-gray-300 rounded text-xs"
+                                min="0"
+                              />
+                              <span className="ml-2 text-gray-500 text-xs">{cogsAssumption.capacityToLease.unit}</span>
+                            </div>
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">임대 가능한 용량 비율</td>
                         </tr>
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">Circuit Discount %</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">15%</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <input
+                              type="number"
+                              value={cogsAssumption.circuitDiscountPercent}
+                              onChange={(e) => handleAssumptionChange('circuitDiscountPercent', Number(e.target.value))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">회선 할인율</td>
                         </tr>
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">Colocation growth %</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">20%</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <input
+                              type="number"
+                              value={cogsAssumption.colocationGrowthPercent}
+                              onChange={(e) => handleAssumptionChange('colocationGrowthPercent', Number(e.target.value))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">공동위치 성장률</td>
                         </tr>
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">Target RFS(mm)</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">6</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <input
+                              type="number"
+                              value={cogsAssumption.targetRfsMonths}
+                              onChange={(e) => handleAssumptionChange('targetRfsMonths', Number(e.target.value))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                              min="1"
+                              max="24"
+                            />
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">목표 RFS 개월</td>
                         </tr>
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">1yr apply % revenue</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">5%</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <input
+                              type="number"
+                              value={cogsAssumption.oneYearApplyPercentRevenue}
+                              onChange={(e) => handleAssumptionChange('oneYearApplyPercentRevenue', Number(e.target.value))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">1년 적용 매출 비율</td>
                         </tr>
                         <tr>
                           <td className="px-4 py-2 text-sm text-gray-900">Churn %</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">3%</td>
+                          <td className="px-4 py-2 text-sm text-gray-900">
+                            <input
+                              type="number"
+                              value={cogsAssumption.churnPercent}
+                              onChange={(e) => handleAssumptionChange('churnPercent', Number(e.target.value))}
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                              min="0"
+                              max="100"
+                              step="0.1"
+                            />
+                          </td>
                           <td className="px-4 py-2 text-sm text-gray-500">이탈률</td>
                         </tr>
                       </tbody>
