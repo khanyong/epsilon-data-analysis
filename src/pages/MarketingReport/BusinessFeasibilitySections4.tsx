@@ -236,7 +236,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
   if (loading) {
     return (
       <section id="target-customers">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 지역별 한국기업 진출현황</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -251,7 +251,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
   if (error) {
     return (
       <section id="target-customers">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 지역별 한국기업 진출현황</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <div className="flex items-center">
             <div className="text-red-600 mr-3">
@@ -277,7 +277,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
 
   return (
     <section id="target-customers">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 지역별 한국기업 진출현황</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
       
       <div className="mb-6">
         <p className="text-gray-600 mb-4">
@@ -603,7 +603,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
 export function BusinessFeasibilitySectionAppendix() {
   return (
     <section id="appendix">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📋 부록</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">12. 📚 부록</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-blue-50 p-6 rounded-lg">

@@ -220,7 +220,7 @@ export function BusinessFeasibilitySectionRevenue() {
 
   return (
     <section id="revenue">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 수익 추정</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">6. 💰 5년 매출 추정</h2>
       
       <div className="mb-6">
         <p className="text-gray-600 mb-4">

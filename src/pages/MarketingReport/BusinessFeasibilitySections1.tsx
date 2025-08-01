@@ -65,7 +65,7 @@ export function BusinessFeasibilitySectionOverview() {
 
   return (
     <section id="overview">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📋 사업성 분석 개요</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">1. 📋 사업성 분석 개요</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-blue-50 p-6 rounded-lg">
@@ -197,7 +197,7 @@ export function BusinessFeasibilitySectionAms() {
 
   return (
     <section id="ams">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">🌐 AMS (Addressable Market Size) 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">2. 🌐 AMS (Addressable Market Size) 분석</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-purple-50 p-6 rounded-lg">
@@ -418,7 +418,7 @@ export function BusinessFeasibilitySectionMumbai() {
 
   return (
     <section id="mumbai">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">🏙️ 뭄바이 지역 AMS 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">3. 🏙️ 뭄바이 지역 AMS 분석</h2>
       
       <div className="mb-6">
         <div className="flex border-b border-gray-200 mb-6">
@@ -726,7 +726,7 @@ export function BusinessFeasibilitySectionChennai() {
 
   return (
     <section id="chennai">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">🏭 첸나이 지역 AMS 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">4. 🏭 첸나이 지역 AMS 분석</h2>
       
       <div className="mb-6">
         <div className="flex border-b border-gray-200 mb-6">

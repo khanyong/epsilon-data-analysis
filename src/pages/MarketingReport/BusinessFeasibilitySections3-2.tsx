@@ -845,7 +845,7 @@ export function BusinessFeasibilitySectionMarketing() {
 export function BusinessFeasibilitySectionConclusion() {
   return (
     <section id="conclusion">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">결론 권고 항목</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">10. 📋 결론 및 권고사항</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-green-50 p-6 rounded-lg">
@@ -958,7 +958,7 @@ export function BusinessFeasibilitySectionConclusion() {
 export function BusinessFeasibilitySectionRisk() {
   return (
     <section id="risk">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">리스크 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">9. ⚠️ 리스크 분석</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-red-50 p-6 rounded-lg">

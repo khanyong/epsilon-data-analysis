@@ -583,7 +583,7 @@ export function BusinessFeasibilitySectionDcf() {
 
   return (
     <section id="dcf">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 DCF 분석 기반 NPV/IRR 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">7. 💰 DCF 분석 기반 NPV/IRR 분석</h2>
       
       {/* 지역 선택 탭 */}
       <div className="bg-gradient-to-br from-gray-50 to-blue-50 border-2 border-gray-200 rounded-xl shadow-lg p-6 mb-8">
@@ -1114,7 +1114,7 @@ export function BusinessFeasibilitySectionMarketing() {
 
   return (
     <section id="marketing">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📈 마케팅 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">8. 📈 마케팅 분석</h2>
       
       {/* 시나리오 선택 */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">

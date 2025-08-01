@@ -165,7 +165,7 @@ export function BusinessFeasibilitySectionInvestment() {
 
   return (
     <section id="investment">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">💰 투자 비용 분석</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">5. 💰 투자 비용 분석</h2>
       
       <div className="mb-6">
         <div className="bg-blue-50 p-4 rounded-lg mb-6">
@@ -227,7 +227,7 @@ export function BusinessFeasibilitySectionInvestment() {
           
           <div className="mb-4 p-4 bg-green-50 rounded-lg">
             <p className="text-sm text-green-700">
-              💡 <strong>시뮬레이션 흐름 1단계:</strong> 이곳에서 투자 비용 파라미터를 설정한 후 "실행" 버튼을 클릭하세요. 
+              �� <strong>시뮬레이션 흐름 1단계:</strong> 이곳에서 투자 비용 파라미터를 설정한 후 "실행" 버튼을 클릭하세요. 
               이 단계가 완료되어야 다음 단계인 수익 추정으로 진행할 수 있습니다.
             </p>
           </div>

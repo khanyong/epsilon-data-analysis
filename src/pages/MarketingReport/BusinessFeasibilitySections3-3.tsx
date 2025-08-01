@@ -685,7 +685,7 @@ export function BusinessFeasibilitySectionSimulation() {
 
   return (
     <section id="simulation">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">🎯 Simulation - 통합 시뮬레이션</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">13. 🎯 Simulation - 통합 시뮬레이션</h2>
       
       <div className="mb-6">
         <p className="text-gray-600 mb-4">

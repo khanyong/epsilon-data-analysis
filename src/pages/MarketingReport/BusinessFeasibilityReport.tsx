@@ -35,11 +35,11 @@ export function BusinessFeasibilityReport({
           <BusinessFeasibilitySectionRevenue />
           <BusinessFeasibilitySectionDcf />
           <BusinessFeasibilitySectionMarketing />
-          <BusinessFeasibilitySectionSimulation />
-          <BusinessFeasibilitySectionConclusion />
           <BusinessFeasibilitySectionRisk />
+          <BusinessFeasibilitySectionConclusion />
           <BusinessFeasibilitySectionTargetCustomers />
           <BusinessFeasibilitySectionAppendix />
+          <BusinessFeasibilitySectionSimulation />
         </div>
       ) : (
         <>
@@ -51,11 +51,11 @@ export function BusinessFeasibilityReport({
           {sectionId === 'revenue' && <BusinessFeasibilitySectionRevenue />}
           {sectionId === 'dcf' && <BusinessFeasibilitySectionDcf />}
           {sectionId === 'marketing' && <BusinessFeasibilitySectionMarketing />}
-          {sectionId === 'simulation' && <BusinessFeasibilitySectionSimulation />}
-          {sectionId === 'conclusion' && <BusinessFeasibilitySectionConclusion />}
           {sectionId === 'risk' && <BusinessFeasibilitySectionRisk />}
+          {sectionId === 'conclusion' && <BusinessFeasibilitySectionConclusion />}
           {sectionId === 'target-customers' && <BusinessFeasibilitySectionTargetCustomers />}
           {sectionId === 'appendix' && <BusinessFeasibilitySectionAppendix />}
+          {sectionId === 'simulation' && <BusinessFeasibilitySectionSimulation />}
         </>
       )}
     </div>
