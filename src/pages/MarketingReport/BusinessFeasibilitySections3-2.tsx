@@ -1,36 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { COMMON_CONFIG, REGION_CONFIGS } from '../../config/businessConfig';
 import { getGlobalRevenueParams, calculateRevenue, isInvestmentExecuted, isRevenueExecuted, updateGlobalRevenueParams } from './BusinessFeasibilitySections2';
 import { getGlobalInvestmentParams, calculateInvestmentCosts, updateGlobalInvestmentParams } from './BusinessFeasibilitySections2';
 import { CogsByRegion } from '../../services/cogsService';
-
-// 공통 기본 설정
-const COMMON_CONFIG = {
-  basePrice: 900,
-  priceDeclineRate: 0.05,
-  mbpsPerCustomer: 10,
-  discountRate: 0.12,
-  taxRate: 0.25,
-  depreciationYears: 6,
-  backboneDeviceCapex: 40000,
-  dcnOdfCapex: 2000,
-  backboneMaintenanceOpex: 133
-};
-
-// 지역 기본 설정,
-const REGION_CONFIGS = {
-  mumbai: {
-    baseCustomers: 3,
-    customersByYear: [3, 5, 9, 14, 24],
-    cogsByYear: [20820, 43440, 67740, 93840, 122040], // 기본값
-    depreciationByYear: [3500, 7000, 7000, 7000, 7000]
-  },
-  chennai: {
-    baseCustomers: 5,
-    customersByYear: [5, 8, 16, 32, 77],
-    cogsByYear: [55520, 111040, 166560, 222080, 277600], // 기본값
-    depreciationByYear: [3500, 7000, 7000, 7000, 7000]
-  }
-};
 
 // COGS 데이터 가져오기
 const getCogsData = async (): Promise<CogsByRegion> => {

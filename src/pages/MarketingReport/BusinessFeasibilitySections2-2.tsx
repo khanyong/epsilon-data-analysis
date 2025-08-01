@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { COMMON_CONFIG, REGION_CONFIGS } from '../../config/businessConfig';
 import { CogsSection } from '../../components/CogsSection';
 import { isInvestmentExecuted, getGlobalInvestmentParams } from './BusinessFeasibilitySections2-1';
 
@@ -30,14 +31,14 @@ let globalRevenueParams: { mumbai: RevenueParameters; chennai: RevenueParameters
   mumbai: {
     baseCustomers: 3,
     customersByYear: [3, 5, 9, 14, 24], // 연도별 고객수 (정수)
-    basePrice: 800,
+    basePrice: COMMON_CONFIG.basePrice,
     priceDeclineRate: 0.05, // 연간 5% 감소
     mbpsPerCustomer: 10
   },
   chennai: {
     baseCustomers: 5,
     customersByYear: [5, 8, 16, 32, 77], // 연도별 고객수 (정수)
-    basePrice: 800,
+    basePrice: COMMON_CONFIG.basePrice,
     priceDeclineRate: 0.05, // 연간 5% 감소
     mbpsPerCustomer: 10
   }
@@ -133,7 +134,7 @@ export function BusinessFeasibilitySectionRevenue() {
   const [revenueParams, setRevenueParams] = useState<RevenueParameters>({
     baseCustomers: 3,
     customersByYear: [3, 3.8, 4.7, 5.8, 7.2], // 뭄바이: 2029년 정확히 24명 목표
-    basePrice: 800,
+    basePrice: COMMON_CONFIG.basePrice,
     priceDeclineRate: 0.08,
     mbpsPerCustomer: 10
   });
@@ -186,9 +187,9 @@ export function BusinessFeasibilitySectionRevenue() {
     const defaultParams = {
       baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
       customersByYear: activeRegion === 'mumbai' ? [3, 5, 9, 14, 24] : [5, 8, 16, 32, 77], // 연도별 고객수 (정수)
-      basePrice: 800,
-      priceDeclineRate: 0.05,
-      mbpsPerCustomer: 10
+      basePrice: COMMON_CONFIG.basePrice,
+      priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+      mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
     };
     setRevenueParams(defaultParams);
   };

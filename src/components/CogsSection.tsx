@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCogsByRegion, updateCogsByRegion, resetCogsToDefault, CogsByRegion } from '../services/cogsService';
+import { CogsByRegion } from '../services/cogsService';
 import { getGlobalRevenueParams, resetCogsSectionData } from '../pages/MarketingReport/BusinessFeasibilitySections2-2';
 
 interface CogsSectionProps {
@@ -503,8 +503,11 @@ export function CogsSection({ region }: CogsSectionProps) {
         });
       });
 
-      // 현재 지역의 COGS 값만 업데이트
-      await updateCogsByRegion(region, totalYearlyCosts);
+      // 전역 COGS 데이터 업데이트 (Supabase 호출 제거)
+      import('../pages/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
+        updateGlobalCogsData(region, totalYearlyCosts);
+      });
+      
       setMessage('✅ COGS 데이터가 성공적으로 실행되었습니다.');
     } catch (error) {
       console.error('COGS 실행 실패:', error);
@@ -832,6 +835,20 @@ export function CogsSection({ region }: CogsSectionProps) {
 
   return (
     <div className="space-y-6">
+      {/* 통합된 메시지 영역 */}
+      {message && (
+        <div className={`p-4 rounded-lg border ${
+          message.includes('✅') ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
+        }`}>
+          <div className="flex items-center">
+            <span className="text-lg mr-2">
+              {message.includes('✅') ? '✅' : '❌'}
+            </span>
+            <span className="font-medium">{message}</span>
+          </div>
+        </div>
+      )}
+
       {/* ASSUMPTION 섹션 */}
       <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-lg">
         {renderAssumptionTable()}
@@ -857,14 +874,6 @@ export function CogsSection({ region }: CogsSectionProps) {
             </button>
           </div>
         </div>
-
-        {message && (
-          <div className={`p-3 rounded-md mb-4 ${
-            message.includes('✅') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-          }`}>
-            {message}
-          </div>
-        )}
 
         {/* COGS 입력 테이블들 */}
         {renderCogsInputTable('onNetBackbone', 'COGS - On net Backbone', cogsData.onNetBackbone)}
