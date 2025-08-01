@@ -27,7 +27,14 @@ export function CogsEditor({ onDataChange }: CogsEditorProps) {
       onDataChange?.(data);
     } catch (error) {
       console.error('COGS 데이터 로드 실패:', error);
-      setMessage({ type: 'error', text: '데이터 로드에 실패했습니다.' });
+      // 데이터베이스 연결 실패 시에도 기본값 사용
+      const defaultData = {
+        mumbai: [20820, 43440, 67740, 93840, 122040],
+        chennai: [55520, 111040, 166560, 222080, 277600]
+      };
+      setCogsData(defaultData);
+      onDataChange?.(defaultData);
+      setMessage({ type: 'error', text: '데이터베이스 연결 실패. 기본값을 사용합니다.' });
     } finally {
       setLoading(false);
     }
@@ -179,6 +186,92 @@ export function CogsEditor({ onDataChange }: CogsEditorProps) {
         </div>
       </div>
 
+      {/* COGS 결과 테이블 */}
+      <div className="mt-6">
+        <h4 className="text-lg font-bold text-gray-800 mb-4">📊 COGS 결과 테이블</h4>
+        <div className="overflow-x-auto">
+          <table className="w-full border border-gray-300 rounded-lg">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b border-gray-300">
+                  연도
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-300">
+                  Mumbai COGS
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-300">
+                  Chennai COGS
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-300">
+                  차이 (Chennai - Mumbai)
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b border-gray-300">
+                  비율 (Chennai/Mumbai)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {[0, 1, 2, 3, 4].map((index) => {
+                const year = 2025 + index;
+                const mumbaiCogs = cogsData.mumbai[index];
+                const chennaiCogs = cogsData.chennai[index];
+                const difference = chennaiCogs - mumbaiCogs;
+                const ratio = mumbaiCogs > 0 ? (chennaiCogs / mumbaiCogs).toFixed(2) : 'N/A';
+                
+                return (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-200">
+                      {year}년
+                    </td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-200">
+                      {formatCurrency(mumbaiCogs)}원
+                    </td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-200">
+                      {formatCurrency(chennaiCogs)}원
+                    </td>
+                    <td className={`px-4 py-3 text-sm text-center border-b border-gray-200 ${
+                      difference > 0 ? 'text-red-600' : 'text-green-600'
+                    }`}>
+                      {difference > 0 ? '+' : ''}{formatCurrency(difference)}원
+                    </td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-200">
+                      {ratio !== 'N/A' ? `${ratio}x` : 'N/A'}
+                    </td>
+                  </tr>
+                );
+              })}
+              {/* 합계 행 */}
+              <tr className="bg-blue-50 font-bold">
+                <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b border-gray-300">
+                  <strong>5년 합계</strong>
+                </td>
+                <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-300">
+                  <strong>{formatCurrency(cogsData.mumbai.reduce((sum, val) => sum + val, 0))}원</strong>
+                </td>
+                <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-300">
+                  <strong>{formatCurrency(cogsData.chennai.reduce((sum, val) => sum + val, 0))}원</strong>
+                </td>
+                <td className={`px-4 py-3 text-sm text-center border-b border-gray-300 ${
+                  cogsData.chennai.reduce((sum, val) => sum + val, 0) > cogsData.mumbai.reduce((sum, val) => sum + val, 0) 
+                    ? 'text-red-600' 
+                    : 'text-green-600'
+                }`}>
+                  <strong>
+                    {cogsData.chennai.reduce((sum, val) => sum + val, 0) > cogsData.mumbai.reduce((sum, val) => sum + val, 0) ? '+' : ''}
+                    {formatCurrency(cogsData.chennai.reduce((sum, val) => sum + val, 0) - cogsData.mumbai.reduce((sum, val) => sum + val, 0))}원
+                  </strong>
+                </td>
+                <td className="px-4 py-3 text-sm text-center text-gray-900 border-b border-gray-300">
+                  <strong>
+                    {(cogsData.chennai.reduce((sum, val) => sum + val, 0) / cogsData.mumbai.reduce((sum, val) => sum + val, 0)).toFixed(2)}x
+                  </strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* 요약 정보 */}
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
         <h5 className="font-semibold text-gray-800 mb-2">📊 COGS 요약</h5>
@@ -190,6 +283,63 @@ export function CogsEditor({ onDataChange }: CogsEditorProps) {
           <div>
             <span className="font-medium text-green-600">Chennai 총 COGS:</span>
             <span className="ml-2">{formatCurrency(cogsData.chennai.reduce((sum, val) => sum + val, 0))}원</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 추가 분석 정보 */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <h6 className="font-semibold text-blue-800 mb-2">📈 연평균 성장률</h6>
+          <div className="space-y-1 text-sm">
+            <div>
+              <span className="text-blue-600">Mumbai:</span>
+              <span className="ml-2">
+                {((Math.pow(cogsData.mumbai[4] / cogsData.mumbai[0], 1/4) - 1) * 100).toFixed(1)}%
+              </span>
+            </div>
+            <div>
+              <span className="text-green-600">Chennai:</span>
+              <span className="ml-2">
+                {((Math.pow(cogsData.chennai[4] / cogsData.chennai[0], 1/4) - 1) * 100).toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-green-50 p-4 rounded-lg">
+          <h6 className="font-semibold text-green-800 mb-2">💰 연평균 COGS</h6>
+          <div className="space-y-1 text-sm">
+            <div>
+              <span className="text-blue-600">Mumbai:</span>
+              <span className="ml-2">
+                {formatCurrency(cogsData.mumbai.reduce((sum, val) => sum + val, 0) / 5)}원
+              </span>
+            </div>
+            <div>
+              <span className="text-green-600">Chennai:</span>
+              <span className="ml-2">
+                {formatCurrency(cogsData.chennai.reduce((sum, val) => sum + val, 0) / 5)}원
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-purple-50 p-4 rounded-lg">
+          <h6 className="font-semibold text-purple-800 mb-2">⚖️ 비용 효율성</h6>
+          <div className="space-y-1 text-sm">
+            <div>
+              <span className="text-purple-600">Chennai/Mumbai 비율:</span>
+              <span className="ml-2">
+                {(cogsData.chennai.reduce((sum, val) => sum + val, 0) / cogsData.mumbai.reduce((sum, val) => sum + val, 0)).toFixed(2)}x
+              </span>
+            </div>
+            <div>
+              <span className="text-purple-600">절약 가능 금액:</span>
+              <span className="ml-2 text-green-600">
+                {formatCurrency(cogsData.chennai.reduce((sum, val) => sum + val, 0) - cogsData.mumbai.reduce((sum, val) => sum + val, 0))}원
+              </span>
+            </div>
           </div>
         </div>
       </div>
