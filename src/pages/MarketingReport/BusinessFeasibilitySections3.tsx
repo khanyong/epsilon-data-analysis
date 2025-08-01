@@ -6,7 +6,7 @@ import { CogsSection } from '../../components/CogsSection';
 
 // 공통 기본 설정
 const COMMON_CONFIG = {
-  basePrice: 1000,
+  basePrice: 900,
   priceDeclineRate: 0.05,
   mbpsPerCustomer: 10,
   discountRate: 0.12,
