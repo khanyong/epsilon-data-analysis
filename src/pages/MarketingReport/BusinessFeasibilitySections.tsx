@@ -1,23 +1,32 @@
 // 분리된 섹션 파일들을 import
 import {
   BusinessFeasibilitySectionOverview,
+  BusinessFeasibilitySectionAms,
   BusinessFeasibilitySectionMumbai,
-  BusinessFeasibilitySectionChennai,
-  BusinessFeasibilitySectionAms
+  BusinessFeasibilitySectionChennai
 } from './BusinessFeasibilitySections1';
 
 import {
-  BusinessFeasibilitySectionInvestment,
+  BusinessFeasibilitySectionInvestment
+} from './BusinessFeasibilitySections2-1';
+
+import {
   BusinessFeasibilitySectionRevenue
-} from './BusinessFeasibilitySections2';
+} from './BusinessFeasibilitySections2-2';
 
 import {
   BusinessFeasibilitySectionDcf,
-  BusinessFeasibilitySectionMarketing,
-  BusinessFeasibilitySectionRisk,
-  BusinessFeasibilitySectionConclusion,
+  BusinessFeasibilitySectionMarketing
+} from './BusinessFeasibilitySections3-1';
+
+import {
   BusinessFeasibilitySectionSimulation
-} from './BusinessFeasibilitySections3';
+} from './BusinessFeasibilitySections3-3';
+
+import {
+  BusinessFeasibilitySectionConclusion,
+  BusinessFeasibilitySectionRisk
+} from './BusinessFeasibilitySections3-2';
 
 import {
   BusinessFeasibilitySectionTargetCustomers,
@@ -27,17 +36,17 @@ import {
 // 모든 섹션을 export
 export {
   BusinessFeasibilitySectionOverview,
+  BusinessFeasibilitySectionAms,
   BusinessFeasibilitySectionMumbai,
   BusinessFeasibilitySectionChennai,
-  BusinessFeasibilitySectionAms,
   BusinessFeasibilitySectionInvestment,
   BusinessFeasibilitySectionRevenue,
   BusinessFeasibilitySectionDcf,
   BusinessFeasibilitySectionMarketing,
-  BusinessFeasibilitySectionRisk,
+  BusinessFeasibilitySectionSimulation,
   BusinessFeasibilitySectionConclusion,
+  BusinessFeasibilitySectionRisk,
   BusinessFeasibilitySectionTargetCustomers,
-  BusinessFeasibilitySectionAppendix,
-  BusinessFeasibilitySectionSimulation
+  BusinessFeasibilitySectionAppendix
 };
 

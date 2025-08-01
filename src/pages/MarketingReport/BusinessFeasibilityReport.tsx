@@ -1,18 +1,18 @@
 import React from 'react';
 import {
   BusinessFeasibilitySectionOverview,
+  BusinessFeasibilitySectionAms,
   BusinessFeasibilitySectionMumbai,
   BusinessFeasibilitySectionChennai,
-  BusinessFeasibilitySectionAms,
   BusinessFeasibilitySectionInvestment,
   BusinessFeasibilitySectionRevenue,
   BusinessFeasibilitySectionDcf,
   BusinessFeasibilitySectionMarketing,
-  BusinessFeasibilitySectionRisk,
+  BusinessFeasibilitySectionSimulation,
   BusinessFeasibilitySectionConclusion,
+  BusinessFeasibilitySectionRisk,
   BusinessFeasibilitySectionTargetCustomers,
   BusinessFeasibilitySectionAppendix,
-  BusinessFeasibilitySectionSimulation,
 } from './BusinessFeasibilitySections';
 
 export function BusinessFeasibilityReport({
@@ -35,11 +35,11 @@ export function BusinessFeasibilityReport({
           <BusinessFeasibilitySectionRevenue />
           <BusinessFeasibilitySectionDcf />
           <BusinessFeasibilitySectionMarketing />
-          <BusinessFeasibilitySectionRisk />
+          <BusinessFeasibilitySectionSimulation />
           <BusinessFeasibilitySectionConclusion />
+          <BusinessFeasibilitySectionRisk />
           <BusinessFeasibilitySectionTargetCustomers />
           <BusinessFeasibilitySectionAppendix />
-          <BusinessFeasibilitySectionSimulation />
         </div>
       ) : (
         <>
@@ -51,11 +51,11 @@ export function BusinessFeasibilityReport({
           {sectionId === 'revenue' && <BusinessFeasibilitySectionRevenue />}
           {sectionId === 'dcf' && <BusinessFeasibilitySectionDcf />}
           {sectionId === 'marketing' && <BusinessFeasibilitySectionMarketing />}
-          {sectionId === 'risk' && <BusinessFeasibilitySectionRisk />}
+          {sectionId === 'simulation' && <BusinessFeasibilitySectionSimulation />}
           {sectionId === 'conclusion' && <BusinessFeasibilitySectionConclusion />}
+          {sectionId === 'risk' && <BusinessFeasibilitySectionRisk />}
           {sectionId === 'target-customers' && <BusinessFeasibilitySectionTargetCustomers />}
           {sectionId === 'appendix' && <BusinessFeasibilitySectionAppendix />}
-          {sectionId === 'simulation' && <BusinessFeasibilitySectionSimulation />}
         </>
       )}
     </div>

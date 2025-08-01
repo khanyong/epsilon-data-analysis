@@ -58,43 +58,6 @@ export const getGlobalRevenueParams = (region: 'mumbai' | 'chennai') => {
   return globalRevenueParams[region];
 };
 
-// COGS 데이터 전역 관리 (CogsSection에서 사용)
-// 기본 COGS 데이터 정의
-const DEFAULT_COGS_DATA = {
-  mumbai: [20820, 43440, 67740, 93840, 122040],
-  chennai: [55520, 111040, 166560, 222080, 277600]
-};
-
-let globalCogsData: { mumbai: number[]; chennai: number[] } = {
-  mumbai: [...DEFAULT_COGS_DATA.mumbai],
-  chennai: [...DEFAULT_COGS_DATA.chennai]
-};
-
-// 전역 함수로 COGS 데이터 가져오기
-export const getGlobalCogsData = (region: 'mumbai' | 'chennai') => {
-  return globalCogsData[region];
-};
-
-// 전역 함수로 COGS 데이터 업데이트
-export const updateGlobalCogsData = (region: 'mumbai' | 'chennai', cogsByYear: number[]) => {
-  globalCogsData[region] = cogsByYear;
-};
-
-// 전역 함수로 COGS 데이터를 기본값으로 리셋
-export const resetGlobalCogsData = (region: 'mumbai' | 'chennai') => {
-  globalCogsData[region] = [...DEFAULT_COGS_DATA[region]];
-};
-
-// CogsSection에서 호출할 전역 리셋 함수
-export const resetCogsSectionData = (region: 'mumbai' | 'chennai') => {
-  // 전역 COGS 데이터를 기본값으로 리셋
-  globalCogsData[region] = [...DEFAULT_COGS_DATA[region]];
-  
-  // 페이지 새로고침 없이 전역 상태 업데이트를 트리거
-  // 이벤트를 발생시켜 다른 컴포넌트들이 업데이트를 감지하도록 함
-  window.dispatchEvent(new CustomEvent('cogsDataReset', { detail: { region } }));
-};
-
 export const setRevenueExecuted = (region: 'mumbai' | 'chennai') => {
   globalRevenueExecuted[region] = true;
 };

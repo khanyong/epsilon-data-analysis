@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchCogsByRegion, updateCogsByRegion, resetCogsToDefault, CogsByRegion } from '../services/cogsService';
-import { getGlobalRevenueParams } from '../pages/MarketingReport/BusinessFeasibilitySections2-2';
+import { getGlobalRevenueParams, resetCogsSectionData } from '../pages/MarketingReport/BusinessFeasibilitySections2-2';
 
 interface CogsSectionProps {
   region: 'mumbai' | 'chennai';
@@ -137,6 +137,116 @@ export function CogsSection({ region }: CogsSectionProps) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+
+  // COGS 데이터 리셋 이벤트 감지
+  useEffect(() => {
+    const handleCogsReset = (event: CustomEvent) => {
+      if (event.detail.region === region) {
+        // CogsSection 내부 상태를 기본값으로 되돌리기
+        setCogsAssumption({
+          capacityToLease: { value: 350, unit: 'Mbps' },
+          circuitDiscountPercent: 5,
+          colocationGrowthPercent: 5.8,
+          targetRfsMonths: 12,
+          churnPercent: 0
+        });
+
+        // COGS 데이터를 기본값으로 되돌리기
+        setCogsData({
+          onNetBackbone: [
+            {
+              id: 'backbone-1',
+              category: 'Implement on-net',
+              subCategory: 'Backbone',
+              point: region === 'mumbai' ? 'Mumbai~SG' : 'Chennai~SG',
+              costOwner: 'Epsilon',
+              supplier: 'Sify',
+              term: { value: 3, unit: 'yr' },
+              capacity: { value: 1, unit: 'G' },
+              quantity: 1,
+              nrc: 0,
+              mrc: 2500,
+              arc: 30000,
+              yearlyCosts: [3750, 57000, 71250, 85500, 99750],
+              note: 'Starting with 250M, lease on demand as long as KT BB allows.'
+            },
+            {
+              id: 'fiber-1',
+              category: 'Implement on-net',
+              subCategory: 'Fiber XC',
+              point: region === 'mumbai' ? 'Mumbai' : 'Chennai',
+              costOwner: 'Epsilon',
+              supplier: '',
+              term: { value: 0, unit: '' },
+              capacity: { value: 0, unit: '-' },
+              quantity: 1,
+              nrc: 150,
+              mrc: 150,
+              arc: 1800,
+              yearlyCosts: [150, 1800, 1800, 3065, 1543],
+              note: 'required'
+            },
+            {
+              id: 'colocation-1',
+              category: 'Implement on-net',
+              subCategory: 'Colocation',
+              point: region === 'mumbai' ? 'Mumbai' : 'Chennai',
+              costOwner: 'Epsilon',
+              supplier: 'Digital Realty',
+              term: { value: 3, unit: 'yr' },
+              capacity: { value: 0, unit: '' },
+              quantity: 1,
+              nrc: 0,
+              mrc: 1350,
+              arc: 16200,
+              yearlyCosts: [1350, 16200, 16200, 27582, 13889],
+              note: 'required'
+            },
+            {
+              id: 'support-1',
+              category: 'Implement on-net',
+              subCategory: 'Support (HW)',
+              point: '',
+              costOwner: 'Epsilon',
+              supplier: '',
+              term: { value: 0, unit: '' },
+              capacity: { value: 0, unit: '' },
+              quantity: 1,
+              nrc: 0,
+              mrc: 167,
+              arc: 2004,
+              yearlyCosts: [167, 2004, 2004, 3412, 1718],
+              note: 'required'
+            }
+          ],
+          localLoopKtVpn: [
+            {
+              id: 'kt-vpn-1',
+              category: 'Local Loop',
+              subCategory: 'KT VPN',
+              point: region === 'mumbai' ? 'Mumbai' : 'Chennai',
+              costOwner: 'Epsilon',
+              supplier: 'CMI',
+              term: { value: 0, unit: '' },
+              capacity: { value: 1, unit: 'G' },
+              quantity: 1,
+              nrc: 0,
+              mrc: 3400,
+              arc: 40800,
+              yearlyCosts: [1700, 40800, 39780, 38760, 38760],
+              note: 'Apr. 27 to renew for 3yr term - 50% of cost decrease applied for FY27, full cost decrease applied for FY28~29'
+            }
+          ]
+        });
+      }
+    };
+
+    window.addEventListener('cogsDataReset', handleCogsReset as EventListener);
+    
+    return () => {
+      window.removeEventListener('cogsDataReset', handleCogsReset as EventListener);
+    };
+  }, [region]);
 
   // 연도별 판매단위 계산
   const calculateSalesUnits = () => {
@@ -395,10 +505,10 @@ export function CogsSection({ region }: CogsSectionProps) {
 
       // 현재 지역의 COGS 값만 업데이트
       await updateCogsByRegion(region, totalYearlyCosts);
-      setMessage('✅ COGS 데이터가 성공적으로 저장되었습니다.');
+      setMessage('✅ COGS 데이터가 성공적으로 실행되었습니다.');
     } catch (error) {
-      console.error('COGS 저장 실패:', error);
-      setMessage('❌ COGS 데이터 저장에 실패했습니다.');
+      console.error('COGS 실행 실패:', error);
+      setMessage('❌ COGS 데이터 실행에 실패했습니다.');
     } finally {
       setSaving(false);
     }
@@ -407,10 +517,9 @@ export function CogsSection({ region }: CogsSectionProps) {
   // 리셋 핸들러
   const handleReset = async () => {
     try {
-      await resetCogsToDefault();
+      // 전역 COGS 데이터를 기본값으로 리셋
+      resetCogsSectionData(region);
       setMessage('✅ COGS 데이터가 기본값으로 리셋되었습니다.');
-      // 기본값으로 다시 로드
-      window.location.reload();
     } catch (error) {
       console.error('COGS 리셋 실패:', error);
       setMessage('❌ COGS 데이터 리셋에 실패했습니다.');
@@ -463,7 +572,36 @@ export function CogsSection({ region }: CogsSectionProps) {
   const renderAssumptionTable = () => {
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">📋 COGS ASSUMPTION - {region === 'mumbai' ? '뭄바이' : '첸나이'}</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-800">📋 COGS ASSUMPTION - {region === 'mumbai' ? '뭄바이' : '첸나이'}</h3>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => {
+                setCogsAssumption({
+                  capacityToLease: { value: 350, unit: 'Mbps' },
+                  circuitDiscountPercent: 5,
+                  colocationGrowthPercent: 5.8,
+                  targetRfsMonths: 12,
+                  churnPercent: 0
+                });
+                setMessage('✅ COGS ASSUMPTION이 기본값으로 리셋되었습니다.');
+              }}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors"
+            >
+              기본값으로 리셋
+            </button>
+            <button
+              onClick={() => {
+                // Assumption 변경사항을 전역에 반영하는 로직
+                setTimeout(() => updateCogsYearlyCosts(), 0);
+                setMessage('✅ COGS ASSUMPTION이 실행되었습니다.');
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-xs font-medium transition-colors"
+            >
+              실행
+            </button>
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-gray-50">
@@ -715,7 +853,7 @@ export function CogsSection({ region }: CogsSectionProps) {
               disabled={saving}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
             >
-              {saving ? '저장 중...' : '저장'}
+              {saving ? '실행 중...' : '실행'}
             </button>
           </div>
         </div>
