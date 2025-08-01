@@ -20,13 +20,12 @@ interface InvestmentParameters {
   dcnOdfCapex: number;
   depreciationYears: number;
   backboneMaintenanceOpex: number;
-  dcnOdfMaintenanceOpex: number;
 }
 
 // 수익 추정 시뮬레이션을 위한 타입 정의
 interface RevenueParameters {
   baseCustomers: number;
-  customerGrowthRate: number;
+  customersByYear: number[]; // 연도별 고객수 (2025-2029)
   basePrice: number;
   priceDeclineRate: number;
   mbpsPerCustomer: number;
@@ -38,15 +37,13 @@ let globalInvestmentParams: { mumbai: InvestmentParameters; chennai: InvestmentP
     backboneDeviceCapex: 40000,
     dcnOdfCapex: 2000,
     depreciationYears: 6,
-    backboneMaintenanceOpex: 1600,
-    dcnOdfMaintenanceOpex: 1600
+    backboneMaintenanceOpex: 1600
   },
   chennai: {
     backboneDeviceCapex: 40000,
     dcnOdfCapex: 2000,
     depreciationYears: 6,
-    backboneMaintenanceOpex: 1600,
-    dcnOdfMaintenanceOpex: 1600
+    backboneMaintenanceOpex: 1600
   }
 };
 
@@ -54,16 +51,16 @@ let globalInvestmentParams: { mumbai: InvestmentParameters; chennai: InvestmentP
 let globalRevenueParams: { mumbai: RevenueParameters; chennai: RevenueParameters } = {
   mumbai: {
     baseCustomers: 3,
-    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
+    customersByYear: [3, 5, 9, 14, 24], // 연도별 고객수 (정수)
     basePrice: 1160,
-    priceDeclineRate: 0.08, // 연간 8% 감소
+    priceDeclineRate: 0.05, // 연간 5% 감소
     mbpsPerCustomer: 10
   },
   chennai: {
     baseCustomers: 5,
-    customerGrowthRate: 0.8569, // 첸나이: 2029년 정확히 77명 목표 (5명 → 77명)
+    customersByYear: [5, 8, 16, 32, 77], // 연도별 고객수 (정수)
     basePrice: 1160,
-    priceDeclineRate: 0.08, // 연간 8% 감소
+    priceDeclineRate: 0.05, // 연간 5% 감소
     mbpsPerCustomer: 10
   }
 };
@@ -121,14 +118,14 @@ export const calculateInvestmentCosts = (region: 'mumbai' | 'chennai') => {
   const params = globalInvestmentParams[region];
   
   const totalCapex = params.backboneDeviceCapex + params.dcnOdfCapex;
-  const totalAnnualOpex = params.backboneMaintenanceOpex + params.dcnOdfMaintenanceOpex;
+  const totalAnnualOpex = params.backboneMaintenanceOpex;
   
   // 감가상각 계산 (직선법)
   const annualDepreciation = totalCapex / params.depreciationYears;
   
-  // 연도별 감가상각 (2025년은 반년, 2026-2029년은 1년)
+  // 연도별 감가상각 (2025년도부터 1년으로 변경)
   const depreciationByYear = [
-    annualDepreciation * 0.5, // 2025년 (반년)
+    annualDepreciation,       // 2025년 (1년)
     annualDepreciation,       // 2026년
     annualDepreciation,       // 2027년
     annualDepreciation,       // 2028년
@@ -153,7 +150,7 @@ export const calculateRevenue = (region: 'mumbai' | 'chennai') => {
   const prices: number[] = [];
 
   for (let year = 0; year < 5; year++) {
-    const customerCount = params.baseCustomers * Math.pow(1 + params.customerGrowthRate, year);
+    const customerCount = params.customersByYear[year];
     const price = params.basePrice * Math.pow(1 - params.priceDeclineRate, year);
     const salesUnit = customerCount * params.mbpsPerCustomer;
     const revenue = salesUnit * price;
@@ -175,8 +172,7 @@ export function BusinessFeasibilitySectionInvestment() {
     backboneDeviceCapex: 40000,
     dcnOdfCapex: 2000,
     depreciationYears: 6,
-    backboneMaintenanceOpex: 1600,
-    dcnOdfMaintenanceOpex: 1600
+    backboneMaintenanceOpex: 3200
   });
 
   // 지역 변경 시 파라미터 업데이트
@@ -211,8 +207,7 @@ export function BusinessFeasibilitySectionInvestment() {
       backboneDeviceCapex: 40000,
       dcnOdfCapex: 2000,
       depreciationYears: 6,
-      backboneMaintenanceOpex: 1600,
-      dcnOdfMaintenanceOpex: 1600
+      backboneMaintenanceOpex: 1600
     };
     setInvestmentParams(defaultParams);
   };
@@ -220,11 +215,11 @@ export function BusinessFeasibilitySectionInvestment() {
   // 현재 파라미터로 투자 비용 계산
   const calculateCurrentInvestment = () => {
     const totalCapex = investmentParams.backboneDeviceCapex + investmentParams.dcnOdfCapex;
-    const totalAnnualOpex = investmentParams.backboneMaintenanceOpex + investmentParams.dcnOdfMaintenanceOpex;
+    const totalAnnualOpex = investmentParams.backboneMaintenanceOpex;
     const annualDepreciation = totalCapex / investmentParams.depreciationYears;
     
     const depreciationByYear = [
-      annualDepreciation * 0.5, // 2025년 (반년)
+      annualDepreciation,       // 2025년 (1년)
       annualDepreciation,       // 2026년
       annualDepreciation,       // 2027년
       annualDepreciation,       // 2028년
@@ -371,21 +366,6 @@ export function BusinessFeasibilitySectionInvestment() {
                 step="100"
               />
             </div>
-
-            {/* DCN/ODF Maintenance OPEX */}
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                DCN/ODF OPEX ($/년)
-              </label>
-              <input
-                type="number"
-                value={investmentParams.dcnOdfMaintenanceOpex}
-                onChange={(e) => handleParameterChange('dcnOdfMaintenanceOpex', Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                min="0"
-                step="100"
-              />
-            </div>
           </div>
         </div>
 
@@ -461,7 +441,7 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.backboneDeviceCapex)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{investmentParams.depreciationYears}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.backboneDeviceCapex / investmentParams.depreciationYears) * 0.5)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.backboneDeviceCapex / investmentParams.depreciationYears) * 1.0)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneDeviceCapex / investmentParams.depreciationYears)}</td>
@@ -474,7 +454,7 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.dcnOdfCapex)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{investmentParams.depreciationYears}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.dcnOdfCapex / investmentParams.depreciationYears) * 0.5)}</td>
+                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency((investmentParams.dcnOdfCapex / investmentParams.depreciationYears) * 1.0)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfCapex / investmentParams.depreciationYears)}</td>
@@ -546,18 +526,6 @@ export function BusinessFeasibilitySectionInvestment() {
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.backboneMaintenanceOpex)}</td>
                 </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Maintenance Cost</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">DCN/ODF</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{activeRegion === 'mumbai' ? 'Mumbai' : 'Chennai'}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">Epsilon</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 border-b">{formatCurrency(investmentParams.dcnOdfMaintenanceOpex)}</td>
-                </tr>
                 <tr className={`font-semibold ${activeRegion === 'mumbai' ? 'bg-blue-50' : 'bg-orange-50'}`}>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b" colSpan={4}>총계</td>
                   <td className="px-4 py-3 text-sm text-gray-900 border-b font-medium">{formatCurrency(currentResults.totalAnnualOpex)}</td>
@@ -613,7 +581,7 @@ export function BusinessFeasibilitySectionRevenue() {
   // 수익 시뮬레이션 파라미터 상태
   const [revenueParams, setRevenueParams] = useState<RevenueParameters>({
     baseCustomers: 3,
-    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
+    customersByYear: [3, 3.8, 4.7, 5.8, 7.2], // 뭄바이: 2029년 정확히 24명 목표
     basePrice: 1160,
     priceDeclineRate: 0.08,
     mbpsPerCustomer: 10
@@ -642,7 +610,7 @@ export function BusinessFeasibilitySectionRevenue() {
         `현재 ${activeRegion === 'mumbai' ? '뭄바이' : '첸나이'} 투자 비용 파라미터:\n` +
         `• Backbone Device CAPEX: $${getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').backboneDeviceCapex.toLocaleString()}\n` +
         `• DCN/ODF CAPEX: $${getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').dcnOdfCapex.toLocaleString()}\n` +
-        `• 연간 OPEX: $${(getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').backboneMaintenanceOpex + getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').dcnOdfMaintenanceOpex).toLocaleString()}\n\n` +
+        `• 연간 OPEX: $${(getGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai').backboneMaintenanceOpex).toLocaleString()}\n\n` +
         `이 값들을 확인하고 수익 추정을 진행하시겠습니까?`
       );
       
@@ -666,9 +634,9 @@ export function BusinessFeasibilitySectionRevenue() {
   const resetToDefaults = () => {
     const defaultParams = {
       baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
-      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
+      customersByYear: activeRegion === 'mumbai' ? [3, 5, 9, 14, 24] : [5, 8, 16, 32, 77], // 연도별 고객수 (정수)
       basePrice: 1160,
-      priceDeclineRate: 0.08,
+      priceDeclineRate: 0.05,
       mbpsPerCustomer: 10
     };
     setRevenueParams(defaultParams);
@@ -682,7 +650,7 @@ export function BusinessFeasibilitySectionRevenue() {
     const prices: number[] = [];
 
     for (let year = 0; year < 5; year++) {
-      const customerCount = revenueParams.baseCustomers * Math.pow(1 + revenueParams.customerGrowthRate, year);
+      const customerCount = revenueParams.customersByYear[year];
       const price = revenueParams.basePrice * Math.pow(1 - revenueParams.priceDeclineRate, year);
       const salesUnit = customerCount * revenueParams.mbpsPerCustomer;
       const revenue = salesUnit * price;
@@ -764,37 +732,118 @@ export function BusinessFeasibilitySectionRevenue() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
-            {/* 기본 고객 수 */}
+            {/* 2025년 고객수 */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                기본 고객 수
+                2025년 고객수
               </label>
               <input
                 type="number"
-                value={revenueParams.baseCustomers}
-                onChange={(e) => handleParameterChange('baseCustomers', Number(e.target.value))}
+                value={revenueParams.customersByYear[0]}
+                onChange={(e) => {
+                  const newCustomersByYear = [...revenueParams.customersByYear];
+                  newCustomersByYear[0] = Math.round(Number(e.target.value));
+                  setRevenueParams(prev => ({
+                    ...prev,
+                    customersByYear: newCustomersByYear
+                  }));
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                min="1"
+                min="0"
                 step="1"
               />
             </div>
 
-            {/* 고객 성장률 */}
+            {/* 2026년 고객수 */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                고객 성장률 (%)
+                2026년 고객수
               </label>
               <input
                 type="number"
-                value={(revenueParams.customerGrowthRate * 100).toFixed(1)}
-                onChange={(e) => handleParameterChange('customerGrowthRate', Number(e.target.value) / 100)}
+                value={revenueParams.customersByYear[1]}
+                onChange={(e) => {
+                  const newCustomersByYear = [...revenueParams.customersByYear];
+                  newCustomersByYear[1] = Math.round(Number(e.target.value));
+                  setRevenueParams(prev => ({
+                    ...prev,
+                    customersByYear: newCustomersByYear
+                  }));
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
-                max="200"
-                step="0.1"
+                step="1"
               />
             </div>
 
+            {/* 2027년 고객수 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                2027년 고객수
+              </label>
+              <input
+                type="number"
+                value={revenueParams.customersByYear[2]}
+                onChange={(e) => {
+                  const newCustomersByYear = [...revenueParams.customersByYear];
+                  newCustomersByYear[2] = Math.round(Number(e.target.value));
+                  setRevenueParams(prev => ({
+                    ...prev,
+                    customersByYear: newCustomersByYear
+                  }));
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="1"
+              />
+            </div>
+
+            {/* 2028년 고객수 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                2028년 고객수
+              </label>
+              <input
+                type="number"
+                value={revenueParams.customersByYear[3]}
+                onChange={(e) => {
+                  const newCustomersByYear = [...revenueParams.customersByYear];
+                  newCustomersByYear[3] = Math.round(Number(e.target.value));
+                  setRevenueParams(prev => ({
+                    ...prev,
+                    customersByYear: newCustomersByYear
+                  }));
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="1"
+              />
+            </div>
+
+            {/* 2029년 고객수 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                2029년 고객수
+              </label>
+              <input
+                type="number"
+                value={revenueParams.customersByYear[4]}
+                onChange={(e) => {
+                  const newCustomersByYear = [...revenueParams.customersByYear];
+                  newCustomersByYear[4] = Math.round(Number(e.target.value));
+                  setRevenueParams(prev => ({
+                    ...prev,
+                    customersByYear: newCustomersByYear
+                  }));
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                min="0"
+                step="1"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start mt-4">
             {/* 기본 단가 */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -853,19 +902,19 @@ export function BusinessFeasibilitySectionRevenue() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     구분
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2025
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2026
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2027
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2028
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                     2029
                   </th>
                 </tr>
@@ -874,7 +923,7 @@ export function BusinessFeasibilitySectionRevenue() {
                 <tr className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">고객 수</td>
                   {currentResults.customers.map((customer, index) => (
-                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b text-center">
                       {customer.toFixed(1)}
                     </td>
                   ))}
@@ -882,7 +931,7 @@ export function BusinessFeasibilitySectionRevenue() {
                 <tr className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">판매 단위 (Mbps)</td>
                   {currentResults.salesUnits.map((unit, index) => (
-                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b text-center">
                       {unit.toFixed(0)}
                     </td>
                   ))}
@@ -890,7 +939,7 @@ export function BusinessFeasibilitySectionRevenue() {
                 <tr className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">단가 (USD)</td>
                   {currentResults.prices.map((price, index) => (
-                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b">
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b text-center">
                       {formatCurrency(price)}
                     </td>
                   ))}
@@ -898,7 +947,7 @@ export function BusinessFeasibilitySectionRevenue() {
                 <tr className={`font-semibold ${activeRegion === 'mumbai' ? 'bg-blue-50' : 'bg-orange-50'}`}>
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">매출 (USD)</td>
                   {currentResults.revenues.map((revenue, index) => (
-                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b font-medium">
+                    <td key={index} className="px-4 py-3 text-sm text-gray-900 border-b text-center font-medium">
                       {formatCurrency(revenue)}
                     </td>
                   ))}

@@ -2,6 +2,240 @@ import React, { useState, useEffect } from 'react';
 import { getGlobalRevenueParams, calculateRevenue, isInvestmentExecuted, isRevenueExecuted, updateGlobalRevenueParams } from './BusinessFeasibilitySections2';
 import { getGlobalInvestmentParams, calculateInvestmentCosts, updateGlobalInvestmentParams } from './BusinessFeasibilitySections2';
 
+// 공통 기본 설정
+const COMMON_CONFIG = {
+  basePrice: 1160,
+  priceDeclineRate: 0.05,
+  mbpsPerCustomer: 10,
+  discountRate: 0.12,
+  taxRate: 0.25,
+  depreciationYears: 6,
+  backboneDeviceCapex: 40000,
+  dcnOdfCapex: 2000,
+  backboneMaintenanceOpex: 1600
+};
+
+// 지역별 기본 설정
+const REGION_CONFIGS = {
+  mumbai: {
+    baseCustomers: 3,
+    customersByYear: [3, 5, 9, 14, 24],
+    cogsByYear: [20820, 43440, 67740, 93840, 122040],
+    depreciationByYear: [3500, 7000, 7000, 7000, 7000]
+  },
+  chennai: {
+    baseCustomers: 5,
+    customersByYear: [5, 8, 16, 32, 77],
+    cogsByYear: [55520, 111040, 166560, 222080, 277600],
+    depreciationByYear: [3500, 7000, 7000, 7000, 7000]
+  }
+};
+
+// 통합된 계산 함수들
+const calculateUnifiedRevenue = (region: 'mumbai' | 'chennai', customParams?: {
+  basePrice?: number;
+  priceDeclineRate?: number;
+  customersByYear?: number[];
+}) => {
+  // 입력값 검증
+  if (!region || !['mumbai', 'chennai'].includes(region)) {
+    throw new Error('지역은 mumbai 또는 chennai여야 합니다');
+  }
+
+  const basePrice = customParams?.basePrice ?? COMMON_CONFIG.basePrice;
+  const priceDeclineRate = customParams?.priceDeclineRate ?? COMMON_CONFIG.priceDeclineRate;
+  const customersByYear = customParams?.customersByYear ?? REGION_CONFIGS[region].customersByYear;
+
+  // 파라미터 검증
+  if (basePrice <= 0) {
+    throw new Error('기본 단가는 0보다 커야 합니다');
+  }
+  if (priceDeclineRate < 0 || priceDeclineRate > 1) {
+    throw new Error('가격 하락률은 0~100% 사이여야 합니다');
+  }
+  if (!customersByYear || customersByYear.length !== 5) {
+    throw new Error('고객수 데이터는 5년치여야 합니다');
+  }
+  if (customersByYear.some(c => c < 0)) {
+    throw new Error('고객수는 음수가 될 수 없습니다');
+  }
+  
+  const revenues: number[] = [];
+  const customers: number[] = [];
+  const salesUnits: number[] = [];
+  const prices: number[] = [];
+
+  for (let year = 0; year < 5; year++) {
+    const customerCount = customersByYear[year];
+    const price = basePrice * Math.pow(1 - priceDeclineRate, year);
+    const salesUnit = customerCount * COMMON_CONFIG.mbpsPerCustomer;
+    const revenue = salesUnit * price;
+
+    customers.push(customerCount);
+    salesUnits.push(salesUnit);
+    prices.push(price);
+    revenues.push(revenue);
+  }
+
+  // 결과 검증
+  if (revenues.some(r => r < 0)) {
+    console.warn('⚠️ 일부 매출이 음수입니다. 파라미터를 확인해주세요.');
+  }
+  if (revenues.some(r => r > 1000000)) {
+    console.warn('⚠️ 일부 매출이 비정상적으로 큽니다. 파라미터를 확인해주세요.');
+  }
+
+  return { revenues, customers, salesUnits, prices };
+};
+
+const calculateUnifiedInvestmentCosts = (customParams?: {
+  backboneDeviceCapex?: number;
+  dcnOdfCapex?: number;
+  backboneMaintenanceOpex?: number;
+  depreciationYears?: number;
+}) => {
+  const backboneDeviceCapex = customParams?.backboneDeviceCapex ?? COMMON_CONFIG.backboneDeviceCapex;
+  const dcnOdfCapex = customParams?.dcnOdfCapex ?? COMMON_CONFIG.dcnOdfCapex;
+  const backboneMaintenanceOpex = customParams?.backboneMaintenanceOpex ?? COMMON_CONFIG.backboneMaintenanceOpex;
+  const depreciationYears = customParams?.depreciationYears ?? COMMON_CONFIG.depreciationYears;
+  
+  // 파라미터 검증
+  if (backboneDeviceCapex < 0) {
+    throw new Error('Backbone Device CAPEX는 음수가 될 수 없습니다');
+  }
+  if (dcnOdfCapex < 0) {
+    throw new Error('DCN/ODF CAPEX는 음수가 될 수 없습니다');
+  }
+  if (backboneMaintenanceOpex < 0) {
+    throw new Error('연간 OPEX는 음수가 될 수 없습니다');
+  }
+  if (depreciationYears <= 0) {
+    throw new Error('감가상각 연수는 0보다 커야 합니다');
+  }
+  
+  const totalCapex = backboneDeviceCapex + dcnOdfCapex;
+  const totalAnnualOpex = backboneMaintenanceOpex;
+  
+  // 감가상각 계산 (직선법)
+  const annualDepreciation = totalCapex / depreciationYears;
+  
+  // 연도별 감가상각
+  const depreciationByYear = [
+    annualDepreciation, // 2025년
+    annualDepreciation, // 2026년
+    annualDepreciation, // 2027년
+    annualDepreciation, // 2028년
+    annualDepreciation  // 2029년
+  ];
+  
+  // 결과 검증
+  if (totalCapex <= 0) {
+    console.warn('⚠️ 총 CAPEX가 0 이하입니다. 투자 비용을 확인해주세요.');
+  }
+  if (annualDepreciation <= 0) {
+    console.warn('⚠️ 연간 감가상각이 0 이하입니다. 감가상각 연수를 확인해주세요.');
+  }
+  
+  return {
+    totalCapex,
+    totalAnnualOpex,
+    annualDepreciation,
+    depreciationByYear
+  };
+};
+
+const calculateUnifiedCashFlows = (
+  region: 'mumbai' | 'chennai',
+  revenueParams?: {
+    basePrice?: number;
+    priceDeclineRate?: number;
+    customersByYear?: number[];
+  },
+  investmentParams?: {
+    backboneDeviceCapex?: number;
+    dcnOdfCapex?: number;
+    backboneMaintenanceOpex?: number;
+    depreciationYears?: number;
+  },
+  npvParams?: {
+    discountRate?: number;
+    taxRate?: number;
+  }
+) => {
+  // 입력값 검증
+  if (!region || !['mumbai', 'chennai'].includes(region)) {
+    throw new Error('지역은 mumbai 또는 chennai여야 합니다');
+  }
+
+  // 수익 계산
+  const revenueData = calculateUnifiedRevenue(region, revenueParams);
+  const revenues = revenueData.revenues;
+
+  // 투자 비용 계산
+  const investmentData = calculateUnifiedInvestmentCosts(investmentParams);
+  const totalCapex = investmentData.totalCapex;
+  const totalAnnualOpex = investmentData.totalAnnualOpex;
+  const depreciationByYear = investmentData.depreciationByYear;
+
+  // NPV 파라미터
+  const discountRate = npvParams?.discountRate ?? COMMON_CONFIG.discountRate;
+  const taxRate = npvParams?.taxRate ?? COMMON_CONFIG.taxRate;
+
+  // NPV 파라미터 검증
+  if (discountRate < 0 || discountRate > 1) {
+    throw new Error('할인율은 0~100% 사이여야 합니다');
+  }
+  if (taxRate < 0 || taxRate > 1) {
+    throw new Error('세율은 0~100% 사이여야 합니다');
+  }
+
+  const cashFlows: number[] = [];
+  const costs: number[] = [];
+  const profits: number[] = [];
+  const taxes: number[] = [];
+  const netCashFlows: number[] = [];
+
+  for (let year = 0; year < 5; year++) {
+    const revenue = revenues[year];
+    const cost = totalAnnualOpex;
+    costs.push(cost);
+
+    const profit = revenue - cost;
+    profits.push(profit);
+
+    const tax = profit * taxRate;
+    taxes.push(tax);
+
+    const netCashFlow = profit - tax + depreciationByYear[year];
+    netCashFlows.push(netCashFlow);
+  }
+
+  // 초기 투자 비용을 첫 번째 현금흐름에 반영
+  cashFlows.push(-totalCapex);
+  cashFlows.push(...netCashFlows);
+
+  // 결과 검증
+  if (profits.some(p => p < -1000000)) {
+    console.warn('⚠️ 일부 연도의 손실이 비정상적으로 큽니다. 비용 구조를 확인해주세요.');
+  }
+  if (taxes.some(t => t < 0)) {
+    console.warn('⚠️ 일부 연도의 세금이 음수입니다. 이익 구조를 확인해주세요.');
+  }
+  if (netCashFlows.some(n => Math.abs(n) > 1000000)) {
+    console.warn('⚠️ 일부 연도의 순현금흐름이 비정상적으로 큽니다. 계산을 확인해주세요.');
+  }
+
+  return {
+    cashFlows,
+    revenues,
+    costs,
+    profits,
+    taxes,
+    netCashFlows,
+    depreciationByYear
+  };
+};
+
 // 유틸리티 함수들
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -29,8 +263,8 @@ export function BusinessFeasibilitySectionDcf() {
   
   // NPV 시뮬레이션 파라미터 상태
   const [npvParams, setNpvParams] = useState<NPVParameters>({
-    discountRate: 0.12,
-    taxRate: 0.25
+    discountRate: COMMON_CONFIG.discountRate,
+    taxRate: COMMON_CONFIG.taxRate
   });
 
   const openWaccModal = (componentKey: string) => {
@@ -118,61 +352,24 @@ export function BusinessFeasibilitySectionDcf() {
 
   // 수익 추정과 투자 비용에서 가져온 데이터를 사용한 현금흐름 생성
   const generateSimulationCashFlows = () => {
-    // 수익 추정에서 계산된 매출 데이터 가져오기
-    const revenueData = calculateRevenue(activeRegion as 'mumbai' | 'chennai');
-    const revenues = revenueData.revenues;
-
-    // 투자 비용에서 계산된 비용 데이터 가져오기
-    const investmentData = calculateInvestmentCosts(activeRegion as 'mumbai' | 'chennai');
-    const totalCapex = investmentData.totalCapex;
-    const totalAnnualOpex = investmentData.totalAnnualOpex;
-    const depreciationByYear = investmentData.depreciationByYear;
-
-    const cashFlows: number[] = [];
-    const costs: number[] = [];
-    const profits: number[] = [];
-    const taxes: number[] = [];
-    const netCashFlows: number[] = [];
-
-    for (let year = 0; year < 5; year++) {
-      // 매출은 수익 추정에서 가져온 값 사용
-      const revenue = revenues[year];
-
-      // 비용은 투자 비용에서 가져온 값 사용
-      const cost = totalAnnualOpex;
-      costs.push(cost);
-
-      // 이익 계산
-      const profit = revenue - cost;
-      profits.push(profit);
-
-      // 세금 계산
-      const tax = profit * npvParams.taxRate;
-      taxes.push(tax);
-
-      // 순현금흐름 계산 (감가상각 포함)
-      const netCashFlow = profit - tax + depreciationByYear[year];
-      netCashFlows.push(netCashFlow);
-    }
-
-    // 초기 투자 비용을 첫 번째 현금흐름에 반영
-    cashFlows.push(-totalCapex);
-    cashFlows.push(...netCashFlows);
-
-    return {
-      cashFlows,
-      revenues,
-      costs,
-      profits,
-      taxes,
-      netCashFlows,
-      depreciationByYear
-    };
+    return calculateUnifiedCashFlows(
+      activeRegion as 'mumbai' | 'chennai',
+      undefined, // 기본 수익 파라미터 사용
+      undefined, // 기본 투자 비용 파라미터 사용
+      {
+        discountRate: npvParams.discountRate,
+        taxRate: npvParams.taxRate
+      }
+    );
   };
 
   // 시뮬레이션 결과 계산
   const simulationResults = generateSimulationCashFlows();
   const metrics = calculateFinancialMetrics(simulationResults.cashFlows, npvParams.discountRate);
+
+  // 검증 로직 추가
+  validateCalculationConsistency(activeRegion as 'mumbai' | 'chennai');
+  validateFinancialMetrics(metrics);
 
   // 파라미터 업데이트 핸들러
   const handleParameterChange = (param: keyof NPVParameters, value: number) => {
@@ -185,51 +382,40 @@ export function BusinessFeasibilitySectionDcf() {
   // 파라미터 리셋 핸들러
   const resetToDefaults = () => {
     setNpvParams({
-      discountRate: 0.12,
-      taxRate: 0.25
+      discountRate: COMMON_CONFIG.discountRate,
+      taxRate: COMMON_CONFIG.taxRate
     });
     
     // 전역 상태도 13.Simulation과 동일한 기본값으로 리셋
     updateGlobalInvestmentParams(activeRegion as 'mumbai' | 'chennai', {
-      backboneDeviceCapex: 40000,
-      dcnOdfCapex: 2000,
-      depreciationYears: 6,
-      backboneMaintenanceOpex: 1600,
-      dcnOdfMaintenanceOpex: 1600
+      backboneDeviceCapex: COMMON_CONFIG.backboneDeviceCapex,
+      dcnOdfCapex: COMMON_CONFIG.dcnOdfCapex,
+      depreciationYears: COMMON_CONFIG.depreciationYears,
+      backboneMaintenanceOpex: COMMON_CONFIG.backboneMaintenanceOpex
     });
     
     updateGlobalRevenueParams(activeRegion as 'mumbai' | 'chennai', {
-      baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
-      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
-      basePrice: 1160,
-      priceDeclineRate: 0.08,
-      mbpsPerCustomer: 10
+      baseCustomers: REGION_CONFIGS[activeRegion as 'mumbai' | 'chennai'].baseCustomers,
+      customersByYear: REGION_CONFIGS[activeRegion as 'mumbai' | 'chennai'].customersByYear,
+      basePrice: COMMON_CONFIG.basePrice,
+      priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+      mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
     });
   };
 
   // Base 매출 데이터 (매출 추정에서 계산된 실제 값)
   const getBaseRevenueData = (region: 'mumbai' | 'chennai') => {
-    const basePrice = 1160;
-    const baseCustomers = region === 'mumbai' ? 3 : 5; // 뭄바이 3명, 첸나이 5명 (영업조직 매칭 기반)
-    const baseProduct = 10;
-    const capex = 42000; // 투자 비용 분석에서 가져온 값 (감가상각 6년 기준)
-    const annualOpex = 3200; // 투자 비용 분석에서 가져온 값
+    const revenueData = calculateUnifiedRevenue(region);
+    const investmentData = calculateUnifiedInvestmentCosts();
     
-    const revenues: number[] = [];
-    for (let year = 0; year < 5; year++) {
-      const price = basePrice * Math.pow(1.04, year);
-      const cumulativeCustomers = baseCustomers * (year + 1);
-      const cumulativeSalesUnit = baseProduct * cumulativeCustomers;
-      const revenue = cumulativeSalesUnit * price;
-      revenues.push(revenue);
-    }
-    
-    return { revenues, capex, annualOpex };
+    return { 
+      revenues: revenueData.revenues, 
+      capex: investmentData.totalCapex, 
+      annualOpex: investmentData.totalAnnualOpex 
+    };
   };
 
   const generateCashFlows = (region: 'mumbai' | 'chennai', scenario: 'base' | 'optimistic' | 'pessimistic' = 'base') => {
-    const { revenues, capex, annualOpex } = getBaseRevenueData(region);
-    
     // 시나리오별 매출 조정 비율
     const revenueAdjustments = {
       optimistic: 1.25, // +25%
@@ -237,51 +423,22 @@ export function BusinessFeasibilitySectionDcf() {
       pessimistic: 0.75  // -25%
     };
     
-    // 연도별 COGS (새로운 매출 전망 기반)
-    const cogsByYear = region === 'mumbai' 
-      ? [
-          20820,  // 2025: $20,820 (뭄바이 3명 고객 기준)
-          43440,  // 2026: $43,440 (뭄바이 6명 고객 기준)
-          67740,  // 2027: $67,740 (뭄바이 9명 고객 기준)
-          93840,  // 2028: $93,840 (뭄바이 12명 고객 기준)
-          122040  // 2029: $122,040 (뭄바이 15명 고객 기준)
-        ]
-      : [
-          55520,  // 2025: $55,520 (첸나이 8명 고객 기준)
-          111040, // 2026: $111,040 (첸나이 16명 고객 기준)
-          166560, // 2027: $166,560 (첸나이 24명 고객 기준)
-          222080, // 2028: $222,080 (첸나이 32명 고객 기준)
-          277600  // 2029: $277,600 (첸나이 40명 고객 기준)
-        ];
-    
-    // 연도별 감가상각비 (CAPEX 테이블 기반)
-    const depreciationByYear = region === 'mumbai' 
-      ? [3500, 7000, 7000, 7000, 7000] // 뭄바이: 2025년 $3,500, 2026-2029년 $7,000
-      : [3500, 7000, 7000, 7000, 7000]; // 첸나이: 2025년 $3,500, 2026-2029년 $7,000
-    
     const adjustment = revenueAdjustments[scenario];
-    const cashFlows: number[] = [-capex]; // 초기 투자
+    const cashFlows = calculateUnifiedCashFlows(region);
     
-    for (let year = 1; year <= 5; year++) {
-      const adjustedRevenue = revenues[year - 1] * adjustment;
-      const cogs = cogsByYear[year - 1]; // 실제 COGS 데이터 사용
-      const grossProfit = adjustedRevenue - cogs;
-      const opex = annualOpex * Math.pow(1.03, year); // 3% 증가
-      const ebitda = grossProfit - opex;
-      const tax = ebitda > 0 ? ebitda * 0.25 : 0; // EBITDA가 양수일 때만 세금 계산
-      const netIncome = ebitda - tax;
-      const depreciation = depreciationByYear[year - 1]; // 실제 감가상각비 사용
-      const operatingCashFlow = netIncome + depreciation;
-      
-      cashFlows.push(operatingCashFlow);
+    // 시나리오별로 매출 조정
+    const adjustedCashFlows = [cashFlows.cashFlows[0]]; // 초기 투자 비용
+    for (let i = 1; i < cashFlows.cashFlows.length; i++) {
+      adjustedCashFlows.push(cashFlows.cashFlows[i] * adjustment);
     }
     
-    return cashFlows;
+    return adjustedCashFlows;
   };
 
   const generateCalculationDetails = (region: 'mumbai' | 'chennai', scenario: 'base' | 'optimistic' | 'pessimistic' = 'base') => {
-    const { revenues, capex, annualOpex } = getBaseRevenueData(region);
+    const cashFlows = calculateUnifiedCashFlows(region);
     
+    // 시나리오별 매출 조정 비율
     const revenueAdjustments = {
       optimistic: 1.25,
       base: 1.0,
@@ -302,46 +459,15 @@ export function BusinessFeasibilitySectionDcf() {
       operatingCashFlow: number;
     }> = [];
     
-    // COGS 구성 요소 (이미지 데이터 기반)
-    const cogsComponents = {
-      backbone: { mrc: 2500, arc: 30000 },
-      fiberXc: { mrc: 1800, arc: 21600 },
-      colocation: { mrc: 1350, arc: 16200 },
-      supportHw: { mrc: 167, arc: 2004 },
-      localLoop: { mrc: 3400, arc: 40800 }
-    };
-    
-    // 연도별 COGS 계산 (새로운 매출 전망 기반)
-    const cogsByYear = region === 'mumbai' 
-      ? [
-          20820,  // 2025: $20,820 (뭄바이 3명 고객 기준)
-          43440,  // 2026: $43,440 (뭄바이 6명 고객 기준)
-          67740,  // 2027: $67,740 (뭄바이 9명 고객 기준)
-          93840,  // 2028: $93,840 (뭄바이 12명 고객 기준)
-          122040  // 2029: $122,040 (뭄바이 15명 고객 기준)
-        ]
-      : [
-          55520,  // 2025: $55,520 (첸나이 8명 고객 기준)
-          111040, // 2026: $111,040 (첸나이 16명 고객 기준)
-          166560, // 2027: $166,560 (첸나이 24명 고객 기준)
-          222080, // 2028: $222,080 (첸나이 32명 고객 기준)
-          277600  // 2029: $277,600 (첸나이 40명 고객 기준)
-        ];
-    
-    // 연도별 감가상각비 (CAPEX 테이블 기반)
-    const depreciationByYear = region === 'mumbai' 
-      ? [3500, 7000, 7000, 7000, 7000] // 뭄바이: 2025년 $3,500, 2026-2029년 $7,000
-      : [3500, 7000, 7000, 7000, 7000]; // 첸나이: 2025년 $3,500, 2026-2029년 $7,000
-    
     for (let year = 1; year <= 5; year++) {
-      const adjustedRevenue = revenues[year - 1] * adjustment;
-      const cogs = cogsByYear[year - 1]; // 실제 COGS 데이터 사용
+      const adjustedRevenue = cashFlows.revenues[year - 1] * adjustment;
+      const cogs = REGION_CONFIGS[region].cogsByYear[year - 1];
       const grossProfit = adjustedRevenue - cogs;
-      const opex = annualOpex * Math.pow(1.03, year);
+      const opex = cashFlows.costs[year - 1] * Math.pow(1.03, year);
       const ebitda = grossProfit - opex;
       const tax = ebitda > 0 ? ebitda * 0.25 : 0;
       const netIncome = ebitda - tax;
-      const depreciation = depreciationByYear[year - 1]; // 실제 감가상각비 사용
+      const depreciation = cashFlows.depreciationByYear[year - 1];
       const operatingCashFlow = netIncome + depreciation;
       
       details.push({
@@ -363,7 +489,7 @@ export function BusinessFeasibilitySectionDcf() {
 
   const calculateMetricsForScenario = (region: 'mumbai' | 'chennai', scenario: 'optimistic' | 'base' | 'pessimistic') => {
     const cashFlows = generateCashFlows(region, scenario);
-    const discountRate = 0.12; // 12% WACC
+    const discountRate = COMMON_CONFIG.discountRate; // 12% WACC
     return calculateFinancialMetrics(cashFlows, discountRate);
   };
 
@@ -561,41 +687,63 @@ export function BusinessFeasibilitySectionDcf() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">연도</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">매출</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">비용</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이익</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">세금</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">감가상각</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">순현금흐름</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">항목</th>
+                  {simulationResults.revenues.map((_, index) => (
+                    <th key={index} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {2025 + index}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {simulationResults.revenues.map((revenue, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {2025 + index}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">매출</td>
+                  {simulationResults.revenues.map((revenue, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                       {formatCurrency(revenue)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(simulationResults.costs[index])}
+                  ))}
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">비용</td>
+                  {simulationResults.costs.map((cost, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                      {formatCurrency(cost)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(simulationResults.profits[index])}
+                  ))}
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">이익</td>
+                  {simulationResults.profits.map((profit, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                      {formatCurrency(profit)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(simulationResults.taxes[index])}
+                  ))}
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">세금</td>
+                  {simulationResults.taxes.map((tax, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                      {formatCurrency(tax)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(simulationResults.depreciationByYear[index])}
+                  ))}
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">감가상각</td>
+                  {simulationResults.depreciationByYear.map((depr, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                      {formatCurrency(depr)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(simulationResults.netCashFlows[index])}
+                  ))}
+                </tr>
+                <tr className="bg-blue-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">순현금흐름</td>
+                  {simulationResults.netCashFlows.map((net, index) => (
+                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">
+                      {formatCurrency(net)}
                     </td>
-                  </tr>
-                ))}
+                  ))}
+                </tr>
               </tbody>
             </table>
           </div>
@@ -647,7 +795,7 @@ export function BusinessFeasibilitySectionMarketing() {
           <div className="bg-white p-4 rounded-lg border">
             <h4 className="font-semibold text-gray-700 mb-2">📈 KPI 목표</h4>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• 고객 획득: 연 8개사 (뭄바이 5개, 첸나이 3개)</li>
+              <li>• 고객 획득: 연 {REGION_CONFIGS.mumbai.baseCustomers + REGION_CONFIGS.chennai.baseCustomers}개사 (뭄바이 {REGION_CONFIGS.mumbai.baseCustomers}개, 첸나이 {REGION_CONFIGS.chennai.baseCustomers}개)</li>
               <li>• 리드 생성: 월 20개</li>
               <li>• 전환율: 15%</li>
               <li>• 고객 만족도: 90%</li>
@@ -799,10 +947,10 @@ export function BusinessFeasibilitySectionConclusion() {
           <h3 className="text-lg font-bold mb-4 text-green-800">✅ 투자 권고</h3>
           <ul className="space-y-2 text-green-700">
             <li>• <strong>전체 평가:</strong> 뭄바이 우선 투자, 첸나이 단계적 진입</li>
-            <li>• <strong>뭄바이 IRR:</strong> 19.2% (투자 추천)</li>
-            <li>• <strong>첸나이 IRR:</strong> 12.8% (신중 검토)</li>
-            <li>• <strong>투자 회수 기간:</strong> 뭄바이 4.1년, 첸나이 5.2년</li>
-            <li>• <strong>리스크 대비 수익:</strong> 뭄바이 적절, 첸나이 보수적</li>
+            <li>• <strong>기본 단가:</strong> {formatCurrency(COMMON_CONFIG.basePrice)}/Mbps</li>
+            <li>• <strong>가격 하락률:</strong> {formatPercentage(COMMON_CONFIG.priceDeclineRate)}</li>
+            <li>• <strong>할인율:</strong> {formatPercentage(COMMON_CONFIG.discountRate)}</li>
+            <li>• <strong>세율:</strong> {formatPercentage(COMMON_CONFIG.taxRate)}</li>
           </ul>
         </div>
         
@@ -822,20 +970,28 @@ export function BusinessFeasibilitySectionConclusion() {
         <h3 className="text-lg font-bold mb-4 text-gray-800">📊 투자 요약</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-purple-600">$2.9M</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {formatCurrency(COMMON_CONFIG.backboneDeviceCapex + COMMON_CONFIG.dcnOdfCapex)}
+            </div>
             <div className="text-sm text-gray-600">초기 투자</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-blue-600">16.0%</div>
-            <div className="text-sm text-gray-600">평균 IRR</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {formatPercentage(COMMON_CONFIG.discountRate)}
+            </div>
+            <div className="text-sm text-gray-600">할인율</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-green-600">4.7년</div>
-            <div className="text-sm text-gray-600">평균 투자 회수</div>
+            <div className="text-2xl font-bold text-green-600">
+              {COMMON_CONFIG.depreciationYears}년
+            </div>
+            <div className="text-sm text-gray-600">감가상각 연수</div>
           </div>
           <div className="bg-white p-4 rounded-lg border text-center">
-            <div className="text-2xl font-bold text-orange-600">$1.2M</div>
-            <div className="text-sm text-gray-600">연간 매출</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {formatCurrency(COMMON_CONFIG.backboneMaintenanceOpex)}
+            </div>
+            <div className="text-sm text-gray-600">연간 OPEX</div>
           </div>
         </div>
       </div>
@@ -872,8 +1028,8 @@ export function BusinessFeasibilitySectionConclusion() {
           <h3 className="text-lg font-bold mb-4 text-green-800">🏙️ 뭄바이 투자 권고</h3>
           <ul className="space-y-2 text-green-700">
             <li>• <strong>투자 우선순위:</strong> 1차 투자 대상</li>
-            <li>• <strong>예상 수익률:</strong> 높음 (IRR 19.2%)</li>
-            <li>• <strong>투자 회수:</strong> 4.1년</li>
+            <li>• <strong>기본 고객 수:</strong> {REGION_CONFIGS.mumbai.baseCustomers}명</li>
+            <li>• <strong>고객 증가 패턴:</strong> {REGION_CONFIGS.mumbai.customersByYear.join(' → ')}명</li>
             <li>• <strong>시장 특성:</strong> 금융 중심, 높은 구매력</li>
             <li>• <strong>전략:</strong> 빠른 시장 진입 및 확장</li>
           </ul>
@@ -883,8 +1039,8 @@ export function BusinessFeasibilitySectionConclusion() {
           <h3 className="text-lg font-bold mb-4 text-orange-800">🏭 첸나이 투자 권고</h3>
           <ul className="space-y-2 text-orange-700">
             <li>• <strong>투자 우선순위:</strong> 2차 투자 대상</li>
-            <li>• <strong>예상 수익률:</strong> 보통 (IRR 12.8%)</li>
-            <li>• <strong>투자 회수:</strong> 5.2년</li>
+            <li>• <strong>기본 고객 수:</strong> {REGION_CONFIGS.chennai.baseCustomers}명</li>
+            <li>• <strong>고객 증가 패턴:</strong> {REGION_CONFIGS.chennai.customersByYear.join(' → ')}명</li>
             <li>• <strong>시장 특성:</strong> 제조 중심, 보수적 접근</li>
             <li>• <strong>전략:</strong> 뭄바이 성공 후 단계적 진입</li>
           </ul>
@@ -899,92 +1055,63 @@ export function BusinessFeasibilitySectionSimulation() {
   
   // Simulation 전용 독립적인 파라미터 상태
   const [simulationInvestmentParams, setSimulationInvestmentParams] = useState({
-    backboneDeviceCapex: 40000,
-    dcnOdfCapex: 2000,
-    depreciationYears: 6,
-    backboneMaintenanceOpex: 1600,
-    dcnOdfMaintenanceOpex: 1600
+    backboneDeviceCapex: COMMON_CONFIG.backboneDeviceCapex,
+    dcnOdfCapex: COMMON_CONFIG.dcnOdfCapex,
+    depreciationYears: COMMON_CONFIG.depreciationYears,
+    backboneMaintenanceOpex: COMMON_CONFIG.backboneMaintenanceOpex
   });
 
   const [simulationRevenueParams, setSimulationRevenueParams] = useState({
     baseCustomers: 3,
-    customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
-    basePrice: 1160,
-    priceDeclineRate: 0.08,
-    mbpsPerCustomer: 10
+    customersByYear: [3, 5, 9, 14, 24], // 연도별 고객수 (정수)
+    basePrice: COMMON_CONFIG.basePrice,
+    priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+    mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
   });
 
   const [simulationNpvParams, setSimulationNpvParams] = useState({
-    discountRate: 0.12,
-    taxRate: 0.25
+    discountRate: COMMON_CONFIG.discountRate,
+    taxRate: COMMON_CONFIG.taxRate
   });
 
   // 지역 변경 시 파라미터 업데이트
   useEffect(() => {
     if (activeRegion === 'mumbai') {
       setSimulationRevenueParams({
-        baseCustomers: 3,
-        customerGrowthRate: 0.6818, // 뭄바이: 2029년 정확히 24명 목표
-        basePrice: 1160,
-        priceDeclineRate: 0.08,
-        mbpsPerCustomer: 10
+        baseCustomers: REGION_CONFIGS.mumbai.baseCustomers,
+        customersByYear: REGION_CONFIGS.mumbai.customersByYear,
+        basePrice: COMMON_CONFIG.basePrice,
+        priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+        mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
       });
     } else {
       setSimulationRevenueParams({
-        baseCustomers: 5,
-        customerGrowthRate: 0.8569, // 첸나이: 2029년 정확히 77명 목표 (5명 → 77명)
-        basePrice: 1160,
-        priceDeclineRate: 0.08,
-        mbpsPerCustomer: 10
+        baseCustomers: REGION_CONFIGS.chennai.baseCustomers,
+        customersByYear: REGION_CONFIGS.chennai.customersByYear,
+        basePrice: COMMON_CONFIG.basePrice,
+        priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+        mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
       });
     }
   }, [activeRegion]);
 
   // 기존과 동일한 투자 비용 계산 함수
   const calculateSimulationInvestmentCosts = () => {
-    const totalCapex = simulationInvestmentParams.backboneDeviceCapex + simulationInvestmentParams.dcnOdfCapex;
-    const totalAnnualOpex = simulationInvestmentParams.backboneMaintenanceOpex + simulationInvestmentParams.dcnOdfMaintenanceOpex;
-    
-    // 감가상각 계산 (직선법) - 기존과 동일
-    const annualDepreciation = totalCapex / simulationInvestmentParams.depreciationYears;
-    
-    // 연도별 감가상각 (2025년은 반년, 2026-2029년은 1년) - 기존과 동일
-    const depreciationByYear = [
-      annualDepreciation * 0.5, // 2025년 (반년)
-      annualDepreciation,       // 2026년
-      annualDepreciation,       // 2027년
-      annualDepreciation,       // 2028년
-      annualDepreciation        // 2029년
-    ];
-    
-    return {
-      totalCapex,
-      totalAnnualOpex,
-      annualDepreciation,
-      depreciationByYear
-    };
+    return calculateUnifiedInvestmentCosts({
+      backboneDeviceCapex: simulationInvestmentParams.backboneDeviceCapex,
+      dcnOdfCapex: simulationInvestmentParams.dcnOdfCapex,
+      backboneMaintenanceOpex: simulationInvestmentParams.backboneMaintenanceOpex,
+      depreciationYears: simulationInvestmentParams.depreciationYears
+    });
   };
 
   // 기존과 동일한 수익 계산 함수
   const calculateSimulationRevenue = () => {
-    const revenues: number[] = [];
-    const customers: number[] = [];
-    const salesUnits: number[] = [];
-    const prices: number[] = [];
-
-    for (let year = 0; year < 5; year++) {
-      const customerCount = simulationRevenueParams.baseCustomers * Math.pow(1 + simulationRevenueParams.customerGrowthRate, year);
-      const price = simulationRevenueParams.basePrice * Math.pow(1 - simulationRevenueParams.priceDeclineRate, year);
-      const salesUnit = customerCount * simulationRevenueParams.mbpsPerCustomer;
-      const revenue = salesUnit * price;
-
-      customers.push(customerCount);
-      salesUnits.push(salesUnit);
-      prices.push(price);
-      revenues.push(revenue);
-    }
-
-    return { revenues, customers, salesUnits, prices };
+    return calculateUnifiedRevenue(activeRegion as 'mumbai' | 'chennai', {
+      basePrice: simulationRevenueParams.basePrice,
+      priceDeclineRate: simulationRevenueParams.priceDeclineRate,
+      customersByYear: simulationRevenueParams.customersByYear
+    });
   };
 
   // 기존과 동일한 DCF 계산 함수
@@ -1058,56 +1185,15 @@ export function BusinessFeasibilitySectionSimulation() {
 
   // 기존과 동일한 현금흐름 생성 함수
   const generateSimulationCashFlows = () => {
-    // 수익 추정에서 계산된 매출 데이터 가져오기
-    const revenueData = calculateSimulationRevenue();
-    const revenues = revenueData.revenues;
-
-    // 투자 비용에서 계산된 비용 데이터 가져오기
-    const investmentData = calculateSimulationInvestmentCosts();
-    const totalCapex = investmentData.totalCapex;
-    const totalAnnualOpex = investmentData.totalAnnualOpex;
-    const depreciationByYear = investmentData.depreciationByYear;
-
-    const cashFlows: number[] = [];
-    const costs: number[] = [];
-    const profits: number[] = [];
-    const taxes: number[] = [];
-    const netCashFlows: number[] = [];
-
-    for (let year = 0; year < 5; year++) {
-      // 매출은 수익 추정에서 가져온 값 사용
-      const revenue = revenues[year];
-
-      // 비용은 투자 비용에서 가져온 값 사용
-      const cost = totalAnnualOpex;
-      costs.push(cost);
-
-      // 이익 계산
-      const profit = revenue - cost;
-      profits.push(profit);
-
-      // 세금 계산
-      const tax = profit * simulationNpvParams.taxRate;
-      taxes.push(tax);
-
-      // 순현금흐름 계산 (감가상각 포함) - 기존과 동일
-      const netCashFlow = profit - tax + depreciationByYear[year];
-      netCashFlows.push(netCashFlow);
-    }
-
-    // 초기 투자 비용을 첫 번째 현금흐름에 반영 - 기존과 동일
-    cashFlows.push(-totalCapex);
-    cashFlows.push(...netCashFlows);
-
-    return {
-      cashFlows,
-      revenues,
-      costs,
-      profits,
-      taxes,
-      netCashFlows,
-      depreciationByYear
-    };
+    return calculateUnifiedCashFlows(
+      activeRegion as 'mumbai' | 'chennai',
+      undefined, // 기본 수익 파라미터 사용
+      undefined, // 기본 투자 비용 파라미터 사용
+      {
+        discountRate: simulationNpvParams.discountRate,
+        taxRate: simulationNpvParams.taxRate
+      }
+    );
   };
 
   // 시뮬레이션 결과 계산
@@ -1115,6 +1201,10 @@ export function BusinessFeasibilitySectionSimulation() {
   
   // ✅ 수정: 전체 현금흐름으로 NPV와 IRR 계산
   const npvMetrics = calculateFinancialMetrics(simulationResults.cashFlows, simulationNpvParams.discountRate);
+  
+  // 검증 로직 추가
+  validateCalculationConsistency(activeRegion as 'mumbai' | 'chennai');
+  validateFinancialMetrics(npvMetrics);
   
   // 회수기간 계산 (전체 현금흐름 포함)
   const calculatePaybackPeriod = (cashFlows: number[]) => {
@@ -1167,22 +1257,21 @@ export function BusinessFeasibilitySectionSimulation() {
   // 기본값 리셋 핸들러
   const resetToDefaults = () => {
     setSimulationInvestmentParams({
-      backboneDeviceCapex: 40000,
-      dcnOdfCapex: 2000,
-      depreciationYears: 6,
-      backboneMaintenanceOpex: 1600,
-      dcnOdfMaintenanceOpex: 1600
+      backboneDeviceCapex: COMMON_CONFIG.backboneDeviceCapex,
+      dcnOdfCapex: COMMON_CONFIG.dcnOdfCapex,
+      depreciationYears: COMMON_CONFIG.depreciationYears,
+      backboneMaintenanceOpex: COMMON_CONFIG.backboneMaintenanceOpex
     });
     setSimulationRevenueParams({
-      baseCustomers: activeRegion === 'mumbai' ? 3 : 5,
-      customerGrowthRate: activeRegion === 'mumbai' ? 0.6818 : 0.8569, // 2029년 정확한 목표 고객 수 기준
-      basePrice: 1160,
-      priceDeclineRate: 0.08,
-      mbpsPerCustomer: 10
+      baseCustomers: REGION_CONFIGS[activeRegion as 'mumbai' | 'chennai'].baseCustomers,
+      customersByYear: REGION_CONFIGS[activeRegion as 'mumbai' | 'chennai'].customersByYear,
+      basePrice: COMMON_CONFIG.basePrice,
+      priceDeclineRate: COMMON_CONFIG.priceDeclineRate,
+      mbpsPerCustomer: COMMON_CONFIG.mbpsPerCustomer
     });
     setSimulationNpvParams({
-      discountRate: 0.12,
-      taxRate: 0.25
+      discountRate: COMMON_CONFIG.discountRate,
+      taxRate: COMMON_CONFIG.taxRate
     });
   };
 
@@ -1236,12 +1325,12 @@ export function BusinessFeasibilitySectionSimulation() {
         </div>
 
         {/* 통합 시뮬레이션 그리드 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="space-y-6">
           
           {/* 1. 투자 비용 시뮬레이션 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">💰 투자 비용 시뮬레이션</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Backbone Device CAPEX ($)
@@ -1276,12 +1365,8 @@ export function BusinessFeasibilitySectionSimulation() {
                 </label>
                 <input
                   type="number"
-                  value={simulationInvestmentParams.backboneMaintenanceOpex + simulationInvestmentParams.dcnOdfMaintenanceOpex}
-                  onChange={(e) => {
-                    const totalOpex = Number(e.target.value);
-                    handleInvestmentParameterChange('backboneMaintenanceOpex', totalOpex / 2);
-                    handleInvestmentParameterChange('dcnOdfMaintenanceOpex', totalOpex / 2);
-                  }}
+                  value={simulationInvestmentParams.backboneMaintenanceOpex}
+                  onChange={(e) => handleInvestmentParameterChange('backboneMaintenanceOpex', Number(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   min="0"
                   step="100"
@@ -1293,7 +1378,7 @@ export function BusinessFeasibilitySectionSimulation() {
           {/* 2. 수익 추정 시뮬레이션 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">📈 수익 추정 시뮬레이션</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   기본 고객 수
@@ -1310,21 +1395,106 @@ export function BusinessFeasibilitySectionSimulation() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  고객 성장률 (%)
+                  2025년 고객수
                 </label>
                 <input
                   type="number"
-                  value={Math.round(simulationRevenueParams.customerGrowthRate * 1000) / 10}
+                  value={simulationRevenueParams.customersByYear[0]}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    if (!isNaN(value)) {
-                      handleRevenueParameterChange('customerGrowthRate', value / 100);
-                    }
+                    const newCustomersByYear = [...simulationRevenueParams.customersByYear];
+                    newCustomersByYear[0] = Math.round(Number(e.target.value));
+                    setSimulationRevenueParams(prev => ({
+                      ...prev,
+                      customersByYear: newCustomersByYear
+                    }));
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   min="0"
-                  max="200"
-                  step="0.1"
+                  step="1"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  2026년 고객수
+                </label>
+                <input
+                  type="number"
+                  value={simulationRevenueParams.customersByYear[1]}
+                  onChange={(e) => {
+                    const newCustomersByYear = [...simulationRevenueParams.customersByYear];
+                    newCustomersByYear[1] = Math.round(Number(e.target.value));
+                    setSimulationRevenueParams(prev => ({
+                      ...prev,
+                      customersByYear: newCustomersByYear
+                    }));
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="1"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  2027년 고객수
+                </label>
+                <input
+                  type="number"
+                  value={simulationRevenueParams.customersByYear[2]}
+                  onChange={(e) => {
+                    const newCustomersByYear = [...simulationRevenueParams.customersByYear];
+                    newCustomersByYear[2] = Math.round(Number(e.target.value));
+                    setSimulationRevenueParams(prev => ({
+                      ...prev,
+                      customersByYear: newCustomersByYear
+                    }));
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="1"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  2028년 고객수
+                </label>
+                <input
+                  type="number"
+                  value={simulationRevenueParams.customersByYear[3]}
+                  onChange={(e) => {
+                    const newCustomersByYear = [...simulationRevenueParams.customersByYear];
+                    newCustomersByYear[3] = Math.round(Number(e.target.value));
+                    setSimulationRevenueParams(prev => ({
+                      ...prev,
+                      customersByYear: newCustomersByYear
+                    }));
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="1"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  2029년 고객수
+                </label>
+                <input
+                  type="number"
+                  value={simulationRevenueParams.customersByYear[4]}
+                  onChange={(e) => {
+                    const newCustomersByYear = [...simulationRevenueParams.customersByYear];
+                    newCustomersByYear[4] = Math.round(Number(e.target.value));
+                    setSimulationRevenueParams(prev => ({
+                      ...prev,
+                      customersByYear: newCustomersByYear
+                    }));
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  min="0"
+                  step="1"
                 />
               </div>
               
@@ -1347,7 +1517,7 @@ export function BusinessFeasibilitySectionSimulation() {
           {/* 3. NPV 시뮬레이션 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-bold text-gray-800 mb-4">📊 NPV 시뮬레이션</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   할인율 (%)
@@ -1449,66 +1619,66 @@ export function BusinessFeasibilitySectionSimulation() {
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">항목</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">2025</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">2026</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">2027</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">2028</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">2029</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">매출</td>
-                  {simulationResults.revenues.map((revenue, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                      {formatCurrency(revenue)}
-                    </td>
-                  ))}
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">비용</td>
-                  {simulationResults.costs.map((cost, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                      {formatCurrency(cost)}
-                    </td>
-                  ))}
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">이익</td>
-                  {simulationResults.profits.map((profit, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                      {formatCurrency(profit)}
-                    </td>
-                  ))}
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">세금</td>
-                  {simulationResults.taxes.map((tax, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                      {formatCurrency(tax)}
-                    </td>
-                  ))}
-                </tr>
-                <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">감가상각</td>
-                  {simulationResults.depreciationByYear.map((depreciation, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                      {formatCurrency(depreciation)}
-                    </td>
-                  ))}
-                </tr>
-                <tr className="hover:bg-gray-50 bg-blue-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">순현금흐름</td>
-                  {simulationResults.netCashFlows.map((netCashFlow, index) => (
-                    <td key={index} className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">
-                      {formatCurrency(netCashFlow)}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">항목</th>
+                {simulationResults.revenues.map((_, index) => (
+                  <th key={index} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {2025 + index}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">매출</td>
+                {simulationResults.revenues.map((revenue, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                    {formatCurrency(revenue)}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">비용</td>
+                {simulationResults.costs.map((cost, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                    {formatCurrency(cost)}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">이익</td>
+                {simulationResults.profits.map((profit, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                    {formatCurrency(profit)}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">세금</td>
+                {simulationResults.taxes.map((tax, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                    {formatCurrency(tax)}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">감가상각</td>
+                {simulationResults.depreciationByYear.map((depr, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                    {formatCurrency(depr)}
+                  </td>
+                ))}
+              </tr>
+              <tr className="bg-blue-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">순현금흐름</td>
+                {simulationResults.netCashFlows.map((net, index) => (
+                  <td key={index} className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">
+                    {formatCurrency(net)}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
             </table>
           </div>
         </div>
@@ -1516,3 +1686,72 @@ export function BusinessFeasibilitySectionSimulation() {
     </section>
   );
 } 
+
+// 일관성 검증 함수들
+const validateCalculationConsistency = (region: 'mumbai' | 'chennai') => {
+  try {
+    // 동일한 파라미터로 여러 번 계산했을 때 같은 결과가 나오는지 확인
+    const result1 = calculateUnifiedCashFlows(region);
+    const result2 = calculateUnifiedCashFlows(region);
+    
+    const npvDiff = Math.abs(result1.cashFlows.reduce((sum, cf, year) => 
+      sum + cf / Math.pow(1 + COMMON_CONFIG.discountRate, year), 0) - 
+      result2.cashFlows.reduce((sum, cf, year) => 
+      sum + cf / Math.pow(1 + COMMON_CONFIG.discountRate, year), 0));
+    
+    if (npvDiff > 0.01) {
+      console.warn('⚠️ 계산 결과가 일관되지 않습니다. 계산 로직을 확인해주세요.');
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('❌ 일관성 검증 중 오류 발생:', error);
+    return false;
+  }
+};
+
+const validateDataCompleteness = (params: any) => {
+  const requiredFields = ['region', 'basePrice', 'discountRate', 'taxRate'];
+  const missingFields = requiredFields.filter(field => !params[field]);
+  
+  if (missingFields.length > 0) {
+    throw new Error(`필수 파라미터가 누락되었습니다: ${missingFields.join(', ')}`);
+  }
+  
+  return true;
+};
+
+const validateFinancialMetrics = (metrics: {
+  npv: number;
+  irr: number;
+  paybackPeriod: number;
+  profitabilityIndex: number;
+}) => {
+  const warnings: string[] = [];
+  
+  if (Math.abs(metrics.npv) > 10000000) {
+    warnings.push('NPV가 비정상적으로 큽니다');
+  }
+  
+  if (metrics.irr < -0.5 || metrics.irr > 2) {
+    warnings.push('IRR이 비현실적인 범위입니다');
+  }
+  
+  if (metrics.paybackPeriod < 0 || metrics.paybackPeriod > 20) {
+    warnings.push('투자 회수기간이 비현실적입니다');
+  }
+  
+  if (metrics.profitabilityIndex < 0 || metrics.profitabilityIndex > 10) {
+    warnings.push('수익성 지수가 비현실적입니다');
+  }
+  
+  if (warnings.length > 0) {
+    console.warn('⚠️ 재무 지표 검증 경고:', warnings.join(', '));
+    return false;
+  }
+  
+  return true;
+};
+
+// 유틸리티 함수들
