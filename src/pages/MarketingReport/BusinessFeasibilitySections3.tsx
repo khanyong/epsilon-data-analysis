@@ -231,7 +231,8 @@ const calculateUnifiedCashFlows = (
     const profit = revenue - totalCost;
     profits.push(profit);
 
-    const tax = profit * taxRate;
+    // ✅ 수정: 이익이 양수일 때만 세금 적용, 손실 연도에는 세금 0
+    const tax = profit > 0 ? profit * taxRate : 0;
     taxes.push(tax);
 
     const netCashFlow = profit - tax + depreciationByYear[year];
