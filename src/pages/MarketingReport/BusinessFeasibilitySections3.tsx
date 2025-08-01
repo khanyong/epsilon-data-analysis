@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getGlobalRevenueParams, calculateRevenue, isInvestmentExecuted, isRevenueExecuted, updateGlobalRevenueParams } from './BusinessFeasibilitySections2';
 import { getGlobalInvestmentParams, calculateInvestmentCosts, updateGlobalInvestmentParams } from './BusinessFeasibilitySections2';
+import { CogsEditor } from '../../components/CogsEditor';
+import { fetchCogsByRegion, CogsByRegion } from '../../services/cogsService';
 
 // 공통 기본 설정
 const COMMON_CONFIG = {
@@ -20,14 +22,28 @@ const REGION_CONFIGS = {
   mumbai: {
     baseCustomers: 3,
     customersByYear: [3, 5, 9, 14, 24],
-    cogsByYear: [20820, 43440, 67740, 93840, 122040],
+    cogsByYear: [20820, 43440, 67740, 93840, 122040], // 기본값
     depreciationByYear: [3500, 7000, 7000, 7000, 7000]
   },
   chennai: {
     baseCustomers: 5,
     customersByYear: [5, 8, 16, 32, 77],
-    cogsByYear: [55520, 111040, 166560, 222080, 277600],
+    cogsByYear: [55520, 111040, 166560, 222080, 277600], // 기본값
     depreciationByYear: [3500, 7000, 7000, 7000, 7000]
+  }
+};
+
+// COGS 데이터를 동적으로 가져오는 함수
+const getCogsData = async (): Promise<CogsByRegion> => {
+  try {
+    const cogsData = await fetchCogsByRegion();
+    return cogsData;
+  } catch (error) {
+    console.error('COGS 데이터 로드 실패, 기본값 사용:', error);
+    return {
+      mumbai: REGION_CONFIGS.mumbai.cogsByYear,
+      chennai: REGION_CONFIGS.chennai.cogsByYear
+    };
   }
 };
 
@@ -144,7 +160,7 @@ const calculateUnifiedInvestmentCosts = (customParams?: {
   };
 };
 
-const calculateUnifiedCashFlows = (
+const calculateUnifiedCashFlows = async (
   region: 'mumbai' | 'chennai',
   revenueParams?: {
     basePrice?: number;
@@ -160,11 +176,26 @@ const calculateUnifiedCashFlows = (
   npvParams?: {
     discountRate?: number;
     taxRate?: number;
-  }
+  },
+  cogsData?: CogsByRegion
 ) => {
   // 입력값 검증
   if (!region || !['mumbai', 'chennai'].includes(region)) {
     throw new Error('지역은 mumbai 또는 chennai여야 합니다');
+  }
+
+  // COGS 데이터 가져오기
+  let cogsByYear: number[];
+  if (cogsData) {
+    cogsByYear = cogsData[region];
+  } else {
+    try {
+      const fetchedCogsData = await getCogsData();
+      cogsByYear = fetchedCogsData[region];
+    } catch (error) {
+      console.warn('COGS 데이터 로드 실패, 기본값 사용:', error);
+      cogsByYear = REGION_CONFIGS[region].cogsByYear;
+    }
   }
 
   // 수익 계산
@@ -197,10 +228,12 @@ const calculateUnifiedCashFlows = (
 
   for (let year = 0; year < 5; year++) {
     const revenue = revenues[year];
-    const cost = totalAnnualOpex;
-    costs.push(cost);
+    const cogs = cogsByYear[year] || 0; // COGS 데이터 사용
+    const opex = totalAnnualOpex;
+    const totalCost = cogs + opex; // COGS + OPEX
+    costs.push(totalCost);
 
-    const profit = revenue - cost;
+    const profit = revenue - totalCost;
     profits.push(profit);
 
     const tax = profit * taxRate;
@@ -232,7 +265,7 @@ const calculateUnifiedCashFlows = (
     profits,
     taxes,
     netCashFlows,
-    depreciationByYear
+    cogsByYear // COGS 데이터도 반환
   };
 };
 
@@ -584,14 +617,16 @@ export function BusinessFeasibilitySectionDcf() {
           
           <div className="mb-4 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-700">
-              💡 <strong>시뮬레이션 흐름 (순서 필수):</strong><br/>
-              1️⃣ <strong>투자 비용 분석</strong>에서 CAPEX/OPEX 입력 후 "실행" 버튼 클릭<br/>
-              2️⃣ <strong>수익 추정</strong>에서 고객수/단가 입력 후 "실행" 버튼 클릭<br/>
-              3️⃣ <strong>이곳에서</strong> 할인율/세율 조정 후 "최종 계산 실행" 버튼 클릭<br/>
-              → 모든 단계가 순서대로 실행되어야 정확한 NPV, IRR, 회수기간, 수익성지수가 계산됩니다.
+              💡 <strong>NPV 시뮬레이션</strong>은 할인율과 세율을 조정하여 투자 가치를 분석합니다. 
+              수익 추정과 투자 비용 분석이 완료된 후 실행하세요.
             </p>
           </div>
-          
+
+          {/* COGS 에디터 추가 */}
+          <div className="mb-6">
+            <CogsEditor />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
             {/* 할인율 */}
             <div className="space-y-2">
