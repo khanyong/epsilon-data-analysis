@@ -6,7 +6,7 @@ import { CogsSection } from '../../components/CogsSection';
 
 // 공통 기본 설정
 const COMMON_CONFIG = {
-  basePrice: 800,
+  basePrice: 1000,
   priceDeclineRate: 0.05,
   mbpsPerCustomer: 10,
   discountRate: 0.12,
@@ -14,10 +14,10 @@ const COMMON_CONFIG = {
   depreciationYears: 6,
   backboneDeviceCapex: 40000,
   dcnOdfCapex: 2000,
-  backboneMaintenanceOpex: 1600
+  backboneMaintenanceOpex: 133
 };
 
-// 지역별 기본 설정
+// 지역별 기본 설정,
 const REGION_CONFIGS = {
   mumbai: {
     baseCustomers: 3,
