@@ -646,7 +646,7 @@ export function CogsSection({ region }: CogsSectionProps) {
                     <span className="ml-2 text-gray-500 text-xs">{cogsAssumption.capacityToLease.unit}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-500 border-b text-xs">Protected circuit btw Hanoi and Hongkong Equinix SG1</td>
+                <td className="px-4 py-3 text-sm text-gray-500 border-b text-xs">Protected circuit btw Singapore and India</td>
               </tr>
               <tr className="hover:bg-gray-50">
                 <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">Circuit Discount %</td>

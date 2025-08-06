@@ -46,6 +46,45 @@ export function BusinessFeasibilitySectionTargetCustomers() {
   // 필터링 상태 추가
   const [filterType, setFilterType] = useState<'all' | 'withSalesDivision' | 'withoutSalesDivision'>('all');
   
+  // 삭제 관련 상태 추가
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [companyToDelete, setCompanyToDelete] = useState<Company | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  // 수정 관련 상태 추가
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [companyToEdit, setCompanyToEdit] = useState<Company | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    company_name_kr: '',
+    company_name_en: '',
+    industry_major: '',
+    industry_minor: '',
+    entry_type: '',
+    sales_division: '',
+    local_address: '',
+    phone: '',
+    email: ''
+  });
+
+  // 추가 관련 상태 추가
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [addForm, setAddForm] = useState({
+    company_name_kr: '',
+    company_name_en: '',
+    industry_major: '',
+    industry_minor: '',
+    entry_type: '',
+    sales_division: '',
+    local_address: '',
+    phone: '',
+    email: '',
+    country: '인도',
+    city: activeRegion === 'mumbai' ? '뭄바이(Mumbai)' : '첸나이(Chennai)',
+    office: activeRegion === 'mumbai' ? '뭄바이' : '첸나이'
+  });
+
   // 목표 수치 (이미지 기준) - 하드코딩
   const targetNumbers = {
     mumbai: {
@@ -232,11 +271,207 @@ export function BusinessFeasibilitySectionTargetCustomers() {
     setCurrentPage(page);
   };
 
+  // 삭제 함수 추가
+  const handleDeleteClick = (company: Company) => {
+    setCompanyToDelete(company);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!companyToDelete) return;
+
+    try {
+      setDeleting(true);
+      
+      // Supabase에서 해당 기업 삭제
+      const { error } = await supabase
+        .from('kotra')
+        .delete()
+        .eq('id', companyToDelete.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // 성공적으로 삭제되면 목록 새로고침
+      await fetchCompanies();
+      
+      // 모달 닫기
+      setDeleteModalOpen(false);
+      setCompanyToDelete(null);
+      
+      // 성공 메시지 (선택사항)
+      alert('기업이 성공적으로 삭제되었습니다.');
+      
+    } catch (err) {
+      console.error('삭제 오류:', err);
+      alert('삭제 중 오류가 발생했습니다.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setCompanyToDelete(null);
+  };
+
+  // 수정 함수 추가
+  const handleEditClick = (company: Company) => {
+    setCompanyToEdit(company);
+    setEditForm({
+      company_name_kr: company.name,
+      company_name_en: '',
+      industry_major: company.industry,
+      industry_minor: '',
+      entry_type: company.entryType,
+      sales_division: company.salesDivision,
+      local_address: '',
+      phone: '',
+      email: ''
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleEditConfirm = async () => {
+    if (!companyToEdit) return;
+
+    try {
+      setEditing(true);
+      
+      // Supabase에서 해당 기업 수정
+      const { error } = await supabase
+        .from('kotra')
+        .update({
+          company_name_kr: editForm.company_name_kr,
+          company_name_en: editForm.company_name_en,
+          industry_major: editForm.industry_major,
+          industry_minor: editForm.industry_minor,
+          entry_type: editForm.entry_type,
+          sales_division: editForm.sales_division,
+          local_address: editForm.local_address,
+          phone: editForm.phone,
+          email: editForm.email
+        })
+        .eq('id', companyToEdit.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // 성공적으로 수정되면 목록 새로고침
+      await fetchCompanies();
+      
+      // 모달 닫기
+      setEditModalOpen(false);
+      setCompanyToEdit(null);
+      
+      // 성공 메시지
+      alert('기업 정보가 성공적으로 수정되었습니다.');
+      
+    } catch (err) {
+      console.error('수정 오류:', err);
+      alert('수정 중 오류가 발생했습니다.');
+    } finally {
+      setEditing(false);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditModalOpen(false);
+    setCompanyToEdit(null);
+  };
+
+  const handleEditFormChange = (field: string, value: string) => {
+    setEditForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // 추가 함수 추가
+  const handleAddClick = () => {
+    setAddForm({
+      company_name_kr: '',
+      company_name_en: '',
+      industry_major: '',
+      industry_minor: '',
+      entry_type: '',
+      sales_division: '',
+      local_address: '',
+      phone: '',
+      email: '',
+      country: '인도',
+      city: activeRegion === 'mumbai' ? '뭄바이(Mumbai)' : '첸나이(Chennai)',
+      office: activeRegion === 'mumbai' ? '뭄바이' : '첸나이'
+    });
+    setAddModalOpen(true);
+  };
+
+  const handleAddConfirm = async () => {
+    if (!addForm.company_name_kr.trim()) {
+      alert('한국 기업명은 필수 입력 항목입니다.');
+      return;
+    }
+
+    try {
+      setAdding(true);
+      
+      // Supabase에 새 기업 추가
+      const { error } = await supabase
+        .from('kotra')
+        .insert([{
+          company_name_kr: addForm.company_name_kr,
+          company_name_en: addForm.company_name_en,
+          industry_major: addForm.industry_major,
+          industry_minor: addForm.industry_minor,
+          entry_type: addForm.entry_type,
+          sales_division: addForm.sales_division,
+          local_address: addForm.local_address,
+          phone: addForm.phone,
+          email: addForm.email,
+          country: addForm.country,
+          city: addForm.city,
+          office: addForm.office
+        }]);
+
+      if (error) {
+        throw error;
+      }
+
+      // 성공적으로 추가되면 목록 새로고침
+      await fetchCompanies();
+      
+      // 모달 닫기
+      setAddModalOpen(false);
+      
+      // 성공 메시지
+      alert('새 기업이 성공적으로 추가되었습니다.');
+      
+    } catch (err) {
+      console.error('추가 오류:', err);
+      alert('기업 추가 중 오류가 발생했습니다.');
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const handleAddCancel = () => {
+    setAddModalOpen(false);
+  };
+
+  const handleAddFormChange = (field: string, value: string) => {
+    setAddForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   // 로딩 상태 렌더링
   if (loading) {
     return (
       <section id="target-customers">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 마케팅 대상 기업</h2>
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -251,7 +486,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
   if (error) {
     return (
       <section id="target-customers">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 마케팅 대상 기업</h2>
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <div className="flex items-center">
             <div className="text-red-600 mr-3">
@@ -277,13 +512,13 @@ export function BusinessFeasibilitySectionTargetCustomers() {
 
   return (
     <section id="target-customers">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 타겟고객리스트</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">11. 👥 마케팅 대상 기업</h2>
       
       <div className="mb-6">
         <p className="text-gray-600 mb-4">
           KOTRA 자료를 기반으로 한 인도 뭄바이, 첸나이 지역 진출 한국기업 현황입니다. 
           각 지역별로 진출한 모든 한국기업의 리스트와 함께, 
-          타겟고객으로 선정된 기업들의 정보를 포함하여 제공합니다.
+          마케팅 대상으로 선정된 기업들의 정보를 포함하여 제공합니다.
           <br />
           <span className="text-sm text-blue-600">
             📊 Supabase 데이터 기준: 첸나이 {targetStats.chennai.total}개, 뭄바이 {targetStats.mumbai.total}개
@@ -360,7 +595,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">타겟 기업</p>
+                  <p className="text-sm text-gray-600">마케팅 대상</p>
                   <p className="text-2xl font-bold text-green-600">
                     {activeRegion === 'mumbai' ? targetStats.mumbai.withSalesDivision : targetStats.chennai.withSalesDivision}개
                   </p>
@@ -376,7 +611,7 @@ export function BusinessFeasibilitySectionTargetCustomers() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">타겟 비율</p>
+                  <p className="text-sm text-gray-600">마케팅 대상 비율</p>
                   <p className="text-2xl font-bold text-blue-600">
                     {formatPercentage(activeRegion === 'mumbai' ? targetStats.mumbai.targetRatio : targetStats.chennai.targetRatio)}
                   </p>
@@ -434,6 +669,12 @@ export function BusinessFeasibilitySectionTargetCustomers() {
                 >
                   영업조직 없음 ({filteredCompanies.filter(c => !Boolean(c.salesDivision)).length}개)
                 </button>
+                <button
+                  onClick={handleAddClick}
+                  className="px-4 py-2 text-sm font-medium rounded-md transition-colors bg-green-600 text-white hover:bg-green-700"
+                >
+                  ➕ 새 기업 추가
+                </button>
               </div>
             </div>
           </div>
@@ -481,7 +722,13 @@ export function BusinessFeasibilitySectionTargetCustomers() {
                       </div>
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      타겟여부
+                      마케팅 대상 여부
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      수정
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      삭제
                     </th>
                   </tr>
                 </thead>
@@ -512,13 +759,29 @@ export function BusinessFeasibilitySectionTargetCustomers() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {company.isTarget ? (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            타겟
+                            마케팅 대상
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                             일반
                           </span>
                         )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button
+                          onClick={() => handleEditClick(company)}
+                          className="text-blue-600 hover:text-blue-900 underline"
+                        >
+                          수정
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button
+                          onClick={() => handleDeleteClick(company)}
+                          className="text-red-600 hover:text-red-900 underline"
+                        >
+                          삭제
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -596,6 +859,278 @@ export function BusinessFeasibilitySectionTargetCustomers() {
           </div>
         </div>
       </div>
+
+      {/* 삭제 모달 */}
+      {deleteModalOpen && companyToDelete && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+          <div className="relative p-8 border w-96 shadow-lg rounded-md bg-white">
+            <div className="text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">기업 삭제</h3>
+              <div className="mt-2 px-7 py-3">
+                <p className="text-sm text-gray-500">
+                  "{companyToDelete.name}" 기업을 정말로 삭제하시겠습니까?
+                  이 작업은 되돌릴 수 없습니다.
+                </p>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={deleting}
+                  className="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  {deleting ? '삭제 중...' : '삭제'}
+                </button>
+                <button
+                  onClick={handleDeleteCancel}
+                  className="mt-3 px-4 py-2 bg-gray-200 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 수정 모달 */}
+      {editModalOpen && companyToEdit && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+          <div className="relative p-8 border w-96 shadow-lg rounded-md bg-white">
+            <div className="text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">기업 정보 수정</h3>
+              <div className="mt-2 px-7 py-3">
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label htmlFor="company_name_kr" className="block text-sm font-medium text-gray-700">한국 기업명</label>
+                    <input
+                      type="text"
+                      id="company_name_kr"
+                      value={editForm.company_name_kr}
+                      onChange={(e) => handleEditFormChange('company_name_kr', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="company_name_en" className="block text-sm font-medium text-gray-700">영문 기업명</label>
+                    <input
+                      type="text"
+                      id="company_name_en"
+                      value={editForm.company_name_en}
+                      onChange={(e) => handleEditFormChange('company_name_en', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="industry_major" className="block text-sm font-medium text-gray-700">업종 (대분류)</label>
+                    <input
+                      type="text"
+                      id="industry_major"
+                      value={editForm.industry_major}
+                      onChange={(e) => handleEditFormChange('industry_major', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="industry_minor" className="block text-sm font-medium text-gray-700">세부 업종</label>
+                    <input
+                      type="text"
+                      id="industry_minor"
+                      value={editForm.industry_minor}
+                      onChange={(e) => handleEditFormChange('industry_minor', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="entry_type" className="block text-sm font-medium text-gray-700">진출형태</label>
+                    <input
+                      type="text"
+                      id="entry_type"
+                      value={editForm.entry_type}
+                      onChange={(e) => handleEditFormChange('entry_type', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="sales_division" className="block text-sm font-medium text-gray-700">영업조직</label>
+                    <input
+                      type="text"
+                      id="sales_division"
+                      value={editForm.sales_division}
+                      onChange={(e) => handleEditFormChange('sales_division', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="local_address" className="block text-sm font-medium text-gray-700">지명 및 주소</label>
+                    <input
+                      type="text"
+                      id="local_address"
+                      value={editForm.local_address}
+                      onChange={(e) => handleEditFormChange('local_address', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">전화번호</label>
+                    <input
+                      type="text"
+                      id="phone"
+                      value={editForm.phone}
+                      onChange={(e) => handleEditFormChange('phone', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">이메일</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={editForm.email}
+                      onChange={(e) => handleEditFormChange('email', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button
+                  onClick={handleEditConfirm}
+                  disabled={editing}
+                  className="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {editing ? '수정 중...' : '수정'}
+                </button>
+                <button
+                  onClick={handleEditCancel}
+                  className="mt-3 px-4 py-2 bg-gray-200 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 추가 모달 */}
+      {addModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+          <div className="relative p-8 border w-96 shadow-lg rounded-md bg-white">
+            <div className="text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">새 기업 추가</h3>
+              <div className="mt-2 px-7 py-3">
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label htmlFor="add_company_name_kr" className="block text-sm font-medium text-gray-700">한국 기업명</label>
+                    <input
+                      type="text"
+                      id="add_company_name_kr"
+                      value={addForm.company_name_kr}
+                      onChange={(e) => handleAddFormChange('company_name_kr', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_company_name_en" className="block text-sm font-medium text-gray-700">영문 기업명</label>
+                    <input
+                      type="text"
+                      id="add_company_name_en"
+                      value={addForm.company_name_en}
+                      onChange={(e) => handleAddFormChange('company_name_en', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_industry_major" className="block text-sm font-medium text-gray-700">업종 (대분류)</label>
+                    <input
+                      type="text"
+                      id="add_industry_major"
+                      value={addForm.industry_major}
+                      onChange={(e) => handleAddFormChange('industry_major', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_industry_minor" className="block text-sm font-medium text-gray-700">세부 업종</label>
+                    <input
+                      type="text"
+                      id="add_industry_minor"
+                      value={addForm.industry_minor}
+                      onChange={(e) => handleAddFormChange('industry_minor', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_entry_type" className="block text-sm font-medium text-gray-700">진출형태</label>
+                    <input
+                      type="text"
+                      id="add_entry_type"
+                      value={addForm.entry_type}
+                      onChange={(e) => handleAddFormChange('entry_type', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_sales_division" className="block text-sm font-medium text-gray-700">영업조직</label>
+                    <input
+                      type="text"
+                      id="add_sales_division"
+                      value={addForm.sales_division}
+                      onChange={(e) => handleAddFormChange('sales_division', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_local_address" className="block text-sm font-medium text-gray-700">지명 및 주소</label>
+                    <input
+                      type="text"
+                      id="add_local_address"
+                      value={addForm.local_address}
+                      onChange={(e) => handleAddFormChange('local_address', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_phone" className="block text-sm font-medium text-gray-700">전화번호</label>
+                    <input
+                      type="text"
+                      id="add_phone"
+                      value={addForm.phone}
+                      onChange={(e) => handleAddFormChange('phone', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="add_email" className="block text-sm font-medium text-gray-700">이메일</label>
+                    <input
+                      type="email"
+                      id="add_email"
+                      value={addForm.email}
+                      onChange={(e) => handleAddFormChange('email', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button
+                  onClick={handleAddConfirm}
+                  disabled={adding}
+                  className="px-4 py-2 bg-green-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  {adding ? '추가 중...' : '추가'}
+                </button>
+                <button
+                  onClick={handleAddCancel}
+                  className="mt-3 px-4 py-2 bg-gray-200 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                >
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

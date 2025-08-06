@@ -10,7 +10,7 @@ export const businessFeasibilityToc = [
   { id: 'marketing', label: '8. 타겟 마케팅 전략' },
   { id: 'risk', label: '9. 리스크 분석 및 대응 방안' },
   { id: 'conclusion', label: '10. 결론 및 권고사항' },
-  { id: 'target-customers', label: '11. 타겟 고객리스트' },
+  { id: 'target-customers', label: '11. 마케팅 대상 기업' },
   { id: 'appendix', label: '12. 부록' },
   { id: 'simulation', label: '13. Simulation' },
 ];
