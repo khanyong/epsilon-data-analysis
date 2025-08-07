@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { NavigationHub } from './NavigationHub';
 import { RFQAnalysis } from './RFQAnalysis';
 import { SOFAnalysis } from './SOFAnalysis';
 import { KOTRAAnalysis } from './KOTRAAnalysis';
@@ -11,6 +13,9 @@ import { BusinessFeasibilityReport } from './MarketingReport/BusinessFeasibility
 import { businessFeasibilityToc } from './MarketingReport/BusinessFeasibilityTocData';
 import { investmentStrategyToc } from './InvestmentStrategyReport/InvestmentStrategyTocData';
 import { SynergySales, toc as synergySalesToc } from './SynergySales/SynergySales';
+import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStrategy';
+import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
+import { Home, ArrowLeft } from 'lucide-react';
 
 type MenuType =
   | 'RFQ'
@@ -21,10 +26,42 @@ type MenuType =
   | 'MARKETING_REPORT'
   | 'NY_DISCOUNT_REPORT'
   | 'EPSILON_FACTBOOK'
-  | 'SYNERGY_SALES';
+  | 'SYNERGY_SALES'
+  | 'EURO_MARKETING_STRATEGY';
+
+// URL parameter to MenuType mapping
+const viewToMenuType: Record<string, MenuType> = {
+  'rfq': 'RFQ',
+  'sof': 'SOF',
+  'kotra': 'KOTRA',
+  'epsilon-pop': 'EPSILON_POPS',
+  'investment': 'INVEST_REPORT',
+  'business': 'MARKETING_REPORT',
+  'ny-discount': 'NY_DISCOUNT_REPORT',
+  'factbook': 'EPSILON_FACTBOOK',
+  'synergy': 'SYNERGY_SALES',
+  'euro-marketing': 'EURO_MARKETING_STRATEGY'
+};
 
 export function Dashboard() {
-  const [selectedMenu, setSelectedMenu] = useState<MenuType>('RFQ');
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const view = searchParams.get('view');
+  const [showHub, setShowHub] = useState(!view);
+  
+  // Set initial menu based on URL parameter
+  const initialMenu = view && viewToMenuType[view] ? viewToMenuType[view] : 'RFQ';
+  const [selectedMenu, setSelectedMenu] = useState<MenuType>(initialMenu);
+  
+  // Update selected menu when URL parameter changes
+  useEffect(() => {
+    if (view && viewToMenuType[view]) {
+      setSelectedMenu(viewToMenuType[view]);
+      setShowHub(false);
+    } else {
+      setShowHub(true);
+    }
+  }, [view]);
   // Factbook 상태
   const [factbookOpen, setFactbookOpen] = useState(true);
   const [factbookSection, setFactbookSection] = useState('company');
@@ -44,6 +81,10 @@ export function Dashboard() {
   const [synergySalesOpen, setSynergySalesOpen] = useState(true);
   const [synergySalesSection, setSynergySalesSection] = useState('overview');
   const [synergySalesViewMode, setSynergySalesViewMode] = useState<'section' | 'all' | 'dashboard'>('dashboard');
+  // 유럽 마케팅 전략 보고서 상태
+  const [euroMarketingStrategyOpen, setEuroMarketingStrategyOpen] = useState(true);
+  const [euroMarketingStrategySection, setEuroMarketingStrategySection] = useState('executive-summary');
+  const [euroMarketingStrategyViewMode, setEuroMarketingStrategyViewMode] = useState<'section' | 'all'>('section');
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -146,72 +187,101 @@ export function Dashboard() {
             <SynergySales sectionId={synergySalesSection} viewMode={synergySalesViewMode} />
           </>
         );
+      case 'EURO_MARKETING_STRATEGY':
+        return (
+          <>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setEuroMarketingStrategyViewMode(v => v === 'all' ? 'section' : 'all')}
+                className="px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 border border-blue-300"
+              >
+                {euroMarketingStrategyViewMode === 'all' ? '목차별 보기' : '전체 보기'}
+              </button>
+            </div>
+            <EuroMarketingStrategy
+              sectionId={euroMarketingStrategySection}
+              viewMode={euroMarketingStrategyViewMode}
+            />
+          </>
+        );
       default:
         return <RFQAnalysis />;
     }
   };
 
+  // If no view parameter, show NavigationHub content
+  if (showHub) {
+    return <NavigationHub />;
+  }
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-50">
       {/* 헤더 */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-green-400 shadow-sm">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-slate-800 shadow-lg border-b border-slate-700">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center pl-4">
-            <h1 className="text-xl font-bold text-white">Strategic Data Analyzer</h1>
+          <div className="flex items-center pl-4 space-x-4">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center space-x-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-gray-300 hover:text-white rounded-lg transition-all border border-slate-600"
+            >
+              <Home className="w-4 h-4" />
+              <span className="text-sm">Hub</span>
+            </button>
+            <h1 className="text-xl font-light text-white tracking-wider">EPSILON ANALYTICS</h1>
           </div>
           {/* 사용자 정보 및 로그아웃 */}
           <div className="flex items-center space-x-4 mr-4">
-            <div className="text-sm text-green-900">
-              <span className="font-medium">{user?.email}</span>
+            <div className="text-sm text-gray-400">
+              <span>{user?.email}</span>
             </div>
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-all"
             >
-              로그아웃
+              Logout
             </button>
           </div>
         </div>
       </div>
 
       {/* 사이드바 */}
-      <aside className="w-80 bg-gray-200 text-gray-900 flex flex-col fixed left-0 top-16 h-full overflow-y-auto">
+      <aside className="w-80 bg-slate-700 text-gray-200 flex flex-col fixed left-0 top-16 h-full overflow-y-auto border-r border-slate-600">
         <nav className="flex-1 px-4 py-6 space-y-2">
           {/* 데이터 분석 */}
-          <div className="text-gray-500 text-xs mb-2">데이터 분석</div>
+          <div className="text-gray-500 text-xs mb-2 uppercase tracking-wider">Data Analysis</div>
           <ul className="space-y-1 mb-6">
             <li
-              className={`rounded px-3 py-2 font-semibold ${selectedMenu === 'RFQ' ? 'bg-green-500 text-white' : 'hover:bg-gray-300 cursor-pointer'}`}
+              className={`rounded-lg px-3 py-2 transition-all ${selectedMenu === 'RFQ' ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg' : 'hover:bg-slate-600 cursor-pointer'}`}
               onClick={() => setSelectedMenu('RFQ')}
             >
               RFQ 분석
             </li>
             <li
-              className={`rounded px-3 py-2 font-semibold ${selectedMenu === 'SOF' ? 'bg-green-500 text-white' : 'hover:bg-gray-300 cursor-pointer'}`}
+              className={`rounded-lg px-3 py-2 transition-all ${selectedMenu === 'SOF' ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg' : 'hover:bg-slate-600 cursor-pointer'}`}
               onClick={() => setSelectedMenu('SOF')}
             >
               SOF 분석
             </li>
             <li
-              className={`rounded px-3 py-2 font-semibold ${selectedMenu === 'KOTRA' ? 'bg-green-500 text-white' : 'hover:bg-gray-300 cursor-pointer'}`}
+              className={`rounded-lg px-3 py-2 transition-all ${selectedMenu === 'KOTRA' ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg' : 'hover:bg-slate-600 cursor-pointer'}`}
               onClick={() => setSelectedMenu('KOTRA')}
             >
               KOTRA 분석
             </li>
-            <li className={`rounded px-3 py-2 font-semibold opacity-50 cursor-not-allowed`}>
+            <li className={`rounded-lg px-3 py-2 opacity-50 cursor-not-allowed`}>
               Epsilon PoP 현황 (준비중)
             </li>
           </ul>
           {/* 보고서 */}
-          <div className="text-gray-500 text-xs mb-2">보고서</div>
+          <div className="text-gray-500 text-xs mb-2 uppercase tracking-wider">Reports</div>
           <ul className="space-y-1 mb-6">
             {/* 투자 전략 보고서 */}
             <li>
               <button
-                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full whitespace-nowrap ${
+                className={`rounded-lg px-3 py-2 flex justify-between items-center w-full whitespace-nowrap transition-all ${
                   selectedMenu === 'INVEST_REPORT'
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-gray-300 text-gray-900'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
                 }`}
                 onClick={() => {
                   setSelectedMenu('INVEST_REPORT');
@@ -231,7 +301,7 @@ export function Dashboard() {
                   {investmentStrategyToc.map((item) => (
                     <li key={item.id}>
                       <button
-                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${investmentStrategySection === item.id ? 'font-bold underline' : ''}`}
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${investmentStrategySection === item.id ? 'font-bold text-emerald-400' : ''}`}
                         onClick={() => {
                           setInvestmentStrategySection(item.id);
                           setInvestmentStrategyViewMode('section');
@@ -249,8 +319,8 @@ export function Dashboard() {
               <button
                 className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full whitespace-nowrap ${
                   selectedMenu === 'MARKETING_REPORT'
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-gray-300 text-gray-900'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
                 }`}
                 onClick={() => {
                   setSelectedMenu('MARKETING_REPORT');
@@ -270,8 +340,8 @@ export function Dashboard() {
                   {businessFeasibilityToc.map((item) => (
                     <li key={item.id}>
                       <button
-                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${
-                          businessFeasibilitySection === item.id ? 'font-bold underline' : ''
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          businessFeasibilitySection === item.id ? 'font-bold text-emerald-400' : ''
                         }`}
                         onClick={() => setBusinessFeasibilitySection(item.id)}
                       >
@@ -287,8 +357,8 @@ export function Dashboard() {
               <button
                 className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full whitespace-nowrap ${
                   selectedMenu === 'NY_DISCOUNT_REPORT'
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-gray-300 text-gray-900'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
                 }`}
                 onClick={() => {
                   setSelectedMenu('NY_DISCOUNT_REPORT');
@@ -308,8 +378,8 @@ export function Dashboard() {
                   {nyDiscountToc.map((item) => (
                     <li key={item.id}>
                       <button
-                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${
-                          nyDiscountSection === item.id ? 'font-bold underline' : ''
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          nyDiscountSection === item.id ? 'font-bold text-emerald-400' : ''
                         }`}
                         onClick={() => setNyDiscountSection(item.id)}
                       >
@@ -325,8 +395,8 @@ export function Dashboard() {
               <button
                 className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
                   selectedMenu === 'EPSILON_FACTBOOK'
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-gray-300 text-gray-900'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
                 }`}
                 onClick={() => {
                   setSelectedMenu('EPSILON_FACTBOOK');
@@ -345,8 +415,8 @@ export function Dashboard() {
                   {factbookToc.map((item) => (
                     <li key={item.id}>
                       <button
-                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${
-                          factbookSection === item.id ? 'font-bold underline' : ''
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          factbookSection === item.id ? 'font-bold text-emerald-400' : ''
                         }`}
                         onClick={() => setFactbookSection(item.id)}
                       >
@@ -362,8 +432,8 @@ export function Dashboard() {
               <button
                 className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
                   selectedMenu === 'SYNERGY_SALES'
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-gray-300 text-gray-900'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
                 }`}
                 onClick={() => {
                   setSelectedMenu('SYNERGY_SALES');
@@ -382,8 +452,8 @@ export function Dashboard() {
                   {synergySalesToc.map((item) => (
                     <li key={item.id}>
                       <button
-                        className={`block px-2 py-1 rounded hover:bg-blue-100 text-sm text-blue-700 transition-colors w-full text-left ${
-                          synergySalesSection === item.id ? 'font-bold underline' : ''
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          synergySalesSection === item.id ? 'font-bold text-emerald-400' : ''
                         }`}
                         onClick={() => {
                           console.log('🔍 메뉴 클릭:', item.id, item.label);
@@ -412,12 +482,56 @@ export function Dashboard() {
                 </ul>
               )}
             </li>
+            {/* Euro Marketing Strategy */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'EURO_MARKETING_STRATEGY'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('EURO_MARKETING_STRATEGY');
+                  setEuroMarketingStrategyOpen((v) => (selectedMenu === 'EURO_MARKETING_STRATEGY' ? !v : true));
+                }}
+                aria-expanded={selectedMenu === 'EURO_MARKETING_STRATEGY' && euroMarketingStrategyOpen}
+                aria-controls="euromarketingstrategy-toc-list"
+              >
+                <span>Euro Marketing Strategy</span>
+                <span className="ml-2">
+                  {selectedMenu === 'EURO_MARKETING_STRATEGY' && euroMarketingStrategyOpen ? '▲' : '▼'}
+                </span>
+              </button>
+              {selectedMenu === 'EURO_MARKETING_STRATEGY' && euroMarketingStrategyOpen && (
+                <ul id="euromarketingstrategy-toc-list" className="pl-4 mt-1 space-y-1">
+                  {euroMarketingStrategyToc.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          euroMarketingStrategySection === item.id ? 'font-bold text-emerald-400' : ''
+                        }`}
+                        onClick={() => {
+                          setEuroMarketingStrategySection(item.id);
+                          setEuroMarketingStrategyViewMode('section');
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
           </ul>
         </nav>
       </aside>
 
       {/* 메인 콘텐츠 */}
-      <main className="flex-1 ml-80 mt-16 p-8">{renderContent()}</main>
+      <main className="flex-1 ml-80 mt-16 p-8 bg-gray-50">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          {renderContent()}
+        </div>
+      </main>
     </div>
   );
 } 

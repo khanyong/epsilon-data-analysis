@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             
-            {/* 보호된 라우트 */}
+            {/* 보호된 라우트 - 대시보드 (네비게이션 허브 통합) */}
             <Route 
               path="/dashboard" 
               element={

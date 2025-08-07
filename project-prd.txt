@@ -1,0 +1,79 @@
+프로젝트: Epsilon Data Analyzer (전략 데이터 분석기)
+
+목표:
+- 다중 데이터 소스 통합 분석 대시보드 구축
+- 글로벌 비즈니스 데이터 시각화 및 인사이트 도출
+- 투자 전략 및 마케팅 전략 수립을 위한 데이터 기반 의사결정 지원
+- 유럽 가격 데이터 및 네트워크 인프라 분석
+
+기능 요구사항:
+
+1. 인증 및 보안 시스템
+   - Supabase 기반 이메일/비밀번호 인증
+   - 세션 관리 및 자동 로그인
+   - 보호된 라우트 접근 제어
+   - Row Level Security (RLS) 정책 적용
+
+2. 데이터 분석 대시보드
+   - 7개 데이터 소스 통합 분석 (RFQ, SOF, KOTRA, Hyundai Motors, VPN, KT PoPs, COGS)
+   - 피벗 테이블 기반 다단계 분석 (최대 N단계)
+   - 드래그앤드롭 인터페이스
+   - 실시간 통계 계산 (총 건수, 금액, 국가 수 등)
+   - 컬럼별 필터링 및 정렬
+
+3. 데이터 업로드 및 관리
+   - Excel/CSV 파일 업로드 기능
+   - 자동 데이터 정규화 및 검증
+   - 배치 처리 (5,000개씩 분할)
+   - 데이터 스키마 자동 감지
+
+4. 비즈니스 분석 보고서
+   - DCF 분석 (NPV, IRR 계산)
+   - 시장 분석 (TAM/SAM/SOM)
+   - 투자 비용 분석 (CAPEX/OPEX)
+   - 백업자료 시스템
+
+5. 특화 분석 페이지
+   - Euro Marketing Strategy
+   - Investment Strategy Report
+   - Epsilon Factbook
+   - Synergy Sales Analysis
+   - New York Discount Report
+
+6. 네트워크 인프라 분석
+   - Epsilon PoP 분석
+   - KT PoP 분석
+   - VPN 연결 현황 분석
+   - 글로벌 네트워크 맵핑
+
+7. 데이터 시각화
+   - Chart.js 및 Recharts 기반 차트
+   - AG Grid 기반 데이터 테이블
+   - 반응형 대시보드 레이아웃
+   - 실시간 데이터 업데이트
+
+기술 스택:
+- Frontend: React 18, TypeScript, Tailwind CSS
+- Backend: Supabase (PostgreSQL)
+- Charts: Chart.js, Recharts, AG Grid
+- Build Tool: Vite
+- Authentication: Supabase Auth
+- File Processing: XLSX, CSV-Parse
+
+성능 요구사항:
+- 대용량 데이터 처리 (10만+ 레코드)
+- 페이지네이션 기반 로딩
+- 컬럼별 인덱스 최적화
+- 실시간 데이터 업데이트
+
+보안 요구사항:
+- 모든 데이터 암호화 저장
+- HTTPS 통신
+- JWT 토큰 기반 인증
+- RLS 정책으로 데이터 접근 제어
+
+사용자 경험:
+- 직관적인 드래그앤드롭 인터페이스
+- 반응형 디자인
+- 빠른 데이터 로딩
+- 실시간 피드백 

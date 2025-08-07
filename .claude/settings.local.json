@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone:*)",
+      "Bash(python scripts/upload_euro_pricing_data.py:*)"
+    ],
+    "deny": []
+  }
+}
