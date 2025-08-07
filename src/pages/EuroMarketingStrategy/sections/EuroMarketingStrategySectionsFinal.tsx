@@ -343,59 +343,55 @@ export function EuroMarketingStrategySectionFinancialProjection() {
       <div className="bg-blue-50 p-6 rounded-lg mb-8">
         <h3 className="text-xl font-semibold text-blue-900 mb-4">📈 수익 전망 (2025-2030)</h3>
         
-        <div className="bg-white p-4 rounded-lg">
+        <div className="bg-white p-4 rounded-lg overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b-2 border-gray-200">
-                <th className="text-left py-2">연도</th>
-                <th className="text-right py-2">매출</th>
-                <th className="text-right py-2">EBITDA</th>
-                <th className="text-right py-2">순이익</th>
-                <th className="text-right py-2">마진율</th>
+                <th className="text-left py-2 pr-4">구분</th>
+                <th className="text-center py-2 px-3">2025</th>
+                <th className="text-center py-2 px-3">2026</th>
+                <th className="text-center py-2 px-3">2027</th>
+                <th className="text-center py-2 px-3">2028</th>
+                <th className="text-center py-2 px-3">2029</th>
+                <th className="text-center py-2 px-3 font-bold">2030</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b">
-                <td className="py-2">2025</td>
-                <td className="text-right">€2M</td>
-                <td className="text-right text-red-600">-€1M</td>
-                <td className="text-right text-red-600">-€1.5M</td>
-                <td className="text-right">-75%</td>
+                <td className="py-2 font-semibold">매출</td>
+                <td className="text-center px-3">€2M</td>
+                <td className="text-center px-3">€10M</td>
+                <td className="text-center px-3">€25M</td>
+                <td className="text-center px-3">€50M</td>
+                <td className="text-center px-3">€80M</td>
+                <td className="text-center px-3 font-bold">€120M</td>
               </tr>
               <tr className="border-b">
-                <td className="py-2">2026</td>
-                <td className="text-right">€10M</td>
-                <td className="text-right text-red-600">-€0.5M</td>
-                <td className="text-right text-red-600">-€1M</td>
-                <td className="text-right">-10%</td>
+                <td className="py-2 font-semibold">EBITDA</td>
+                <td className="text-center px-3 text-red-600">-€1M</td>
+                <td className="text-center px-3 text-red-600">-€0.5M</td>
+                <td className="text-center px-3 text-green-600">€2.5M</td>
+                <td className="text-center px-3 text-green-600">€10M</td>
+                <td className="text-center px-3 text-green-600">€20M</td>
+                <td className="text-center px-3 font-bold text-green-600">€36M</td>
               </tr>
               <tr className="border-b">
-                <td className="py-2">2027</td>
-                <td className="text-right">€25M</td>
-                <td className="text-right text-green-600">€2.5M</td>
-                <td className="text-right text-green-600">€1M</td>
-                <td className="text-right">4%</td>
+                <td className="py-2 font-semibold">순이익</td>
+                <td className="text-center px-3 text-red-600">-€1.5M</td>
+                <td className="text-center px-3 text-red-600">-€1M</td>
+                <td className="text-center px-3 text-green-600">€1M</td>
+                <td className="text-center px-3 text-green-600">€5M</td>
+                <td className="text-center px-3 text-green-600">€12M</td>
+                <td className="text-center px-3 font-bold text-green-600">€24M</td>
               </tr>
               <tr className="border-b">
-                <td className="py-2">2028</td>
-                <td className="text-right">€50M</td>
-                <td className="text-right text-green-600">€10M</td>
-                <td className="text-right text-green-600">€5M</td>
-                <td className="text-right">10%</td>
-              </tr>
-              <tr className="border-b">
-                <td className="py-2">2029</td>
-                <td className="text-right">€80M</td>
-                <td className="text-right text-green-600">€20M</td>
-                <td className="text-right text-green-600">€12M</td>
-                <td className="text-right">15%</td>
-              </tr>
-              <tr className="border-b font-bold">
-                <td className="py-2">2030</td>
-                <td className="text-right">€120M</td>
-                <td className="text-right text-green-600">€36M</td>
-                <td className="text-right text-green-600">€24M</td>
-                <td className="text-right">20%</td>
+                <td className="py-2 font-semibold">마진율</td>
+                <td className="text-center px-3">-75%</td>
+                <td className="text-center px-3">-10%</td>
+                <td className="text-center px-3">4%</td>
+                <td className="text-center px-3">10%</td>
+                <td className="text-center px-3">15%</td>
+                <td className="text-center px-3 font-bold">20%</td>
               </tr>
             </tbody>
           </table>
@@ -406,50 +402,79 @@ export function EuroMarketingStrategySectionFinancialProjection() {
       <div className="bg-yellow-50 p-6 rounded-lg">
         <h3 className="text-xl font-semibold text-yellow-900 mb-4">💼 자금 조달 전략</h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 mb-3">Series A (2025)</h4>
+            <h4 className="font-semibold text-yellow-800 mb-3">프로젝트 파이낸싱 (2025)</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
-                <span className="text-gray-600">목표 금액:</span>
+                <span className="text-gray-600">조달 규모:</span>
                 <span className="font-semibold">€5M</span>
               </li>
               <li className="flex justify-between">
-                <span className="text-gray-600">투자자:</span>
-                <span className="font-semibold">VC, 전략적 투자자</span>
+                <span className="text-gray-600">조달 방식:</span>
+                <span className="font-semibold">은행 대출</span>
               </li>
               <li className="flex justify-between">
-                <span className="text-gray-600">지분 희석:</span>
-                <span className="font-semibold">20-25%</span>
+                <span className="text-gray-600">상환 기간:</span>
+                <span className="font-semibold">5년</span>
               </li>
               <li className="flex justify-between">
                 <span className="text-gray-600">용도:</span>
-                <span className="font-semibold">초기 인프라, 팀 구축</span>
+                <span className="font-semibold">인프라 구축</span>
               </li>
             </ul>
           </div>
           
           <div className="bg-white p-4 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 mb-3">Series B (2027)</h4>
+            <h4 className="font-semibold text-yellow-800 mb-3">유상증자 (2026)</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
-                <span className="text-gray-600">목표 금액:</span>
-                <span className="font-semibold">€10M</span>
+                <span className="text-gray-600">조달 규모:</span>
+                <span className="font-semibold">€7M</span>
               </li>
               <li className="flex justify-between">
-                <span className="text-gray-600">투자자:</span>
-                <span className="font-semibold">PE, 기관투자자</span>
+                <span className="text-gray-600">발행 방식:</span>
+                <span className="font-semibold">제3자 배정</span>
               </li>
               <li className="flex justify-between">
-                <span className="text-gray-600">지분 희석:</span>
-                <span className="font-semibold">15-20%</span>
+                <span className="text-gray-600">예상 투자자:</span>
+                <span className="font-semibold">전략적 투자자</span>
               </li>
               <li className="flex justify-between">
                 <span className="text-gray-600">용도:</span>
-                <span className="font-semibold">시장 확장, M&A</span>
+                <span className="font-semibold">운영자금</span>
               </li>
             </ul>
           </div>
+          
+          <div className="bg-white p-4 rounded-lg">
+            <h4 className="font-semibold text-yellow-800 mb-3">회사채 발행 (2027)</h4>
+            <ul className="space-y-2 text-sm">
+              <li className="flex justify-between">
+                <span className="text-gray-600">발행 규모:</span>
+                <span className="font-semibold">€10M</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-gray-600">만기:</span>
+                <span className="font-semibold">3년</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-gray-600">예상 금리:</span>
+                <span className="font-semibold">4-5%</span>
+              </li>
+              <li className="flex justify-between">
+                <span className="text-gray-600">용도:</span>
+                <span className="font-semibold">시장 확장</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+          <p className="text-sm text-blue-700">
+            <strong>💡 자금 조달 원칙:</strong> 프로젝트 특성에 맞는 금융 구조 설계, 
+            부채비율 40% 이하 유지, 신용등급 관리를 통한 조달 비용 최소화
+          </p>
         </div>
       </div>
     </section>
