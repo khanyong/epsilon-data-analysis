@@ -1,0 +1,163 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Supabase 프로젝트 초기 설정 및 데이터베이스 스키마 구축",
+        "description": "Supabase 프로젝트를 생성하고 7개 데이터 소스를 위한 PostgreSQL 테이블 스키마를 설계 및 구현",
+        "details": "1. Supabase 프로젝트 생성 및 환경변수 설정\n2. 테이블 스키마 설계:\n   - rfq_data (id, request_date, customer, product, quantity, price, country)\n   - sof_data (id, project_name, budget, timeline, status)\n   - kotra_data (id, market, industry, opportunity, contact)\n   - hyundai_motors (id, model, region, sales_volume, revenue)\n   - vpn_connections (id, location, bandwidth, status, connected_at)\n   - kt_pops (id, location, capacity, utilization, cost)\n   - cogs_data (id, product, unit_cost, margin, date)\n3. 인덱스 생성: CREATE INDEX idx_country ON rfq_data(country);\n4. RLS 정책 설정: ALTER TABLE rfq_data ENABLE ROW LEVEL SECURITY;",
+        "testStrategy": "1. Supabase 대시보드에서 테이블 생성 확인\n2. SQL 쿼리로 각 테이블 CRUD 작업 테스트\n3. psql 또는 Supabase SQL Editor로 스키마 검증\n4. 샘플 데이터 삽입 및 조회 테스트",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "complexity": 2,
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "인증 시스템 구현",
+        "description": "Supabase Auth를 활용한 이메일/비밀번호 기반 인증 시스템 및 보호된 라우트 구현",
+        "details": "1. Supabase Auth 클라이언트 설정:\n   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)\n2. AuthContext 구현:\n   - 로그인: supabase.auth.signInWithPassword({email, password})\n   - 회원가입: supabase.auth.signUp({email, password})\n   - 로그아웃: supabase.auth.signOut()\n   - 세션 관리: supabase.auth.getSession()\n3. ProtectedRoute 컴포넌트:\n   if (!session) return <Navigate to='/login' />\n4. RLS 정책 적용:\n   CREATE POLICY 'Users can view own data' ON table_name\n   FOR SELECT USING (auth.uid() = user_id)",
+        "testStrategy": "1. 회원가입 플로우 E2E 테스트\n2. 로그인/로그아웃 기능 테스트\n3. 세션 만료 및 자동 갱신 테스트\n4. 보호된 라우트 접근 권한 테스트\n5. RLS 정책으로 다른 사용자 데이터 접근 차단 확인",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "complexity": 4,
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "데이터 업로드 시스템 개발",
+        "description": "Excel/CSV 파일 업로드, 파싱, 검증 및 배치 처리 시스템 구현",
+        "details": "1. 파일 업로드 컴포넌트:\n   const handleUpload = (file: File) => {\n     const reader = new FileReader()\n     reader.onload = async (e) => {\n       const data = XLSX.read(e.target.result)\n       const jsonData = XLSX.utils.sheet_to_json(data.Sheets[0])\n       await processBatch(jsonData)\n     }\n   }\n2. 배치 처리 로직:\n   const processBatch = async (data: any[]) => {\n     const BATCH_SIZE = 5000\n     for (let i = 0; i < data.length; i += BATCH_SIZE) {\n       const batch = data.slice(i, i + BATCH_SIZE)\n       await supabase.from('table').insert(batch)\n     }\n   }\n3. 데이터 검증:\n   - 필수 필드 확인\n   - 데이터 타입 검증\n   - 중복 제거",
+        "testStrategy": "1. 다양한 파일 형식 업로드 테스트 (xlsx, xls, csv)\n2. 대용량 파일 처리 테스트 (10만+ 레코드)\n3. 잘못된 형식 파일 에러 처리 테스트\n4. 배치 처리 성능 측정\n5. 데이터 무결성 검증",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "complexity": 3,
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "피벗 테이블 분석 엔진 구현",
+        "description": "다단계 피벗 테이블 분석 기능과 드래그앤드롭 인터페이스 개발",
+        "details": "1. 피벗 테이블 로직:\n   const pivotData = (data, rows, columns, values) => {\n     const pivot = {}\n     data.forEach(item => {\n       const rowKey = rows.map(r => item[r]).join('|')\n       const colKey = columns.map(c => item[c]).join('|')\n       if (!pivot[rowKey]) pivot[rowKey] = {}\n       if (!pivot[rowKey][colKey]) pivot[rowKey][colKey] = 0\n       pivot[rowKey][colKey] += item[values]\n     })\n     return pivot\n   }\n2. 드래그앤드롭 구현 (react-dnd):\n   - DragSource: 필드 선택\n   - DropTarget: 행/열/값 영역\n3. 실시간 통계 계산:\n   - 총합, 평균, 최대/최소값\n   - 고유 값 카운트",
+        "testStrategy": "1. 다양한 차원 조합 테스트\n2. 드래그앤드롭 기능 테스트\n3. 대용량 데이터 피벗 성능 테스트\n4. 통계 계산 정확도 검증\n5. N단계 피벗 테스트",
+        "priority": "high",
+        "dependencies": [
+          1,
+          3
+        ],
+        "status": "pending",
+        "complexity": 3,
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "AG Grid 기반 데이터 테이블 구현",
+        "description": "고성능 데이터 그리드 컴포넌트와 필터링, 정렬, 페이지네이션 기능 구현",
+        "details": "1. AG Grid 설정:\n   const gridOptions = {\n     columnDefs: [\n       {field: 'id', sortable: true, filter: true},\n       {field: 'name', sortable: true, filter: 'agTextColumnFilter'},\n       {field: 'amount', sortable: true, filter: 'agNumberColumnFilter'}\n     ],\n     pagination: true,\n     paginationPageSize: 100,\n     defaultColDef: {\n       resizable: true,\n       sortable: true,\n       filter: true\n     }\n   }\n2. 서버사이드 페이지네이션:\n   const fetchData = async (page, limit) => {\n     const {data} = await supabase\n       .from('table')\n       .select('*')\n       .range(page * limit, (page + 1) * limit - 1)\n   }\n3. 커스텀 필터 구현",
+        "testStrategy": "1. 대용량 데이터 렌더링 성능 테스트\n2. 필터 조합 테스트\n3. 정렬 기능 테스트\n4. 페이지네이션 경계값 테스트\n5. 컬럼 리사이징 테스트",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          3
+        ],
+        "status": "pending",
+        "complexity": 3,
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "데이터 시각화 대시보드 개발",
+        "description": "Chart.js와 Recharts를 활용한 인터랙티브 차트 및 대시보드 구현",
+        "details": "1. Chart.js 구현:\n   const chartConfig = {\n     type: 'bar',\n     data: {\n       labels: countries,\n       datasets: [{\n         label: 'Sales by Country',\n         data: salesData,\n         backgroundColor: 'rgba(75, 192, 192, 0.6)'\n       }]\n     },\n     options: {\n       responsive: true,\n       plugins: {\n         legend: {position: 'top'},\n         tooltip: {callbacks: {label: (context) => `$${context.parsed.y}`}}\n       }\n     }\n   }\n2. Recharts 구현:\n   <LineChart data={data}>\n     <XAxis dataKey='date' />\n     <YAxis />\n     <Tooltip />\n     <Line type='monotone' dataKey='value' stroke='#8884d8' />\n   </LineChart>\n3. 실시간 업데이트: WebSocket 또는 polling",
+        "testStrategy": "1. 차트 렌더링 테스트\n2. 데이터 업데이트 시 차트 리렌더링 테스트\n3. 반응형 디자인 테스트\n4. 대용량 데이터 포인트 성능 테스트\n5. 차트 인터랙션 테스트",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          3,
+          4
+        ],
+        "status": "pending",
+        "complexity": 4,
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "DCF 분석 및 투자 전략 모듈 구현",
+        "description": "NPV, IRR 계산 로직과 TAM/SAM/SOM 시장 분석 기능 개발",
+        "details": "1. DCF 계산 로직:\n   const calculateNPV = (cashFlows, discountRate) => {\n     return cashFlows.reduce((npv, cf, year) => {\n       return npv + cf / Math.pow(1 + discountRate, year + 1)\n     }, -initialInvestment)\n   }\n   const calculateIRR = (cashFlows) => {\n     // Newton-Raphson method implementation\n   }\n2. 시장 분석:\n   const calculateTAM = (marketSize, growthRate, years) => {\n     return marketSize * Math.pow(1 + growthRate, years)\n   }\n   const SAM = TAM * addressablePercentage\n   const SOM = SAM * marketShareTarget\n3. CAPEX/OPEX 분석:\n   - 초기 투자 비용 계산\n   - 운영 비용 예측\n   - Break-even 분석",
+        "testStrategy": "1. NPV/IRR 계산 정확도 테스트\n2. 다양한 시나리오 시뮬레이션\n3. 시장 분석 로직 검증\n4. 민감도 분석 테스트\n5. 보고서 생성 테스트",
+        "priority": "medium",
+        "dependencies": [
+          1,
+          5,
+          6
+        ],
+        "status": "pending",
+        "complexity": 5,
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "유럽 마케팅 전략 분석 페이지 구현",
+        "description": "유럽 가격 데이터 분석 및 마케팅 전략 수립을 위한 특화 페이지 개발",
+        "details": "1. 유럽 가격 데이터 처리:\n   - 환율 변환 로직 (EUR, GBP, CHF)\n   - 국가별 가격 비교 분석\n   - 가격 탄력성 계산\n2. 마케팅 대상 기업 CRUD:\n   const targetCompanies = {\n     create: async (company) => supabase.from('target_companies').insert(company),\n     update: async (id, data) => supabase.from('target_companies').update(data).eq('id', id),\n     delete: async (id) => supabase.from('target_companies').delete().eq('id', id)\n   }\n3. 경쟁사 분석:\n   - 시장 점유율 비교\n   - 가격 포지셔닝 맵\n   - SWOT 분석 매트릭스",
+        "testStrategy": "1. 가격 데이터 업로드 및 처리 테스트\n2. 환율 변환 정확도 테스트\n3. CRUD 작업 테스트\n4. 데이터 시각화 테스트\n5. 보고서 생성 테스트",
+        "priority": "low",
+        "dependencies": [
+          1,
+          4,
+          5,
+          6
+        ],
+        "status": "pending",
+        "complexity": 4,
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "네트워크 인프라 분석 모듈 개발",
+        "description": "Epsilon PoP, KT PoP, VPN 연결 현황 분석 및 글로벌 네트워크 맵핑 구현",
+        "details": "1. PoP 데이터 모델:\n   interface PoP {\n     id: string\n     location: {lat: number, lng: number}\n     capacity: number\n     utilization: number\n     connections: Connection[]\n   }\n2. 네트워크 맵 구현 (Leaflet):\n   const NetworkMap = () => {\n     return (\n       <MapContainer center={[37.5665, 126.9780]} zoom={2}>\n         {pops.map(pop => (\n           <Marker position={[pop.lat, pop.lng]}>\n             <Popup>{pop.name}: {pop.utilization}%</Popup>\n           </Marker>\n         ))}\n         {connections.map(conn => (\n           <Polyline positions={conn.path} color='blue' />\n         ))}\n       </MapContainer>\n     )\n   }\n3. VPN 상태 모니터링:\n   - 실시간 연결 상태\n   - 대역폭 사용량\n   - 레이턴시 측정",
+        "testStrategy": "1. 지도 렌더링 테스트\n2. PoP 데이터 정확도 검증\n3. 네트워크 경로 계산 테스트\n4. 실시간 업데이트 테스트\n5. 성능 메트릭 측정",
+        "priority": "low",
+        "dependencies": [
+          1,
+          5,
+          6
+        ],
+        "status": "pending",
+        "complexity": 4,
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "백업 및 리포트 생성 시스템 구축",
+        "description": "데이터 백업 자동화 및 PDF/Excel 형식 리포트 생성 기능 구현",
+        "details": "1. 자동 백업 시스템:\n   const scheduleBackup = () => {\n     cron.schedule('0 2 * * *', async () => {\n       const tables = ['rfq_data', 'sof_data', 'kotra_data']\n       for (const table of tables) {\n         const {data} = await supabase.from(table).select('*')\n         await supabase.storage\n           .from('backups')\n           .upload(`${table}_${Date.now()}.json`, JSON.stringify(data))\n       }\n     })\n   }\n2. PDF 리포트 생성 (jsPDF):\n   const generatePDF = (data) => {\n     const doc = new jsPDF()\n     doc.text('Investment Strategy Report', 20, 20)\n     doc.autoTable({head: headers, body: data})\n     doc.save('report.pdf')\n   }\n3. Excel 리포트 생성:\n   const generateExcel = (data) => {\n     const ws = XLSX.utils.json_to_sheet(data)\n     const wb = XLSX.utils.book_new()\n     XLSX.utils.book_append_sheet(wb, ws, 'Report')\n     XLSX.writeFile(wb, 'report.xlsx')\n   }",
+        "testStrategy": "1. 백업 스케줄링 테스트\n2. 백업 복원 테스트\n3. PDF 생성 및 레이아웃 테스트\n4. Excel 포맷 정확도 테스트\n5. 대용량 데이터 리포트 생성 성능 테스트",
+        "priority": "low",
+        "dependencies": [
+          1,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "complexity": 3,
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-07T01:28:31.087Z",
+      "updated": "2025-08-07T01:28:31.087Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
