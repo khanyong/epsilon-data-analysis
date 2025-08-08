@@ -2,9 +2,9 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { Landing } from './pages/Landing'
-import { Login } from './pages/Login'
-import { Dashboard } from './pages/Dashboard'
+import { Landing } from './features/Landing'
+import { Login } from './features/Login'
+import { Dashboard } from './features/Dashboard'
 
 function App() {
   return (

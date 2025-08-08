@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CogsByRegion } from '../services/cogsService';
-import { getGlobalRevenueParams, resetCogsSectionData } from '../pages/MarketingReport/BusinessFeasibilitySections2-2';
+import { getGlobalRevenueParams, resetCogsSectionData } from '../features/MarketingReport/BusinessFeasibilitySections2-2';
 
 interface CogsSectionProps {
   region: 'mumbai' | 'chennai';
@@ -400,7 +400,7 @@ export function CogsSection({ region }: CogsSectionProps) {
       });
       
       // 전역 상태 업데이트
-      import('../pages/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
+      import('../features/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
         updateGlobalCogsData(region, totalYearlyCosts);
       });
       
@@ -521,7 +521,7 @@ export function CogsSection({ region }: CogsSectionProps) {
       });
 
       // 전역 COGS 데이터 업데이트 (Supabase 호출 제거)
-      import('../pages/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
+      import('../features/MarketingReport/BusinessFeasibilitySections2-2').then(({ updateGlobalCogsData }) => {
         updateGlobalCogsData(region, totalYearlyCosts);
       });
       
