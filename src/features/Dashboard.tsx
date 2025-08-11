@@ -15,6 +15,8 @@ import { investmentStrategyToc } from './InvestmentStrategyReport/InvestmentStra
 import { SynergySales, toc as synergySalesToc } from './SynergySales/SynergySales';
 import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStrategy';
 import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
+import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
+import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
 import { Home, ArrowLeft } from 'lucide-react';
 
 type MenuType =
@@ -27,7 +29,8 @@ type MenuType =
   | 'NY_DISCOUNT_REPORT'
   | 'EPSILON_FACTBOOK'
   | 'SYNERGY_SALES'
-  | 'EURO_MARKETING_STRATEGY';
+  | 'EURO_MARKETING_STRATEGY'
+  | 'GLOBAL_GTM_STRATEGY';
 
 // URL parameter to MenuType mapping
 const viewToMenuType: Record<string, MenuType> = {
@@ -40,7 +43,8 @@ const viewToMenuType: Record<string, MenuType> = {
   'ny-discount': 'NY_DISCOUNT_REPORT',
   'factbook': 'EPSILON_FACTBOOK',
   'synergy': 'SYNERGY_SALES',
-  'euro-marketing': 'EURO_MARKETING_STRATEGY'
+  'euro-marketing': 'EURO_MARKETING_STRATEGY',
+  'global-gtm': 'GLOBAL_GTM_STRATEGY'
 };
 
 export function Dashboard() {
@@ -85,6 +89,10 @@ export function Dashboard() {
   const [euroMarketingStrategyOpen, setEuroMarketingStrategyOpen] = useState(true);
   const [euroMarketingStrategySection, setEuroMarketingStrategySection] = useState('executive-summary');
   const [euroMarketingStrategyViewMode, setEuroMarketingStrategyViewMode] = useState<'section' | 'all'>('section');
+  // Global GTM Strategy 상태
+  const [globalGtmStrategyOpen, setGlobalGtmStrategyOpen] = useState(true);
+  const [globalGtmStrategySection, setGlobalGtmStrategySection] = useState('overview');
+  const [globalGtmStrategyViewMode, setGlobalGtmStrategyViewMode] = useState<'section' | 'all'>('section');
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -201,6 +209,23 @@ export function Dashboard() {
             <EuroMarketingStrategy
               sectionId={euroMarketingStrategySection}
               viewMode={euroMarketingStrategyViewMode}
+            />
+          </>
+        );
+      case 'GLOBAL_GTM_STRATEGY':
+        return (
+          <>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setGlobalGtmStrategyViewMode(v => v === 'all' ? 'section' : 'all')}
+                className="px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 border border-blue-300"
+              >
+                {globalGtmStrategyViewMode === 'all' ? '목차별 보기' : '전체 보기'}
+              </button>
+            </div>
+            <GlobalGTMStrategy
+              sectionId={globalGtmStrategySection}
+              viewMode={globalGtmStrategyViewMode}
             />
           </>
         );
@@ -513,6 +538,46 @@ export function Dashboard() {
                         onClick={() => {
                           setEuroMarketingStrategySection(item.id);
                           setEuroMarketingStrategyViewMode('section');
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+            {/* Global GTM Strategy */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'GLOBAL_GTM_STRATEGY'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('GLOBAL_GTM_STRATEGY');
+                  setGlobalGtmStrategyOpen((v) => (selectedMenu === 'GLOBAL_GTM_STRATEGY' ? !v : true));
+                }}
+                aria-expanded={selectedMenu === 'GLOBAL_GTM_STRATEGY' && globalGtmStrategyOpen}
+                aria-controls="globalgtmstrategy-toc-list"
+              >
+                <span>Global GTM Strategy</span>
+                <span className="ml-2">
+                  {selectedMenu === 'GLOBAL_GTM_STRATEGY' && globalGtmStrategyOpen ? '▲' : '▼'}
+                </span>
+              </button>
+              {selectedMenu === 'GLOBAL_GTM_STRATEGY' && globalGtmStrategyOpen && (
+                <ul id="globalgtmstrategy-toc-list" className="pl-4 mt-1 space-y-1">
+                  {globalGTMStrategyToc.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          globalGtmStrategySection === item.id ? 'font-bold text-emerald-400' : ''
+                        }`}
+                        onClick={() => {
+                          setGlobalGtmStrategySection(item.id);
+                          setGlobalGtmStrategyViewMode('section');
                         }}
                       >
                         {item.label}
