@@ -460,7 +460,7 @@ export function GlobalGTMStrategyKorean({ sectionId, viewMode }: GlobalGTMStrate
                     {[...new Set(companies.map((c: any) => c.industry))].slice(0, 2).join(', ')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                    ₩{Math.floor(companies.length * 0.8)}억
+                    ₩{(companies.length * 0.8).toFixed(1)}억
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">직접 영업</td>
                 </tr>
@@ -476,7 +476,7 @@ export function GlobalGTMStrategyKorean({ sectionId, viewMode }: GlobalGTMStrate
                     {[...new Set(companies.map((c: any) => c.industry))].slice(0, 2).join(', ')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                    ₩{Math.floor(companies.length * 1.2)}억
+                    ₩{(companies.length * 1.2).toFixed(1)}억
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">파트너십</td>
                 </tr>
