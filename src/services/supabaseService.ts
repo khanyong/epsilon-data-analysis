@@ -1,8 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY || '';
-export const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from '../lib/supabase';
+export { supabase };
 
 // 개선: pageSize를 5000으로 줄이고, 컬럼 선택 기능 추가
 /**
