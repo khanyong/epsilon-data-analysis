@@ -77,6 +77,8 @@ export function EuroMarketingStrategy({ sectionId, viewMode }: EuroMarketingStra
         return <EuroMarketingStrategySectionExecutionRoadmap />;
       case 'conclusion':
         return <EuroMarketingStrategySectionConclusion />;
+      case 'case-studies':
+        return <EuroMarketingStrategySectionCaseStudies />;
       case 'appendix':
         return <EuroMarketingStrategyDataAppendix />;
       default:
@@ -155,8 +157,13 @@ export function EuroMarketingStrategy({ sectionId, viewMode }: EuroMarketingStra
                 <p className="text-orange-700 text-xs">특화 시장 집중</p>
               </div>
               
+              <div className="bg-teal-50 p-4 rounded-lg text-center">
+                <h3 className="font-semibold text-teal-900 mb-2">12. Case Studies</h3>
+                <p className="text-teal-700 text-xs">성공 사례 분석</p>
+              </div>
+              
               <div className="bg-gray-50 p-4 rounded-lg text-center">
-                <h3 className="font-semibold text-gray-900 mb-2">12. 부록</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">13. 부록</h3>
                 <p className="text-gray-700 text-xs">데이터 및 참조자료</p>
               </div>
             </div>

@@ -490,56 +490,73 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
       
       {/* 전체 타임라인 */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">📅 2025-2029 실행 타임라인</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">📅 2025-2028 실행 타임라인</h3>
         
         {/* 간트 차트 스타일 타임라인 */}
         <div className="bg-white p-4 rounded-lg overflow-x-auto">
-          <div className="min-w-[800px]">
-            {/* 헤더 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 text-xs font-semibold text-gray-600">
-              <div className="col-span-3">구분</div>
-              <div className="text-center">Q4'25</div>
-              <div className="text-center">Q1'26</div>
-              <div className="text-center">Q2'26</div>
-              <div className="text-center">Q3'26</div>
-              <div className="text-center">Q4'26</div>
-              <div className="text-center">Q1'27</div>
-              <div className="text-center">Q2'27</div>
-              <div className="text-center">Q3'27</div>
-              <div className="text-center">Q4'27</div>
-              <div className="text-center">2028</div>
-            </div>
-            
-            {/* 유럽팀 구성 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">런던 유럽팀 구성</div>
-              <div className="col-start-4 bg-blue-500 h-6 rounded"></div>
-            </div>
-            
-            {/* 파트너십 체결 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">파트너십 체결</div>
-              <div className="col-start-5 col-span-2 bg-green-500 h-6 rounded"></div>
-            </div>
-            
-            {/* 파일럿 운영 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">파일럿 운영</div>
-              <div className="col-start-7 col-span-2 bg-purple-500 h-6 rounded"></div>
-            </div>
-            
-            {/* 시장 확장 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">시장 확장</div>
-              <div className="col-start-9 col-span-3 bg-yellow-500 h-6 rounded"></div>
-            </div>
-            
-            {/* 스케일업 */}
-            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">스케일업</div>
-              <div className="col-start-12 col-span-2 bg-red-500 h-6 rounded"></div>
-            </div>
-          </div>
+          <table className="w-full min-w-[900px]">
+            <thead>
+              <tr>
+                <th className="text-left py-2 px-2 w-40" rowSpan={2}>구분</th>
+                <th className="text-center py-1 px-1 border-l border-r border-gray-300 bg-gray-50">2025</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300 bg-gray-50" colSpan={4}>2026</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300 bg-gray-50" colSpan={4}>2027</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300 bg-gray-50">2028</th>
+              </tr>
+              <tr className="text-xs text-gray-600 border-b-2 border-gray-300">
+                <th className="text-center py-1 px-1 border-l border-r border-gray-200">Q4</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q1</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q2</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q3</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300">Q4</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q1</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q2</th>
+                <th className="text-center py-1 px-1 border-r border-gray-200">Q3</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300">Q4</th>
+                <th className="text-center py-1 px-1 border-r border-gray-300">전체</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="py-3 px-2 font-medium text-sm">런던 유럽팀 구성</td>
+                <td className="py-3 px-1">
+                  <div className="bg-blue-500 h-6 rounded mx-auto w-full"></div>
+                </td>
+                <td colSpan={9}></td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3 px-2 font-medium text-sm">파트너십 체결</td>
+                <td className="py-3 px-1"></td>
+                <td className="py-3 px-1" colSpan={2}>
+                  <div className="bg-green-500 h-6 rounded mx-auto w-full"></div>
+                </td>
+                <td colSpan={7}></td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3 px-2 font-medium text-sm">파일럿 운영</td>
+                <td colSpan={3}></td>
+                <td className="py-3 px-1" colSpan={2}>
+                  <div className="bg-purple-500 h-6 rounded mx-auto w-full"></div>
+                </td>
+                <td colSpan={5}></td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3 px-2 font-medium text-sm">시장 확장</td>
+                <td colSpan={5}></td>
+                <td className="py-3 px-1" colSpan={4}>
+                  <div className="bg-yellow-500 h-6 rounded mx-auto w-full"></div>
+                </td>
+                <td></td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3 px-2 font-medium text-sm">스케일업</td>
+                <td colSpan={9}></td>
+                <td className="py-3 px-1">
+                  <div className="bg-red-500 h-6 rounded mx-auto w-full"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

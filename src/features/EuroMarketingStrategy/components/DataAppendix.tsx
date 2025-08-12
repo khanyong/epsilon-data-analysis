@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
+  import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co',
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key'
 );
 
 interface DataTable {
@@ -88,7 +88,7 @@ export function EuroMarketingStrategyDataAppendix() {
   if (loading) {
     return (
       <section>
-        <h2 className="text-2xl font-bold text-blue-700 mb-6">12. 부록 (데이터 참조)</h2>
+        <h2 className="text-2xl font-bold text-blue-700 mb-6">13. 부록 (데이터 참조)</h2>
         <div className="bg-white p-6 rounded-lg border">
           <div className="animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>

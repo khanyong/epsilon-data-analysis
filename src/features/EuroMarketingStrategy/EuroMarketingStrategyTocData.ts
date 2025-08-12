@@ -49,7 +49,11 @@ export const euroMarketingStrategyToc: TocItem[] = [
     label: '11. 결론 및 권고사항'
   },
   {
+    id: 'case-studies',
+    label: '12. Case Studies'
+  },
+  {
     id: 'appendix',
-    label: '12. 부록 (데이터 참조)'
+    label: '13. 부록 (데이터 참조)'
   }
 ];
