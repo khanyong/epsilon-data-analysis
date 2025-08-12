@@ -249,7 +249,8 @@ export function EuroMarketingStrategySectionFinancialProjection() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg text-center">
-            <p className="text-3xl font-bold text-green-600">€15M</p>
+            <p className="text-3xl font-bold text-green-600">$16.2M</p>
+            <p className="text-xs text-gray-500">(환율: 1€ = $1.08)</p>
             <p className="text-sm text-gray-600 mt-1">총 투자 규모</p>
             <p className="text-xs text-gray-500 mt-2">2025-2028 (4년)</p>
           </div>
@@ -278,17 +279,17 @@ export function EuroMarketingStrategySectionFinancialProjection() {
                 <h4 className="font-semibold text-purple-800">Phase 1: 시장 진입 (2025 Q4 - 2026 Q1)</h4>
                 <p className="text-sm text-gray-600 mt-1">초기 인프라 구축 및 팀 구성</p>
               </div>
-              <p className="text-xl font-bold text-purple-600">€3M</p>
+              <p className="text-xl font-bold text-purple-600">$3.2M</p>
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
               <div className="bg-purple-50 p-2 rounded">
-                <p className="font-semibold text-purple-700">인프라: €1.5M</p>
+                <p className="font-semibold text-purple-700">인프라: $1.6M</p>
               </div>
               <div className="bg-purple-50 p-2 rounded">
-                <p className="font-semibold text-purple-700">인력: €1M</p>
+                <p className="font-semibold text-purple-700">인력: $1.1M</p>
               </div>
               <div className="bg-purple-50 p-2 rounded">
-                <p className="font-semibold text-purple-700">마케팅: €0.5M</p>
+                <p className="font-semibold text-purple-700">마케팅: $0.5M</p>
               </div>
             </div>
           </div>
@@ -300,17 +301,17 @@ export function EuroMarketingStrategySectionFinancialProjection() {
                 <h4 className="font-semibold text-blue-800">Phase 2: 시장 확대 (2026 Q2 - 2027)</h4>
                 <p className="text-sm text-gray-600 mt-1">서비스 확장 및 고객 확보</p>
               </div>
-              <p className="text-xl font-bold text-blue-600">€5M</p>
+              <p className="text-xl font-bold text-blue-600">$5.4M</p>
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
               <div className="bg-blue-50 p-2 rounded">
-                <p className="font-semibold text-blue-700">네트워크: €2.5M</p>
+                <p className="font-semibold text-blue-700">네트워크: $2.7M</p>
               </div>
               <div className="bg-blue-50 p-2 rounded">
-                <p className="font-semibold text-blue-700">영업: €1.5M</p>
+                <p className="font-semibold text-blue-700">영업: $1.6M</p>
               </div>
               <div className="bg-blue-50 p-2 rounded">
-                <p className="font-semibold text-blue-700">R&D: €1M</p>
+                <p className="font-semibold text-blue-700">R&D: $1.1M</p>
               </div>
             </div>
           </div>
@@ -322,17 +323,17 @@ export function EuroMarketingStrategySectionFinancialProjection() {
                 <h4 className="font-semibold text-green-800">Phase 3: 성장 가속 (2028)</h4>
                 <p className="text-sm text-gray-600 mt-1">M&A 및 신규 시장 진출</p>
               </div>
-              <p className="text-xl font-bold text-green-600">€7M</p>
+              <p className="text-xl font-bold text-green-600">$7.6M</p>
             </div>
             <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
               <div className="bg-green-50 p-2 rounded">
-                <p className="font-semibold text-green-700">M&A: €4M</p>
+                <p className="font-semibold text-green-700">M&A: $4.3M</p>
               </div>
               <div className="bg-green-50 p-2 rounded">
-                <p className="font-semibold text-green-700">확장: €2M</p>
+                <p className="font-semibold text-green-700">확장: $2.2M</p>
               </div>
               <div className="bg-green-50 p-2 rounded">
-                <p className="font-semibold text-green-700">운영: €1M</p>
+                <p className="font-semibold text-green-700">운영: $1.1M</p>
               </div>
             </div>
           </div>
@@ -359,30 +360,30 @@ export function EuroMarketingStrategySectionFinancialProjection() {
             <tbody>
               <tr className="border-b">
                 <td className="py-2 font-semibold">매출</td>
-                <td className="text-center px-3">€2M</td>
-                <td className="text-center px-3">€10M</td>
-                <td className="text-center px-3">€25M</td>
-                <td className="text-center px-3">€50M</td>
-                <td className="text-center px-3">€80M</td>
-                <td className="text-center px-3 font-bold">€120M</td>
+                <td className="text-center px-3">$2.2M</td>
+                <td className="text-center px-3">$10.8M</td>
+                <td className="text-center px-3">$27M</td>
+                <td className="text-center px-3">$54M</td>
+                <td className="text-center px-3">$86.4M</td>
+                <td className="text-center px-3 font-bold">$129.6M</td>
               </tr>
               <tr className="border-b">
                 <td className="py-2 font-semibold">EBITDA</td>
-                <td className="text-center px-3 text-red-600">-€1M</td>
-                <td className="text-center px-3 text-red-600">-€0.5M</td>
-                <td className="text-center px-3 text-green-600">€2.5M</td>
-                <td className="text-center px-3 text-green-600">€10M</td>
-                <td className="text-center px-3 text-green-600">€20M</td>
-                <td className="text-center px-3 font-bold text-green-600">€36M</td>
+                <td className="text-center px-3 text-red-600">-$1.1M</td>
+                <td className="text-center px-3 text-red-600">-$0.5M</td>
+                <td className="text-center px-3 text-green-600">$2.7M</td>
+                <td className="text-center px-3 text-green-600">$10.8M</td>
+                <td className="text-center px-3 text-green-600">$21.6M</td>
+                <td className="text-center px-3 font-bold text-green-600">$38.9M</td>
               </tr>
               <tr className="border-b">
                 <td className="py-2 font-semibold">순이익</td>
-                <td className="text-center px-3 text-red-600">-€1.5M</td>
-                <td className="text-center px-3 text-red-600">-€1M</td>
-                <td className="text-center px-3 text-green-600">€1M</td>
-                <td className="text-center px-3 text-green-600">€5M</td>
-                <td className="text-center px-3 text-green-600">€12M</td>
-                <td className="text-center px-3 font-bold text-green-600">€24M</td>
+                <td className="text-center px-3 text-red-600">-$1.6M</td>
+                <td className="text-center px-3 text-red-600">-$1.1M</td>
+                <td className="text-center px-3 text-green-600">$1.1M</td>
+                <td className="text-center px-3 text-green-600">$5.4M</td>
+                <td className="text-center px-3 text-green-600">$13M</td>
+                <td className="text-center px-3 font-bold text-green-600">$25.9M</td>
               </tr>
               <tr className="border-b">
                 <td className="py-2 font-semibold">마진율</td>
@@ -400,7 +401,7 @@ export function EuroMarketingStrategySectionFinancialProjection() {
 
       {/* 자금 조달 전략 */}
       <div className="bg-yellow-50 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold text-yellow-900 mb-4">💼 자금 조달 전략</h3>
+        <h3 className="text-xl font-semibold text-yellow-900 mb-4">💼 파이난싱 전략</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-4 rounded-lg">
@@ -408,7 +409,7 @@ export function EuroMarketingStrategySectionFinancialProjection() {
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
                 <span className="text-gray-600">조달 규모:</span>
-                <span className="font-semibold">€5M</span>
+                <span className="font-semibold">$5.4M</span>
               </li>
               <li className="flex justify-between">
                 <span className="text-gray-600">조달 방식:</span>
@@ -430,7 +431,7 @@ export function EuroMarketingStrategySectionFinancialProjection() {
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
                 <span className="text-gray-600">조달 규모:</span>
-                <span className="font-semibold">€7M</span>
+                <span className="font-semibold">$7.6M</span>
               </li>
               <li className="flex justify-between">
                 <span className="text-gray-600">발행 방식:</span>
@@ -452,7 +453,7 @@ export function EuroMarketingStrategySectionFinancialProjection() {
             <ul className="space-y-2 text-sm">
               <li className="flex justify-between">
                 <span className="text-gray-600">발행 규모:</span>
-                <span className="font-semibold">€10M</span>
+                <span className="font-semibold">$10.8M</span>
               </li>
               <li className="flex justify-between">
                 <span className="text-gray-600">만기:</span>
@@ -472,7 +473,7 @@ export function EuroMarketingStrategySectionFinancialProjection() {
         
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-700">
-            <strong>💡 자금 조달 원칙:</strong> 프로젝트 특성에 맞는 금융 구조 설계, 
+            <strong>💡 파이난싱 원칙:</strong> 프로젝트 특성에 맞는 금융 구조 설계, 
             부채비율 40% 이하 유지, 신용등급 관리를 통한 조달 비용 최소화
           </p>
         </div>
@@ -489,13 +490,13 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
       
       {/* 전체 타임라인 */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg mb-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">📅 2025-2028 실행 타임라인</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">📅 2025-2029 실행 타임라인</h3>
         
         {/* 간트 차트 스타일 타임라인 */}
         <div className="bg-white p-4 rounded-lg overflow-x-auto">
           <div className="min-w-[800px]">
             {/* 헤더 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 text-xs font-semibold text-gray-600">
+            <div className="grid grid-cols-13 gap-1 mb-2 text-xs font-semibold text-gray-600">
               <div className="col-span-3">구분</div>
               <div className="text-center">Q4'25</div>
               <div className="text-center">Q1'26</div>
@@ -506,36 +507,37 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
               <div className="text-center">Q2'27</div>
               <div className="text-center">Q3'27</div>
               <div className="text-center">Q4'27</div>
+              <div className="text-center">2028</div>
             </div>
             
-            {/* 인프라 구축 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">인프라 구축</div>
-              <div className="col-span-2 bg-blue-500 h-6 rounded"></div>
+            {/* 유럽팀 구성 */}
+            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
+              <div className="col-span-3 text-sm font-medium">런던 유럽팀 구성</div>
+              <div className="col-start-4 bg-blue-500 h-6 rounded"></div>
             </div>
             
             {/* 파트너십 체결 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 items-center">
+            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
               <div className="col-span-3 text-sm font-medium">파트너십 체결</div>
-              <div className="col-start-4 col-span-3 bg-green-500 h-6 rounded"></div>
+              <div className="col-start-5 col-span-2 bg-green-500 h-6 rounded"></div>
             </div>
             
-            {/* 서비스 개발 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">서비스 개발</div>
-              <div className="col-start-5 col-span-4 bg-purple-500 h-6 rounded"></div>
-            </div>
-            
-            {/* 고객 확보 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 items-center">
-              <div className="col-span-3 text-sm font-medium">고객 확보</div>
-              <div className="col-start-6 col-span-6 bg-yellow-500 h-6 rounded"></div>
+            {/* 파일럿 운영 */}
+            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
+              <div className="col-span-3 text-sm font-medium">파일럿 운영</div>
+              <div className="col-start-7 col-span-2 bg-purple-500 h-6 rounded"></div>
             </div>
             
             {/* 시장 확장 */}
-            <div className="grid grid-cols-12 gap-1 mb-2 items-center">
+            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
               <div className="col-span-3 text-sm font-medium">시장 확장</div>
-              <div className="col-start-9 col-span-3 bg-red-500 h-6 rounded"></div>
+              <div className="col-start-9 col-span-3 bg-yellow-500 h-6 rounded"></div>
+            </div>
+            
+            {/* 스케일업 */}
+            <div className="grid grid-cols-13 gap-1 mb-2 items-center">
+              <div className="col-span-3 text-sm font-medium">스케일업</div>
+              <div className="col-start-12 col-span-2 bg-red-500 h-6 rounded"></div>
             </div>
           </div>
         </div>
@@ -554,28 +556,21 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3"></div>
                 <div>
                   <p className="font-medium text-sm">2025 Q4</p>
-                  <p className="text-xs text-gray-600">영국 본사 유럽팀 구성, 초기 자금 조달</p>
+                  <p className="text-xs text-gray-600">런던 본사 유럽팀 구성, 초기 운영자금 확보</p>
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3"></div>
+                <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3"></div>
                 <div>
-                  <p className="font-medium text-sm">2026 Q1</p>
-                  <p className="text-xs text-gray-600">핵심 파트너십 체결, 인프라 구축 시작</p>
+                  <p className="font-medium text-sm">2026 Q1-Q2</p>
+                  <p className="text-xs text-gray-600">BT Global, Colt 파트너십 체결</p>
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3"></div>
-                <div>
-                  <p className="font-medium text-sm">2026 Q2</p>
-                  <p className="text-xs text-gray-600">싱가포르-프랑크푸르트 라우트 개통</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-3"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full mt-1.5 mr-3"></div>
                 <div>
                   <p className="font-medium text-sm">2026 Q3-Q4</p>
-                  <p className="text-xs text-gray-600">첫 10개 고객 확보, 서비스 안정화</p>
+                  <p className="text-xs text-gray-600">영국 금융권 파일럿 서비스 출시</p>
                 </div>
               </div>
             </div>
@@ -596,14 +591,14 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3"></div>
                 <div>
                   <p className="font-medium text-sm">2027 Q2-Q3</p>
-                  <p className="text-xs text-gray-600">Series B 자금 조달, 100개 기업 고객 달성</p>
+                  <p className="text-xs text-gray-600">추가 파이난싱 확보, 100개 기업 고객 달성</p>
                 </div>
               </div>
               <div className="flex items-start">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-3"></div>
                 <div>
                   <p className="font-medium text-sm">2027 Q4</p>
-                  <p className="text-xs text-gray-600">연매출 €50M 달성, EBITDA 흑자 전환</p>
+                  <p className="text-xs text-gray-600">연매출 $54M 달성, EBITDA 흑자 전환</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -630,7 +625,7 @@ export function EuroMarketingStrategySectionExecutionRoadmap() {
           </div>
           <div className="bg-white p-3 rounded-lg text-center">
             <p className="text-xs text-gray-500 mb-1">연매출</p>
-            <p className="text-2xl font-bold text-green-600">€100M</p>
+            <p className="text-2xl font-bold text-green-600">$108M</p>
             <p className="text-xs text-green-600">목표: 2028</p>
           </div>
           <div className="bg-white p-3 rounded-lg text-center">
@@ -662,7 +657,7 @@ export function EuroMarketingStrategySectionConclusion() {
           유럽 해저케이블 시장은 극도로 경쟁적이지만, <strong>니치 마켓 집중</strong>과 
           <strong> 전략적 파트너십</strong>을 통해 Epsilon과 같은 중소기업도 충분히 성공할 수 있습니다. 
           특히 중소 ISP, 핀테크, 헬스케어 등 특화된 시장에서 맞춤형 서비스를 제공함으로써 
-          2028년까지 <strong>€100M 매출</strong>과 <strong>시장점유율 1%</strong>를 달성할 수 있을 것으로 전망됩니다.
+          2028년까지 <strong>$108M 매출</strong>과 <strong>시장점유율 1%</strong>를 달성할 수 있을 것으로 전망됩니다.
         </p>
       </div>
 
@@ -677,7 +672,7 @@ export function EuroMarketingStrategySectionConclusion() {
               <h4 className="font-semibold text-gray-800">즉시 실행 (2025 Q4)</h4>
               <ul className="mt-2 space-y-1 text-sm text-gray-600">
                 <li>✓ 영국 본사 내 유럽 전담팀 구성</li>
-                <li>✓ Series A 자금 조달 프로세스 시작</li>
+                <li>✓ 본사 승인 및 초기 운영자금 할당</li>
                 <li>✓ 핵심 파트너 후보 리스트 작성 및 접촉</li>
               </ul>
             </div>
@@ -689,7 +684,7 @@ export function EuroMarketingStrategySectionConclusion() {
               <h4 className="font-semibold text-gray-800">단기 실행 (2026)</h4>
               <ul className="mt-2 space-y-1 text-sm text-gray-600">
                 <li>✓ 최소 3개 이상 전략적 파트너십 체결</li>
-                <li>✓ 싱가포르-프랑크푸르트 초기 서비스 개시</li>
+                <li>✓ 주요 유럽 도시 간 연결성 확보</li>
                 <li>✓ 첫 10개 고객 확보 및 레퍼런스 구축</li>
               </ul>
             </div>
@@ -736,7 +731,7 @@ export function EuroMarketingStrategySectionConclusion() {
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
           <h4 className="font-semibold text-blue-800 mb-3">🎯 목표 지표</h4>
           <ul className="space-y-2 text-sm text-blue-700">
-            <li>• 2028년 매출 €100M</li>
+            <li>• 2028년 매출 $108M</li>
             <li>• EBITDA 마진 20%</li>
             <li>• 고객 수 500+</li>
             <li>• 시장점유율 1%</li>
@@ -760,8 +755,8 @@ export function EuroMarketingStrategySectionConclusion() {
             지속 가능한 성장을 달성할 수 있습니다.
           </p>
           <p className="font-semibold text-purple-900">
-            지금이 바로 유럽 시장 진출의 적기입니다. 2025년 4분기부터 체계적인 준비를 시작하여 
-            2028년까지 유럽 시장의 주요 플레이어로 성장하기를 권고합니다.
+            지금이 바로 유럽 시장 진출의 적기입니다. 2025년 4분기부터 체계적인 시장 진입을 시작하여 
+            2029년까지 유럽 Connectivity 시장의 주요 플레이어로 성장하기를 권고합니다.
           </p>
         </div>
       </div>
