@@ -16,6 +16,7 @@ import {
   EuroMarketingStrategySectionExecutionRoadmap,
   EuroMarketingStrategySectionConclusion
 } from './sections/EuroMarketingStrategySectionsFinal';
+import { EuroMarketingStrategySectionCaseStudies } from './sections/EuroMarketingStrategyCaseStudies';
 import { EuroMarketingStrategyDataAppendix } from './components/DataAppendix';
 
 interface EuroMarketingStrategyProps {
@@ -45,6 +46,7 @@ export function EuroMarketingStrategy({ sectionId, viewMode }: EuroMarketingStra
           <EuroMarketingStrategySectionFinancialProjection />
           <EuroMarketingStrategySectionExecutionRoadmap />
           <EuroMarketingStrategySectionConclusion />
+          <EuroMarketingStrategySectionCaseStudies />
           <EuroMarketingStrategyDataAppendix />
         </div>
       </div>

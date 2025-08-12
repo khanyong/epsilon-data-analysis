@@ -1,24 +1,21 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 // 환경 변수 확인 및 로깅
-console.log('Supabase 설정 확인:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlLength: supabaseUrl?.length || 0,
-  keyLength: supabaseAnonKey?.length || 0
-})
-
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase 환경 변수가 설정되지 않았습니다.')
-  console.error('VITE_SUPABASE_URL:', supabaseUrl ? '설정됨' : '누락')
-  console.error('VITE_SUPABASE_KEY:', supabaseAnonKey ? '설정됨' : '누락')
-  throw new Error('Missing Supabase environment variables')
+  console.warn('Supabase 환경 변수가 설정되지 않았습니다.')
+  console.warn('VITE_SUPABASE_URL:', supabaseUrl ? '설정됨' : '누락')
+  console.warn('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? '설정됨' : '누락')
+  console.warn('기본 더미 값을 사용합니다.')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// 환경 변수가 없으면 더미 값을 사용하여 앱이 크래시되지 않도록 함
+const finalUrl = supabaseUrl || 'https://placeholder.supabase.co'
+const finalKey = supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MDAwMDAwMDAsImV4cCI6MTkxNTYwMDAwMH0.placeholder'
+
+export const supabase = createClient(finalUrl, finalKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,

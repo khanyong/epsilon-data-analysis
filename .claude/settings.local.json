@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git clone:*)",
-      "Bash(python scripts/upload_euro_pricing_data.py:*)"
+      "Bash(python scripts/upload_euro_pricing_data.py:*)",
+      "Bash(git mv:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }
