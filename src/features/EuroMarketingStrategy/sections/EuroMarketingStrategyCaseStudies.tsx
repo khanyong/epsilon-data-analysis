@@ -7,6 +7,7 @@ import {
 // Case Study 섹션: 유럽 시장 성공 사례 심층 분석
 export function EuroMarketingStrategySectionCaseStudies() {
   const [selectedCase, setSelectedCase] = useState<string>('orange');
+  const [showSourceModal, setShowSourceModal] = useState(false);
 
   // Orange International 재무 데이터 (Orange SA Annual Report 2020-2023)
   const orangeFinancialData = [
@@ -57,13 +58,106 @@ export function EuroMarketingStrategySectionCaseStudies() {
       </h2>
       
       {/* 데이터 출처 안내 */}
-      <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4">
-        <p className="text-xs text-yellow-800">
-          <strong>📊 데이터 출처:</strong> 상장사 재무제표(Orange, Colt - 연례보고서), 
-          비상장사 추정치(BSO, Eunetworks - TeleGeography, Capacity Media), 
-          GTT(SEC Filing 2020-2023). 모든 금액은 USD 기준.
-        </p>
+      <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4 cursor-pointer hover:bg-yellow-100 transition-colors"
+           onClick={() => setShowSourceModal(true)}>
+        <div className="flex justify-between items-center">
+          <p className="text-xs text-yellow-800">
+            <strong>📊 데이터 출처:</strong> 상장사 재무제표(Orange, Colt), 비상장사 추정치(BSO, Eunetworks), SEC Filing(GTT)
+          </p>
+          <span className="text-xs text-yellow-600 underline">자세히 보기 →</span>
+        </div>
       </div>
+      
+      {/* 데이터 출처 상세 모달 */}
+      {showSourceModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" 
+             onClick={() => setShowSourceModal(false)}>
+          <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4 max-h-[80vh] overflow-y-auto" 
+               onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-gray-900">📊 Case Studies 데이터 출처 및 참고자료</h3>
+              <button onClick={() => setShowSourceModal(false)} className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            
+            <div className="space-y-4">
+              {/* Orange International */}
+              <div className="border-l-4 border-orange-500 pl-4">
+                <h4 className="font-semibold text-orange-900 mb-2">Orange International Carriers</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>주 출처:</strong> Orange SA Annual Report 2020-2023</li>
+                  <li>• <strong>URL:</strong> <a href="https://www.orange.com/en/investors" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">orange.com/investors</a></li>
+                  <li>• <strong>추가 참고:</strong> TeleGeography Global Bandwidth Research Service</li>
+                  <li>• <strong>데이터 기준:</strong> International Carriers Division 세부 재무 데이터</li>
+                </ul>
+              </div>
+              
+              {/* Colt Technology */}
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h4 className="font-semibold text-blue-900 mb-2">Colt Technology Services</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>주 출처:</strong> Fidelity Investments Annual Report 2020-2023</li>
+                  <li>• <strong>URL:</strong> <a href="https://www.colt.net/about/investors/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">colt.net/investors</a></li>
+                  <li>• <strong>추가 참고:</strong> Capacity Magazine Market Analysis</li>
+                  <li>• <strong>데이터 기준:</strong> 통합 재무제표 및 Segment Reporting</li>
+                </ul>
+              </div>
+              
+              {/* BSO Network */}
+              <div className="border-l-4 border-green-500 pl-4">
+                <h4 className="font-semibold text-green-900 mb-2">BSO Network Solutions</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>주 출처:</strong> 비상장사 - 업계 분석 및 추정치</li>
+                  <li>• <strong>URL:</strong> <a href="https://www.bsonetwork.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bsonetwork.com</a></li>
+                  <li>• <strong>참고 자료:</strong> TeleGeography, Capacity Media, Datacenter Dynamics</li>
+                  <li>• <strong>추정 방법:</strong> 업계 평균 성장률 및 직원당 매출 기반 추산</li>
+                </ul>
+              </div>
+              
+              {/* Eunetworks */}
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h4 className="font-semibold text-purple-900 mb-2">Eunetworks</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>주 출처:</strong> Stonepeak Infrastructure Partners Portfolio Report</li>
+                  <li>• <strong>URL:</strong> <a href="https://eunetworks.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">eunetworks.com</a></li>
+                  <li>• <strong>참고 자료:</strong> Light Reading, TeleGeography Europe Report</li>
+                  <li>• <strong>데이터 기준:</strong> 2021년 인수 이후 Portfolio Company 성과</li>
+                </ul>
+              </div>
+              
+              {/* GTT Communications */}
+              <div className="border-l-4 border-red-500 pl-4">
+                <h4 className="font-semibold text-red-900 mb-2">GTT Communications</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>주 출처:</strong> SEC 10-K Filing 2020-2023</li>
+                  <li>• <strong>URL:</strong> <a href="https://www.sec.gov/edgar/browse/?CIK=1385867" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SEC EDGAR Database</a></li>
+                  <li>• <strong>추가 참고:</strong> Chapter 11 Bankruptcy Filing Documents</li>
+                  <li>• <strong>데이터 기준:</strong> 재무제표 및 구조조정 전 수치</li>
+                </ul>
+              </div>
+              
+              {/* 추가 참고사항 */}
+              <div className="bg-gray-50 p-4 rounded-lg mt-6">
+                <h4 className="font-semibold text-gray-800 mb-2">📖 업계 분석 참고자료</h4>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• TeleGeography: Global Bandwidth Research Service 2024</li>
+                  <li>• Capacity Media: European Wholesale Market Report 2023</li>
+                  <li>• Ovum (Omdia): European Carrier Services Forecast 2023-2028</li>
+                  <li>• IDC: European Telecommunications Services Market Analysis</li>
+                  <li>• Light Reading: European Network Operator Strategies 2024</li>
+                </ul>
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>⚠️ 주의사항:</strong> 비상장사의 경우 공개 데이터가 제한적이므로, 
+                  업계 평균 및 전문가 추정치를 기반으로 했습니다. 
+                  실제 수치와 차이가 있을 수 있으며, 투자 결정 시 추가 실사가 필요합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Case Study 선택 탭 */}
       <div className="flex space-x-2 mb-6 overflow-x-auto">
@@ -122,18 +216,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 1: Orange International */}
       {selectedCase === 'orange' && (
         <div className="bg-orange-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-orange-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">OI</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-orange-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">OI</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-orange-900">
+                  Orange International Carriers
+                </h3>
+                <p className="text-sm text-gray-600">
+                  프랑스 기반 Tier 1 글로벌 통신사업자 | 설립: 1994년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-orange-900">
-                Orange International Carriers
-              </h3>
-              <p className="text-sm text-gray-600">
-                프랑스 기반 Tier 1 글로벌 통신사업자 | 설립: 1994년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-orange-100 px-3 py-1.5 rounded-lg text-orange-700 border border-orange-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
