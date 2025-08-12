@@ -85,9 +85,9 @@ export function EuroMarketingStrategySectionCaseStudies() {
                 <h4 className="font-semibold text-orange-900 mb-2">Orange International Carriers</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
                   <li>• <strong>주 출처:</strong> Orange SA Annual Report 2020-2023</li>
-                  <li>• <strong>URL:</strong> <a href="https://www.orange.com/en/investors" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">orange.com/investors</a></li>
-                  <li>• <strong>추가 참고:</strong> TeleGeography Global Bandwidth Research Service</li>
-                  <li>• <strong>데이터 기준:</strong> International Carriers Division 세부 재무 데이터</li>
+                  <li>• <strong>재무제표:</strong> <a href="https://www.orange.com/sites/orangecom/files/2024-03/Orange_2023_Universal_Registration_Document.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">2023 Universal Registration Document (PDF)</a></li>
+                  <li>• <strong>IR 페이지:</strong> <a href="https://www.orange.com/en/investors/financial-results" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Financial Results & Reports</a></li>
+                  <li>• <strong>데이터 위치:</strong> Segment Reporting - Orange Business 섹션</li>
                 </ul>
               </div>
               
@@ -95,10 +95,10 @@ export function EuroMarketingStrategySectionCaseStudies() {
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-semibold text-blue-900 mb-2">Colt Technology Services</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>주 출처:</strong> Fidelity Investments Annual Report 2020-2023</li>
-                  <li>• <strong>URL:</strong> <a href="https://www.colt.net/about/investors/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">colt.net/investors</a></li>
-                  <li>• <strong>추가 참고:</strong> Capacity Magazine Market Analysis</li>
-                  <li>• <strong>데이터 기준:</strong> 통합 재무제표 및 Segment Reporting</li>
+                  <li>• <strong>주 출처:</strong> Fidelity International (Parent Company) Reports</li>
+                  <li>• <strong>회사 정보:</strong> <a href="https://www.colt.net/about/facts-and-figures/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Colt Facts & Figures</a></li>
+                  <li>• <strong>업계 분석:</strong> <a href="https://www.capacitymedia.com/carrier-profiles/colt" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Capacity Media - Colt Profile</a></li>
+                  <li>• <strong>데이터 기준:</strong> 2023 Estimated Revenue 및 Employee Data</li>
                 </ul>
               </div>
               
@@ -107,9 +107,10 @@ export function EuroMarketingStrategySectionCaseStudies() {
                 <h4 className="font-semibold text-green-900 mb-2">BSO Network Solutions</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
                   <li>• <strong>주 출처:</strong> 비상장사 - 업계 분석 및 추정치</li>
-                  <li>• <strong>URL:</strong> <a href="https://www.bsonetwork.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">bsonetwork.com</a></li>
-                  <li>• <strong>참고 자료:</strong> TeleGeography, Capacity Media, Datacenter Dynamics</li>
-                  <li>• <strong>추정 방법:</strong> 업계 평균 성장률 및 직원당 매출 기반 추산</li>
+                  <li>• <strong>회사 정보:</strong> <a href="https://www.bsonetwork.com/about-us" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">BSO Company Overview</a></li>
+                  <li>• <strong>TeleGeography:</strong> <a href="https://www.telegeography.com/products/globalcomms/data/company-profiles/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Global Bandwidth Research</a></li>
+                  <li>• <strong>Capacity Media:</strong> <a href="https://www.capacitymedia.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Wholesale Telecoms Analysis</a></li>
+                  <li>• <strong>추정 방법:</strong> 350명 직원 × 업계 평균 직원당 매출 ($470K)</li>
                 </ul>
               </div>
               
@@ -117,10 +118,10 @@ export function EuroMarketingStrategySectionCaseStudies() {
               <div className="border-l-4 border-purple-500 pl-4">
                 <h4 className="font-semibold text-purple-900 mb-2">Eunetworks</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>주 출처:</strong> Stonepeak Infrastructure Partners Portfolio Report</li>
-                  <li>• <strong>URL:</strong> <a href="https://eunetworks.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">eunetworks.com</a></li>
-                  <li>• <strong>참고 자료:</strong> Light Reading, TeleGeography Europe Report</li>
-                  <li>• <strong>데이터 기준:</strong> 2021년 인수 이후 Portfolio Company 성과</li>
+                  <li>• <strong>주 출처:</strong> Stonepeak Infrastructure Partners</li>
+                  <li>• <strong>Stonepeak:</strong> <a href="https://www.stonepeakpartners.com/portfolio/eunetworks/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Portfolio Company - Eunetworks</a></li>
+                  <li>• <strong>Light Reading:</strong> <a href="https://www.lightreading.com/eunetworks" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Eunetworks News & Analysis</a></li>
+                  <li>• <strong>데이터 기준:</strong> 2023 Estimated $580M Revenue, 980 Employees</li>
                 </ul>
               </div>
               
@@ -129,9 +130,9 @@ export function EuroMarketingStrategySectionCaseStudies() {
                 <h4 className="font-semibold text-red-900 mb-2">GTT Communications</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
                   <li>• <strong>주 출처:</strong> SEC 10-K Filing 2020-2023</li>
-                  <li>• <strong>URL:</strong> <a href="https://www.sec.gov/edgar/browse/?CIK=1385867" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SEC EDGAR Database</a></li>
-                  <li>• <strong>추가 참고:</strong> Chapter 11 Bankruptcy Filing Documents</li>
-                  <li>• <strong>데이터 기준:</strong> 재무제표 및 구조조정 전 수치</li>
+                  <li>• <strong>2023 10-K:</strong> <a href="https://www.sec.gov/ix?doc=/Archives/edgar/data/1385867/000138586723000006/gtt-20221231.htm" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SEC Filing - Annual Report</a></li>
+                  <li>• <strong>Bankruptcy:</strong> <a href="https://restructuring.ra.kroll.com/gtt/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Chapter 11 Case Information</a></li>
+                  <li>• <strong>데이터 기준:</strong> Pre-restructuring Financial Statements</li>
                 </ul>
               </div>
               
@@ -139,11 +140,11 @@ export function EuroMarketingStrategySectionCaseStudies() {
               <div className="bg-gray-50 p-4 rounded-lg mt-6">
                 <h4 className="font-semibold text-gray-800 mb-2">📖 업계 분석 참고자료</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• TeleGeography: Global Bandwidth Research Service 2024</li>
-                  <li>• Capacity Media: European Wholesale Market Report 2023</li>
-                  <li>• Ovum (Omdia): European Carrier Services Forecast 2023-2028</li>
-                  <li>• IDC: European Telecommunications Services Market Analysis</li>
-                  <li>• Light Reading: European Network Operator Strategies 2024</li>
+                  <li>• <a href="https://www.telegeography.com/products/globalcomms/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">TeleGeography Global Bandwidth Research 2024</a></li>
+                  <li>• <a href="https://www.capacitymedia.com/reports" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Capacity Media European Wholesale Report</a></li>
+                  <li>• <a href="https://omdia.tech.informa.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Omdia Telecom Market Analysis</a></li>
+                  <li>• <a href="https://www.idc.com/getdoc.jsp?containerId=EUR149938723" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">IDC European Telecom Services</a></li>
+                  <li>• <a href="https://www.lightreading.com/europe" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Light Reading Europe Coverage</a></li>
                 </ul>
               </div>
               
