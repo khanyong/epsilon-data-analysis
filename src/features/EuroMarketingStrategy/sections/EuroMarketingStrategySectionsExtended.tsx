@@ -72,8 +72,8 @@ export function EuroMarketingStrategySectionStrategicPartnerships() {
                 <h4 className="font-bold text-blue-800 text-center mb-3">🏗️ 인프라 파트너십</h4>
                 <div className="text-xs text-blue-700 space-y-1 text-center px-2">
                   <p className="font-semibold">핵심 파트너:</p>
-                  <p>• KPN (네덜란드)</p>
-                  <p>• Deutsche Telekom</p>
+                  <p>• BT Global (영국)</p>
+                  <p>• Colt (런던-유럽)</p>
                   <p>• Eunetworks</p>
                   <p className="font-semibold mt-2">협력 모델:</p>
                   <p>• Network Sharing</p>
