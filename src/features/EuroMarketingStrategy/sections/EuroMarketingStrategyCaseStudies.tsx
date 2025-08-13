@@ -412,18 +412,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 2: Colt Technology Services */}
       {selectedCase === 'colt' && (
         <div className="bg-blue-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-blue-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">CT</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-blue-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">CT</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-blue-900">
+                  Colt Technology Services
+                </h3>
+                <p className="text-sm text-gray-600">
+                  영국 기반 B2B 전문 네트워크 서비스 제공업체 | 설립: 1992년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-blue-900">
-                Colt Technology Services
-              </h3>
-              <p className="text-sm text-gray-600">
-                영국 기반 B2B 전문 네트워크 서비스 제공업체 | 설립: 1992년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-blue-100 px-3 py-1.5 rounded-lg text-blue-700 border border-blue-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
@@ -487,7 +494,7 @@ export function EuroMarketingStrategySectionCaseStudies() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
@@ -543,18 +550,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 3: BSO Network */}
       {selectedCase === 'bso' && (
         <div className="bg-green-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-green-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">BSO</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-green-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">BSO</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-green-900">
+                  BSO Network Solutions
+                </h3>
+                <p className="text-sm text-gray-600">
+                  아일랜드 기반 글로벌 네트워크 솔루션 제공업체 | 설립: 2004년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-green-900">
-                BSO Network Solutions
-              </h3>
-              <p className="text-sm text-gray-600">
-                아일랜드 기반 글로벌 네트워크 솔루션 제공업체 | 설립: 2004년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-green-100 px-3 py-1.5 rounded-lg text-green-700 border border-green-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
@@ -677,18 +691,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 4: Eunetworks */}
       {selectedCase === 'eunetworks' && (
         <div className="bg-purple-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-purple-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">EU</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-purple-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">EU</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-purple-900">
+                  Eunetworks
+                </h3>
+                <p className="text-sm text-gray-600">
+                  영국 기반 서유럽 대역폭 인프라 전문업체 | 설립: 2005년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-purple-900">
-                Eunetworks
-              </h3>
-              <p className="text-sm text-gray-600">
-                영국 기반 서유럽 대역폭 인프라 전문업체 | 설립: 2005년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-purple-100 px-3 py-1.5 rounded-lg text-purple-700 border border-purple-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
@@ -825,18 +846,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 5: Seaborn Networks */}
       {selectedCase === 'seaborn' && (
         <div className="bg-cyan-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-cyan-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">SN</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-cyan-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">SN</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-cyan-900">
+                  Seaborn Networks
+                </h3>
+                <p className="text-sm text-gray-600">
+                  미국 기반 해저케이블 전문 사업자 | 설립: 2011년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-cyan-900">
-                Seaborn Networks
-              </h3>
-              <p className="text-sm text-gray-600">
-                미국 기반 해저케이블 전문 사업자 | 설립: 2011년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-cyan-100 px-3 py-1.5 rounded-lg text-cyan-700 border border-cyan-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
@@ -948,18 +976,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 6: Aqua Comms */}
       {selectedCase === 'aqua' && (
         <div className="bg-blue-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-blue-600 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">AC</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-blue-600 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">AC</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-blue-900">
+                  Aqua Comms
+                </h3>
+                <p className="text-sm text-gray-600">
+                  아일랜드 기반 대서양 횡단 해저케이블 사업자 | 설립: 2011년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-blue-900">
-                Aqua Comms
-              </h3>
-              <p className="text-sm text-gray-600">
-                아일랜드 기반 대서양 횡단 해저케이블 사업자 | 설립: 2011년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-blue-100 px-3 py-1.5 rounded-lg text-blue-700 border border-blue-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
@@ -1083,18 +1118,25 @@ export function EuroMarketingStrategySectionCaseStudies() {
       {/* Case Study 7: GTT Communications (실패 사례) */}
       {selectedCase === 'gtt' && (
         <div className="bg-red-50 p-6 rounded-lg mb-8">
-          <div className="flex items-center mb-4">
-            <div className="bg-red-500 text-white p-3 rounded-lg mr-4">
-              <span className="text-2xl font-bold">GTT</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-red-500 text-white p-3 rounded-lg mr-4">
+                <span className="text-2xl font-bold">GTT</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-red-900">
+                  GTT Communications (실패 사례 분석)
+                </h3>
+                <p className="text-sm text-gray-600">
+                  미국 기반 글로벌 Tier 1 네트워크 제공업체 | 설립: 2005년 | 파산: 2021년
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold text-red-900">
-                GTT Communications (실패 사례 분석)
-              </h3>
-              <p className="text-sm text-gray-600">
-                미국 기반 글로벌 Tier 1 네트워크 제공업체 | 설립: 2005년 | 파산: 2021년
-              </p>
-            </div>
+            <button 
+              onClick={() => setShowSourceModal(true)}
+              className="text-xs bg-white hover:bg-red-100 px-3 py-1.5 rounded-lg text-red-700 border border-red-300 transition-colors">
+              📊 출처 확인
+            </button>
           </div>
 
           {/* 회사 개요 */}
