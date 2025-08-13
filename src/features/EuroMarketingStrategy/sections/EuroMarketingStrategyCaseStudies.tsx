@@ -33,6 +33,22 @@ export function EuroMarketingStrategySectionCaseStudies() {
     { year: '2023', revenue: 165, ebitda: 41, employees: 350 },
   ];
 
+  // Seaborn Networks 재무 데이터 (추정치 - 비상장사)
+  const seabornFinancialData = [
+    { year: '2020', revenue: 95, ebitda: 19, employees: 120 },
+    { year: '2021', revenue: 110, ebitda: 24, employees: 140 },
+    { year: '2022', revenue: 130, ebitda: 31, employees: 165 },
+    { year: '2023', revenue: 155, ebitda: 39, employees: 190 },
+  ];
+
+  // Aqua Comms 재무 데이터 (추정치 - 비상장사)
+  const aquaCommsFinancialData = [
+    { year: '2020', revenue: 78, ebitda: 16, employees: 95 },
+    { year: '2021', revenue: 88, ebitda: 20, employees: 105 },
+    { year: '2022', revenue: 102, ebitda: 25, employees: 120 },
+    { year: '2023', revenue: 118, ebitda: 31, employees: 135 },
+  ];
+
   // Eunetworks 재무 데이터 (Stonepeak Portfolio Report, 추정치)
   const eunetworksFinancialData = [
     { year: '2020', revenue: 420, ebitda: 168, employees: 750 },
@@ -223,6 +239,26 @@ export function EuroMarketingStrategySectionCaseStudies() {
           }`}
         >
           BSO Network
+        </button>
+        <button
+          onClick={() => setSelectedCase('seaborn')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            selectedCase === 'seaborn' 
+              ? 'bg-cyan-500 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Seaborn Networks
+        </button>
+        <button
+          onClick={() => setSelectedCase('aqua')}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            selectedCase === 'aqua' 
+              ? 'bg-blue-600 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Aqua Comms
         </button>
         <button
           onClick={() => setSelectedCase('eunetworks')}
@@ -526,28 +562,29 @@ export function EuroMarketingStrategySectionCaseStudies() {
             <div className="bg-white p-4 rounded-lg">
               <h4 className="font-semibold text-gray-800 mb-2">📊 2023년 핵심 지표</h4>
               <ul className="text-sm space-y-1">
-                <li><span className="font-medium">매출액:</span> ~$165M (추정)</li>
-                <li><span className="font-medium">EBITDA:</span> ~$41M (25% margin)</li>
-                <li><span className="font-medium">직원수:</span> 350명</li>
-                <li><span className="font-medium">네트워크:</span> 240+ PoPs</li>
+                <li><span className="font-medium">설립연도:</span> 2004년</li>
+                <li><span className="font-medium">현재 규모:</span> 약 150명</li>
+                <li><span className="font-medium">연매출:</span> $50M 내외 (비상장, 추정)</li>
+                <li><span className="font-medium">본사:</span> 아일랜드 더블린</li>
+                <li><span className="font-medium">CEO 근무지:</span> 두바이</li>
               </ul>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-800 mb-2">🏯 핵심 자산</h4>
+              <h4 className="font-semibold text-gray-800 mb-2">🏯 핵심 영업전략</h4>
               <ul className="text-sm space-y-1">
-                <li>• 240+ PoPs 전 세계</li>
-                <li>• 40+ 도시 직접 연결</li>
-                <li>• 90+ 데이터센터</li>
-                <li>• 클라우드 온램프</li>
+                <li>• 글로벌 금융사 타겟</li>
+                <li>• 금융 NW SW + 국제망 패키지</li>
+                <li>• 아시아-중동 허브 활용</li>
+                <li>• 유리한 세율 활용</li>
               </ul>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-800 mb-2">🎯 핵심 고객군</h4>
+              <h4 className="font-semibold text-gray-800 mb-2">🎯 주요 고객</h4>
               <ul className="text-sm space-y-1">
-                <li>• 금융서비스 (45%)</li>
-                <li>• 온라인 게이밍 (25%)</li>
-                <li>• 클라우드 제공업체 (20%)</li>
-                <li>• 기업 고객 (10%)</li>
+                <li>• 글로벌 금융기관</li>
+                <li>• 금융거래소</li>
+                <li>• 클라우드 기업</li>
+                <li>• 통신사</li>
               </ul>
             </div>
           </div>
@@ -785,7 +822,265 @@ export function EuroMarketingStrategySectionCaseStudies() {
         </div>
       )}
 
-      {/* Case Study 5: GTT Communications (실패 사례) */}
+      {/* Case Study 5: Seaborn Networks */}
+      {selectedCase === 'seaborn' && (
+        <div className="bg-cyan-50 p-6 rounded-lg mb-8">
+          <div className="flex items-center mb-4">
+            <div className="bg-cyan-500 text-white p-3 rounded-lg mr-4">
+              <span className="text-2xl font-bold">SN</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-cyan-900">
+                Seaborn Networks
+              </h3>
+              <p className="text-sm text-gray-600">
+                미국 기반 해저케이블 전문 사업자 | 설립: 2011년
+              </p>
+            </div>
+          </div>
+
+          {/* 회사 개요 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">📊 2023년 핵심 지표</h4>
+              <ul className="text-sm space-y-1">
+                <li><span className="font-medium">설립연도:</span> 2011년</li>
+                <li><span className="font-medium">현재 규모:</span> 약 50명</li>
+                <li><span className="font-medium">연매출:</span> $10M 내외 (추정)</li>
+                <li><span className="font-medium">본사:</span> 미국 뉴저지주</li>
+              </ul>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">🌊 주요 자산</h4>
+              <ul className="text-sm space-y-1">
+                <li>• Seabras-1 해저케이블</li>
+                <li>• 총 길이: 10,600km</li>
+                <li>• 용량: 72Tbps 이상</li>
+                <li>• 미국-브라질 직접 연결</li>
+              </ul>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">🎯 타겟 고객</h4>
+              <ul className="text-sm space-y-1">
+                <li>• 캐리어 사업자</li>
+                <li>• CSP 사업자</li>
+                <li>• 글로벌 통신사</li>
+                <li>• 금융기관</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* 재무 성과 차트 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">성장 추이</h4>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={seabornFinancialData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value}M`} />
+                  <Legend />
+                  <Line type="monotone" dataKey="revenue" stroke="#06B6D4" name="매출 ($M)" strokeWidth={2} />
+                  <Line type="monotone" dataKey="ebitda" stroke="#0891B2" name="EBITDA ($M)" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">핵심 경로 특징</h4>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-medium text-sm mb-2">Seabras-1 해저케이블</p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 뉴욕 ↔ 상파울루 직접 연결</li>
+                    <li>• 북미-남미 연결 수요 타겟</li>
+                    <li>• 72Tbps 이상 설계 용량</li>
+                    <li>• 직접 설계, 구축, 운영</li>
+                  </ul>
+                </div>
+                <div className="mt-3 p-3 bg-cyan-100 rounded">
+                  <p className="text-xs text-cyan-800">
+                    <strong>경쟁 우위:</strong> 북미-남미 직접 연결 독립 케이블로 기존 대형 사업자 대비 유연한 가격 정책과 서비스 제공
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 성공 전략 */}
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="font-semibold text-cyan-800 mb-3">🚀 해저케이블 전문화 전략</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">차별화 요소</h5>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>✓ <strong>독립 운영:</strong> 대형 통신사로부터 독립적 운영</li>
+                  <li>✓ <strong>직접 소유:</strong> 케이블 전체 구간 직접 소유/운영</li>
+                  <li>✓ <strong>유연한 가격:</strong> 중소 사업자 친화적 가격 정책</li>
+                  <li>✓ <strong>빠른 프로비저닝:</strong> 신속한 용량 할당</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">영업 전략</h5>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>✓ <strong>B2B 집중:</strong> 통신사/ISP 대상 도매 영업</li>
+                  <li>✓ <strong>장기 계약:</strong> IRU 방식 장기 계약 유도</li>
+                  <li>✓ <strong>파트너십:</strong> 현지 통신사와 협력</li>
+                  <li>✓ <strong>서비스 확장:</strong> 관리형 서비스 추가</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Epsilon에 대한 시사점 */}
+          <div className="bg-cyan-100 p-4 rounded-lg">
+            <h4 className="font-semibold text-cyan-900 mb-2">💡 Epsilon에 대한 시사점</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• <strong>특화 루트 집중:</strong> 전체 시장보다 특정 루트/지역에 집중하여 전문성 구축</li>
+              <li>• <strong>독립성 강조:</strong> 대형 사업자와 차별화된 독립적 포지셔닝</li>
+              <li>• <strong>중소 사업자 타겟:</strong> 대형 사업자가 소홀히 하는 중소 통신사 집중 공략</li>
+              <li>• <strong>자산 경량화:</strong> 모든 인프라 소유보다 핵심 자산만 선택적 투자</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* Case Study 6: Aqua Comms */}
+      {selectedCase === 'aqua' && (
+        <div className="bg-blue-50 p-6 rounded-lg mb-8">
+          <div className="flex items-center mb-4">
+            <div className="bg-blue-600 text-white p-3 rounded-lg mr-4">
+              <span className="text-2xl font-bold">AC</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-blue-900">
+                Aqua Comms
+              </h3>
+              <p className="text-sm text-gray-600">
+                아일랜드 기반 대서양 횡단 해저케이블 사업자 | 설립: 2011년
+              </p>
+            </div>
+          </div>
+
+          {/* 회사 개요 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">📊 2023년 핵심 지표</h4>
+              <ul className="text-sm space-y-1">
+                <li><span className="font-medium">설립연도:</span> 2011년</li>
+                <li><span className="font-medium">현재 규모:</span> 약 50명</li>
+                <li><span className="font-medium">연매출:</span> $10M 내외 (추정)</li>
+                <li><span className="font-medium">본사:</span> 아일랜드 더블린</li>
+              </ul>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">🌊 해저케이블 자산</h4>
+              <ul className="text-sm space-y-1">
+                <li>• AEC-1: 미국-아일랜드-영국</li>
+                <li>• AEC-2: 미국-아일랜드-북유럽</li>
+                <li>• AEC-3: 백업 경로</li>
+                <li>• CC-1/CC-2: 아일랜드-영국</li>
+              </ul>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-2">🎯 주요 고객</h4>
+              <ul className="text-sm space-y-1">
+                <li>• 캐리어/CSP 사업자</li>
+                <li>• 금융기관</li>
+                <li>• 클라우드 기업</li>
+                <li>• 콘텐츠 제공업체</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* 재무 성과 차트 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">성장 추이</h4>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={aquaCommsFinancialData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value}M`} />
+                  <Legend />
+                  <Line type="monotone" dataKey="revenue" stroke="#2563EB" name="매출 ($M)" strokeWidth={2} />
+                  <Line type="monotone" dataKey="ebitda" stroke="#1E40AF" name="EBITDA ($M)" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="bg-white p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-800 mb-3">케이블 포트폴리오</h4>
+              <div className="space-y-2">
+                <div className="border-l-4 border-blue-500 pl-3">
+                  <p className="font-medium text-sm">AEC-1</p>
+                  <p className="text-xs text-gray-600">미국 뉴욕 - 아일랜드 더블린 - 영국 런던</p>
+                </div>
+                <div className="border-l-4 border-blue-400 pl-3">
+                  <p className="font-medium text-sm">AEC-2</p>
+                  <p className="text-xs text-gray-600">미국 동부 해안 - 아일랜드 - 북유럽</p>
+                </div>
+                <div className="border-l-4 border-blue-300 pl-3">
+                  <p className="font-medium text-sm">AEC-3</p>
+                  <p className="text-xs text-gray-600">미국 동부 - 영국 (AEC-1,2 백업)</p>
+                </div>
+                <div className="border-l-4 border-gray-400 pl-3">
+                  <p className="font-medium text-sm">CC-1/CC-2</p>
+                  <p className="text-xs text-gray-600">아일랜드 - 영국 간 연결</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 성공 전략 */}
+          <div className="bg-white p-4 rounded-lg mb-4">
+            <h4 className="font-semibold text-blue-800 mb-3">🌍 대서양 횡단 전문화 전략</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">지리적 이점</h5>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>✓ 아일랜드 허브 활용</li>
+                  <li>✓ 유럽 진입 관문</li>
+                  <li>✓ 세율 혜택 활용</li>
+                  <li>✓ 중립적 위치</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">서비스 차별화</h5>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>✓ 초저지연 서비스</li>
+                  <li>✓ 다중 경로 제공</li>
+                  <li>✓ 높은 가용성</li>
+                  <li>✓ 유연한 용량</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">사업 모델</h5>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>✓ 도매 중심</li>
+                  <li>✓ 장기 IRU 계약</li>
+                  <li>✓ 캐리어 중립성</li>
+                  <li>✓ 오픈 액세스</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Epsilon에 대한 시사점 */}
+          <div className="bg-blue-100 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-900 mb-2">💡 Epsilon에 대한 시사점</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• <strong>허브 전략:</strong> 전략적 위치의 허브를 중심으로 네트워크 구축</li>
+              <li>• <strong>백업 경로:</strong> 주요 경로에 대한 백업 옵션으로 신뢰성 제고</li>
+              <li>• <strong>세제 활용:</strong> 유리한 세제 환경의 국가를 거점으로 활용</li>
+              <li>• <strong>캐리어 중립:</strong> 특정 통신사에 종속되지 않는 독립적 운영</li>
+              <li>• <strong>금융권 특화:</strong> 초저지연이 중요한 금융 고객 집중 공략</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* Case Study 7: GTT Communications (실패 사례) */}
       {selectedCase === 'gtt' && (
         <div className="bg-red-50 p-6 rounded-lg mb-8">
           <div className="flex items-center mb-4">
