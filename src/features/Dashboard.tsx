@@ -17,6 +17,7 @@ import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStra
 import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
 import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
 import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
+import GTMDataAnalysis from './GlobalGTMStrategy/GTMDataAnalysis';
 import { Home, ArrowLeft } from 'lucide-react';
 
 type MenuType =
@@ -30,7 +31,8 @@ type MenuType =
   | 'EPSILON_FACTBOOK'
   | 'SYNERGY_SALES'
   | 'EURO_MARKETING_STRATEGY'
-  | 'GLOBAL_GTM_STRATEGY';
+  | 'GLOBAL_GTM_STRATEGY'
+  | 'GTM_DATA_ANALYSIS';
 
 // URL parameter to MenuType mapping
 const viewToMenuType: Record<string, MenuType> = {
@@ -44,7 +46,8 @@ const viewToMenuType: Record<string, MenuType> = {
   'factbook': 'EPSILON_FACTBOOK',
   'synergy': 'SYNERGY_SALES',
   'euro-marketing': 'EURO_MARKETING_STRATEGY',
-  'global-gtm': 'GLOBAL_GTM_STRATEGY'
+  'global-gtm': 'GLOBAL_GTM_STRATEGY',
+  'gtm-data': 'GTM_DATA_ANALYSIS'
 };
 
 export function Dashboard() {
@@ -52,6 +55,7 @@ export function Dashboard() {
   const navigate = useNavigate();
   const view = searchParams.get('view');
   const [showHub, setShowHub] = useState(!view);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   // Set initial menu based on URL parameter
   const initialMenu = view && viewToMenuType[view] ? viewToMenuType[view] : 'RFQ';
@@ -229,6 +233,8 @@ export function Dashboard() {
             />
           </>
         );
+      case 'GTM_DATA_ANALYSIS':
+        return <GTMDataAnalysis />;
       default:
         return <RFQAnalysis />;
     }
@@ -269,9 +275,55 @@ export function Dashboard() {
         </div>
       </div>
 
+      {/* 사이드바 토글 버튼 */}
+      {!isSidebarOpen && (
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className="fixed left-4 top-20 z-40 p-2 bg-emerald-600 text-white rounded-md shadow-lg hover:bg-emerald-700 transition-colors"
+          aria-label="사이드바 열기"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* 사이드바 */}
-      <aside className="w-80 bg-slate-700 text-gray-200 flex flex-col fixed left-0 top-16 h-full overflow-y-auto border-r border-slate-600">
+      <aside className={`bg-slate-700 text-gray-200 flex flex-col fixed left-0 top-16 h-full overflow-y-auto border-r border-slate-600 transition-all duration-300 ${isSidebarOpen ? 'w-80' : 'w-0 overflow-hidden'}`}>
         <nav className="flex-1 px-4 py-6 space-y-2">
+          {/* 사이드바 헤더 및 닫기 버튼 */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-gray-500 text-xs uppercase tracking-wider">Navigation</div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1.5 hover:bg-slate-600 rounded-md transition-colors"
+              aria-label="사이드바 닫기"
+            >
+              <svg
+                className="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+          </div>
           {/* 데이터 분석 */}
           <div className="text-gray-500 text-xs mb-2 uppercase tracking-wider">Data Analysis</div>
           <ul className="space-y-1 mb-6">
@@ -292,6 +344,12 @@ export function Dashboard() {
               onClick={() => setSelectedMenu('KOTRA')}
             >
               KOTRA 분석
+            </li>
+            <li
+              className={`rounded-lg px-3 py-2 transition-all ${selectedMenu === 'GTM_DATA_ANALYSIS' ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white shadow-lg' : 'hover:bg-slate-600 cursor-pointer'}`}
+              onClick={() => setSelectedMenu('GTM_DATA_ANALYSIS')}
+            >
+              GTM Data 분석
             </li>
             <li className={`rounded-lg px-3 py-2 opacity-50 cursor-not-allowed`}>
               Epsilon PoP 현황 (준비중)
@@ -592,7 +650,7 @@ export function Dashboard() {
       </aside>
 
       {/* 메인 콘텐츠 */}
-      <main className="flex-1 ml-80 mt-16 p-8 bg-gray-50">
+      <main className={`flex-1 mt-16 p-8 bg-gray-50 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
         <div className="bg-white rounded-xl shadow-sm p-6">
           {renderContent()}
         </div>

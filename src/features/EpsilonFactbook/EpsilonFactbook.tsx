@@ -15,6 +15,7 @@ import {
   FactbookSectionKt,
   FactbookSectionGrowth,
 } from './FactbookSections';
+import { PDFExportButton } from '../../components/PDFExportButton';
 
 export const toc = [
   { id: 'company', label: '1. 회사 개요' },
@@ -35,7 +36,19 @@ export const toc = [
 
 export function EpsilonFactbook({ sectionId, viewMode }: { sectionId: string, viewMode?: 'section' | 'all' }) {
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
+    <div className="relative">
+      {/* PDF 다운로드 버튼 */}
+      <div className="flex justify-end mb-4">
+        <PDFExportButton 
+          elementId="factbook-content"
+          filename={viewMode === 'all' ? "Epsilon_Factbook.pdf" : `Epsilon_Factbook_${sectionId}.pdf`}
+          buttonText={viewMode === 'all' ? "전체 Factbook PDF 다운로드" : "현재 섹션 PDF 다운로드"}
+          variant="primary"
+          size="md"
+        />
+      </div>
+      
+      <div id="factbook-content" className="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
       <h2 className="text-3xl font-bold text-green-700 mb-6">Epsilon Factbook</h2>
       {viewMode === 'all' ? (
         <>
@@ -72,6 +85,7 @@ export function EpsilonFactbook({ sectionId, viewMode }: { sectionId: string, vi
           {sectionId === 'growth' && <FactbookSectionGrowth />}
         </>
       )}
+      </div>
     </div>
   );
 } 

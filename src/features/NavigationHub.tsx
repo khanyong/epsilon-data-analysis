@@ -127,6 +127,15 @@ export function NavigationHub() {
       gradient: 'from-gray-400 to-gray-600',
       category: 'analysis',
       available: false
+    },
+    {
+      id: 'gtm-data',
+      title: 'GTM Data Analysis',
+      subtitle: 'KT 글로벌 영업 데이터 분석',
+      icon: <ChartBar className="w-8 h-8" />,
+      gradient: 'from-cyan-500 to-blue-600',
+      category: 'analysis',
+      available: true
     }
   ];
 
