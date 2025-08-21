@@ -299,8 +299,16 @@ export function Dashboard() {
       )}
 
       {/* 사이드바 */}
-      <aside className={`bg-slate-700 text-gray-200 flex flex-col fixed left-0 top-16 h-full overflow-y-auto border-r border-slate-600 transition-all duration-300 ${isSidebarOpen ? 'w-80' : 'w-0 overflow-hidden'}`}>
-        <nav className="flex-1 px-4 py-6 space-y-2">
+      <aside 
+        className={`bg-slate-700 text-gray-200 flex flex-col fixed left-0 top-16 bottom-0 transition-all duration-300 z-30 overflow-hidden ${isSidebarOpen ? 'w-80 border-r border-slate-600' : 'w-0 border-0'}`}
+      >
+        <nav 
+          className={`flex-1 space-y-2 overflow-y-auto overflow-x-hidden ${isSidebarOpen ? 'px-4 py-6' : 'p-0'}`}
+          style={{
+            scrollbarWidth: isSidebarOpen ? 'thin' : 'none',
+            scrollbarColor: '#64748b #334155'
+          }}
+        >
           {/* 사이드바 헤더 및 닫기 버튼 */}
           <div className="flex items-center justify-between mb-4">
             <div className="text-gray-500 text-xs uppercase tracking-wider">Navigation</div>
@@ -646,6 +654,8 @@ export function Dashboard() {
               )}
             </li>
           </ul>
+          {/* 하단 여백 - 스크롤 시 마지막 항목이 잘 보이도록 */}
+          <div className="pb-8"></div>
         </nav>
       </aside>
 
