@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { NavigationHub } from './NavigationHub';
@@ -662,7 +662,16 @@ export function Dashboard() {
       {/* 메인 콘텐츠 */}
       <main className={`flex-1 mt-16 p-8 bg-gray-50 transition-all duration-300 ${isSidebarOpen ? 'ml-80' : 'ml-0'}`}>
         <div className="bg-white rounded-xl shadow-sm p-6">
-          {renderContent()}
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading...</p>
+              </div>
+            </div>
+          }>
+            {renderContent()}
+          </Suspense>
         </div>
       </main>
     </div>
