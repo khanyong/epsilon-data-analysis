@@ -2,32 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import {
   Search,
-  Filter,
   Download,
-  Upload,
-  TrendingUp,
   Users,
   Globe,
-  DollarSign,
-  Calendar,
   AlertCircle,
   BarChart3,
   PieChart,
   Target,
-  Building2,
-  Briefcase,
   CheckCircle,
-  XCircle,
-  Clock,
   Edit,
   Save,
   Plus,
-  FileText,
-  ChevronDown,
-  ChevronUp,
   RefreshCw,
-  ArrowUpRight,
-  ArrowDownRight,
   Trash2,
   X
 } from 'lucide-react';
@@ -86,7 +72,6 @@ const GTMDataAnalysis: React.FC = () => {
   const [filterHeadquarters, setFilterHeadquarters] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [sortBy, setSortBy] = useState<'revenue' | 'probability' | 'renewal_date'>('revenue');
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Partial<GTMCustomer> | null>(null);
   const [isNewCustomer, setIsNewCustomer] = useState(false);
@@ -688,7 +673,7 @@ const GTMDataAnalysis: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                         <button 
                           className="text-blue-600 hover:text-blue-800"
-                          onClick={() => setEditingId(customer.id)}
+                          onClick={() => handleEdit(customer)}
                         >
                           <Edit className="h-4 w-4" />
                         </button>
@@ -914,7 +899,7 @@ const GTMDataAnalysis: React.FC = () => {
             {/* 페이지 번호들 */}
             <div className="flex gap-1">
               {(() => {
-                const pageNumbers = [];
+                const pageNumbers: React.ReactNode[] = [];
                 const maxPagesToShow = 10;
                 let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
                 let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
