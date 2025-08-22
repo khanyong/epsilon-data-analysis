@@ -36,7 +36,7 @@ export function SEAPoPExpansion() {
     {
       phase: '1단계',
       period: '2025-2026',
-      investment: 8,
+      investment: 0.8,
       cities: ['자카르타', '방콕', '호치민시', '마닐라'],
       pops: 12,
       target: '시장 점유율 15%'
@@ -44,7 +44,7 @@ export function SEAPoPExpansion() {
     {
       phase: '2단계',
       period: '2027-2028',
-      investment: 12,
+      investment: 1.2,
       cities: ['수라바야', '치앙마이', '하노이', '세부', '쿠알라룸푸르'],
       pops: 20,
       target: '시장 점유율 25%'
@@ -52,7 +52,7 @@ export function SEAPoPExpansion() {
     {
       phase: '3단계',
       period: '2029-2030',
-      investment: 15,
+      investment: 1.5,
       cities: ['메단', '다낭', '다바오', '페낭', '양곤'],
       pops: 18,
       target: '시장 점유율 35%'
@@ -70,12 +70,12 @@ export function SEAPoPExpansion() {
 
   // PoP 구축 비용 분석
   const costBreakdown = [
-    { category: '네트워크 장비', amount: 8.5, percentage: 24 },
-    { category: '서버 인프라', amount: 7.2, percentage: 21 },
-    { category: '부동산/임대', amount: 6.8, percentage: 19 },
-    { category: '전력/냉각 시스템', amount: 5.5, percentage: 16 },
-    { category: '해저케이블 연결', amount: 4.5, percentage: 13 },
-    { category: '운영/유지보수', amount: 2.5, percentage: 7 }
+    { category: '네트워크 장비', amount: 850, percentage: 24 },
+    { category: '서버 인프라', amount: 720, percentage: 21 },
+    { category: '부동산/임대', amount: 680, percentage: 19 },
+    { category: '전력/냉각 시스템', amount: 550, percentage: 16 },
+    { category: '해저케이블 연결', amount: 450, percentage: 13 },
+    { category: '운영/유지보수', amount: 250, percentage: 7 }
   ];
 
   return (
@@ -538,7 +538,7 @@ export function SEAPoPExpansion() {
                         </div>
                       </div>
                     </div>
-                    <div className="w-20 text-right text-sm font-semibold">${item.amount}B</div>
+                    <div className="w-20 text-right text-sm font-semibold">${item.amount}M</div>
                   </div>
                 ))}
               </div>

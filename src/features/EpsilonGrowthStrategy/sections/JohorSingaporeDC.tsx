@@ -36,7 +36,7 @@ export function JohorSingaporeDC() {
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">3.</span>
-                <span><strong>하이퍼스케일러 50억 달러 투자</strong>: MS, Google, AWS 등 글로벌 클라우드 업체들의 <DataLink href="#ref-hyperscaler-investment">대규모 투자</DataLink> 확정</span>
+                <span><strong>하이퍼스케일러 대규모 투자</strong>: MS(2.2B), Google(2.0B), AWS(9.0B), ByteDance(2.1B) 등 <DataLink href="#ref-hyperscaler-investment">총 150억 달러 이상</DataLink> 투자</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">4.</span>
@@ -152,9 +152,9 @@ export function JohorSingaporeDC() {
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-semibold text-gray-800 mb-2">Microsoft</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>투자 규모</strong>: 약 <DataLink href="#ref-hyperscaler-investment">10억 달러</DataLink> (5년간)</li>
-                  <li>• <strong>프로젝트</strong>: Sedenak Tech Park 내 Built-to-Suit 시설</li>
-                  <li>• <strong>용량</strong>: 50MW (1단계), 150MW (풀빌드)</li>
+                  <li>• <strong>투자 규모</strong>: <DataLink href="#ref-hyperscaler-investment">USD 2.2B</DataLink> (말레이시아 전체)</li>
+                  <li>• <strong>프로젝트</strong>: 클라우드 및 AI 인프라 구축</li>
+                  <li>• <strong>지역</strong>: 조호바르 포함 말레이시아 전역</li>
                   <li>• <strong>목적</strong>: Azure 동남아 리전 확장</li>
                 </ul>
               </div>
@@ -162,20 +162,30 @@ export function JohorSingaporeDC() {
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-semibold text-gray-800 mb-2">Google</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>투자 규모</strong>: 약 <DataLink href="#ref-hyperscaler-investment">8억 달러</DataLink> (5년간)</li>
-                  <li>• <strong>프로젝트</strong>: Nusajaya Tech Park 캠퍼스</li>
-                  <li>• <strong>용량</strong>: 80MW</li>
-                  <li>• <strong>목적</strong>: Google Cloud Platform 아시아 허브</li>
+                  <li>• <strong>투자 규모</strong>: <DataLink href="#ref-hyperscaler-investment">USD 2.0B</DataLink> (말레이시아)</li>
+                  <li>• <strong>태국</strong>: USD 1.0B (2025-2029)</li>
+                  <li>• <strong>프로젝트</strong>: 데이터센터 및 클라우드 인프라</li>
+                  <li>• <strong>목적</strong>: Google Cloud Platform 아시아 확장</li>
                 </ul>
               </div>
 
-              <div className="border-l-4 border-purple-500 pl-4">
+              <div className="border-l-4 border-orange-500 pl-4">
                 <h4 className="font-semibold text-gray-800 mb-2">AWS</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>투자 규모</strong>: 약 <DataLink href="#ref-hyperscaler-investment">12억 달러</DataLink> (5년간)</li>
-                  <li>• <strong>프로젝트</strong>: YTL 파트너십</li>
-                  <li>• <strong>용량</strong>: 100MW</li>
+                  <li>• <strong>싱가포르</strong>: <DataLink href="#ref-hyperscaler-investment">USD 9.0B</DataLink> (2023-2028)</li>
+                  <li>• <strong>말레이시아</strong>: USD 6.0B (2024-2038)</li>
+                  <li>• <strong>태국</strong>: USD 5.0B (2024-2034)</li>
                   <li>• <strong>목적</strong>: 아시아태평양 가용영역 확장</li>
+                </ul>
+              </div>
+              
+              <div className="border-l-4 border-red-500 pl-4">
+                <h4 className="font-semibold text-gray-800 mb-2">ByteDance</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>투자 규모</strong>: <DataLink href="#ref-hyperscaler-investment">USD 2.1B</DataLink> (조호바르)</li>
+                  <li>• <strong>프로젝트</strong>: AI 및 데이터센터 허브</li>
+                  <li>• <strong>위치</strong>: 조호바르 지역</li>
+                  <li>• <strong>목적</strong>: 동남아시아 AI 인프라 구축</li>
                 </ul>
               </div>
             </div>
@@ -184,22 +194,39 @@ export function JohorSingaporeDC() {
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">2.2 전통적 데이터센터 운영사</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-800 mb-2">Keppel Data Centres</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">
+                  <a href="https://www.datacenterdynamics.com/en/news/ntt-plans-290mw-data-center-campus-in-johor-malaysia/" 
+                     target="_blank" 
+                     rel="noopener noreferrer" 
+                     className="text-blue-600 hover:underline">
+                    NTT Global Data Centers
+                  </a>
+                </h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>프로젝트</strong>: Keppel DC Johor 1 (세데낙)</li>
-                  <li>• <strong>규모</strong>: 100,495 sqft (GFA)</li>
-                  <li>• <strong>특징</strong>: Built-to-suit 전용 시설</li>
+                  <li>• <strong>프로젝트</strong>: 조호바르 캠퍼스</li>
+                  <li>• <strong>규모</strong>: 290MW (6개 빌딩)</li>
+                  <li>• <strong>부지</strong>: 68.5 에이커</li>
+                  <li>• <strong>1단계</strong>: 48MW (2027년 4월)</li>
                 </ul>
               </div>
               <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-800 mb-2">YTL Foundation</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">Keppel Data Centres</h4>
                 <ul className="text-sm text-gray-700 space-y-1">
-                  <li>• <strong>프로젝트</strong>: YTL Green Data Center Park</li>
+                  <li>• <strong>프로젝트</strong>: Keppel DC Johor 1</li>
+                  <li>• <strong>위치</strong>: 세데낙 테크 파크</li>
+                  <li>• <strong>규모</strong>: 100,495 sqft</li>
+                  <li>• <strong>특징</strong>: Built-to-suit 시설</li>
+                </ul>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">YTL Power</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• <strong>프로젝트</strong>: YTL Green DC Park</li>
                   <li>• <strong>규모</strong>: 500MW (풀빌드)</li>
-                  <li>• <strong>입주사</strong>: SEA Group (72MW), GDS Holdings (168MW)</li>
-                  <li>• <strong>특징</strong>: 재생에너지 기반 그린 DC</li>
+                  <li>• <strong>입주사</strong>: SEA Group, GDS</li>
+                  <li>• <strong>특징</strong>: 100% 재생에너지</li>
                 </ul>
               </div>
             </div>
