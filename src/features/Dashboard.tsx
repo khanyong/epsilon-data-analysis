@@ -18,6 +18,8 @@ import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingS
 import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
 import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
 import GTMDataAnalysis from './GlobalGTMStrategy/GTMDataAnalysis';
+import { EpsilonGrowthStrategy } from './EpsilonGrowthStrategy/EpsilonGrowthStrategy';
+import { epsilonGrowthStrategyToc } from './EpsilonGrowthStrategy/EpsilonGrowthStrategyTocData';
 import { Home, ArrowLeft } from 'lucide-react';
 
 type MenuType =
@@ -32,7 +34,8 @@ type MenuType =
   | 'SYNERGY_SALES'
   | 'EURO_MARKETING_STRATEGY'
   | 'GLOBAL_GTM_STRATEGY'
-  | 'GTM_DATA_ANALYSIS';
+  | 'GTM_DATA_ANALYSIS'
+  | 'EPSILON_GROWTH_STRATEGY';
 
 // URL parameter to MenuType mapping
 const viewToMenuType: Record<string, MenuType> = {
@@ -47,7 +50,8 @@ const viewToMenuType: Record<string, MenuType> = {
   'synergy': 'SYNERGY_SALES',
   'euro-marketing': 'EURO_MARKETING_STRATEGY',
   'global-gtm': 'GLOBAL_GTM_STRATEGY',
-  'gtm-data': 'GTM_DATA_ANALYSIS'
+  'gtm-data': 'GTM_DATA_ANALYSIS',
+  'epsilon-growth': 'EPSILON_GROWTH_STRATEGY'
 };
 
 export function Dashboard() {
@@ -70,6 +74,30 @@ export function Dashboard() {
       setShowHub(true);
     }
   }, [view]);
+  
+  // Update Epsilon Growth Strategy section when URL parameter changes
+  useEffect(() => {
+    const sectionId = searchParams.get('sectionId');
+    if (view === 'epsilon-growth' && sectionId) {
+      setEpsilonGrowthStrategySection(sectionId);
+    }
+  }, [view, searchParams]);
+  
+  // Listen for popstate events (browser back/forward or programmatic navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const view = urlParams.get('view');
+      const sectionId = urlParams.get('sectionId');
+      
+      if (view === 'epsilon-growth' && sectionId) {
+        setEpsilonGrowthStrategySection(sectionId);
+      }
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   // Factbook 상태
   const [factbookOpen, setFactbookOpen] = useState(true);
   const [factbookSection, setFactbookSection] = useState('company');
@@ -97,6 +125,13 @@ export function Dashboard() {
   const [globalGtmStrategyOpen, setGlobalGtmStrategyOpen] = useState(true);
   const [globalGtmStrategySection, setGlobalGtmStrategySection] = useState('overview');
   const [globalGtmStrategyViewMode, setGlobalGtmStrategyViewMode] = useState<'section' | 'all'>('section');
+  // Epsilon Growth Strategy 상태
+  const [epsilonGrowthStrategyOpen, setEpsilonGrowthStrategyOpen] = useState(true);
+  const sectionIdParam = searchParams.get('sectionId');
+  const [epsilonGrowthStrategySection, setEpsilonGrowthStrategySection] = useState(
+    sectionIdParam || 'johor-singapore-dc'
+  );
+  const [epsilonGrowthStrategyViewMode, setEpsilonGrowthStrategyViewMode] = useState<'section' | 'all'>('section');
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -235,6 +270,23 @@ export function Dashboard() {
         );
       case 'GTM_DATA_ANALYSIS':
         return <GTMDataAnalysis />;
+      case 'EPSILON_GROWTH_STRATEGY':
+        return (
+          <>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setEpsilonGrowthStrategyViewMode(v => v === 'all' ? 'section' : 'all')}
+                className="px-4 py-2 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 border border-blue-300"
+              >
+                {epsilonGrowthStrategyViewMode === 'all' ? '목차별 보기' : '전체 보기'}
+              </button>
+            </div>
+            <EpsilonGrowthStrategy
+              sectionId={epsilonGrowthStrategySection}
+              viewMode={epsilonGrowthStrategyViewMode}
+            />
+          </>
+        );
       default:
         return <RFQAnalysis />;
     }
@@ -644,6 +696,46 @@ export function Dashboard() {
                         onClick={() => {
                           setGlobalGtmStrategySection(item.id);
                           setGlobalGtmStrategyViewMode('section');
+                        }}
+                      >
+                        {item.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+            {/* Epsilon 성장 전략 보고서 */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'EPSILON_GROWTH_STRATEGY'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('EPSILON_GROWTH_STRATEGY');
+                  setEpsilonGrowthStrategyOpen((v) => (selectedMenu === 'EPSILON_GROWTH_STRATEGY' ? !v : true));
+                }}
+                aria-expanded={selectedMenu === 'EPSILON_GROWTH_STRATEGY' && epsilonGrowthStrategyOpen}
+                aria-controls="epsilongrowthstrategy-toc-list"
+              >
+                <span>Epsilon 성장 전략 보고서</span>
+                <span className="ml-2">
+                  {selectedMenu === 'EPSILON_GROWTH_STRATEGY' && epsilonGrowthStrategyOpen ? '▲' : '▼'}
+                </span>
+              </button>
+              {selectedMenu === 'EPSILON_GROWTH_STRATEGY' && epsilonGrowthStrategyOpen && (
+                <ul id="epsilongrowthstrategy-toc-list" className="pl-4 mt-1 space-y-1">
+                  {epsilonGrowthStrategyToc.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                          epsilonGrowthStrategySection === item.id ? 'font-bold text-emerald-400' : ''
+                        }`}
+                        onClick={() => {
+                          setEpsilonGrowthStrategySection(item.id);
+                          setEpsilonGrowthStrategyViewMode('section');
                         }}
                       >
                         {item.label}
