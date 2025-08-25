@@ -729,6 +729,56 @@ export function SingaporeEuropeIRU() {
               <span><strong>시장 성숙도 양극화</strong>: FLAP-D 성숙 시장은 전력 제약과 높은 임대료로 성장률 8-10% 둔화, Edge DC로 전환 중이며 신흥 시장과의 격차 확대</span>
             </li>
           </ul>
+          
+          {/* Edge DC 상세 설명 박스 */}
+          <div className="bg-white/70 rounded-lg p-4 mt-4 border border-blue-200">
+            <h4 className="font-bold text-gray-800 mb-3 text-sm">💡 Edge DC(엣지 데이터센터)란?</h4>
+            <p className="text-xs text-gray-700 mb-3">
+              <strong>전통적인 대규모 중앙집중식 DC</strong> → <strong>소규모 분산형 Edge DC</strong>로의 전환
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+              <div className="bg-gray-50 rounded p-2">
+                <h5 className="font-semibold text-xs text-gray-800 mb-1">주요 특징</h5>
+                <ul className="text-xs text-gray-600 space-y-1">
+                  <li>• <strong>위치</strong>: 최종 사용자와 가까운 도시 외곽, 통신 기지국, 기업 사내 등</li>
+                  <li>• <strong>규모</strong>: 1-5MW 소규모 (기존 대형 DC는 50-100MW+)</li>
+                  <li>• <strong>목적</strong>: 낮은 지연시간(latency) 요구 서비스 제공</li>
+                </ul>
+              </div>
+              
+              <div className="bg-gray-50 rounded p-2">
+                <h5 className="font-semibold text-xs text-gray-800 mb-1">전환 이유</h5>
+                <ul className="text-xs text-gray-600 space-y-1">
+                  <li><strong>1. 물리적 제약</strong></li>
+                  <li className="ml-2">- 도심 내 대규모 부지 확보 불가능</li>
+                  <li className="ml-2">- 전력 공급 한계 (런던, 암스테르담은 신규 DC 전력 제한)</li>
+                  <li className="ml-2">- 냉각수 부족, 환경 규제 강화</li>
+                  <li><strong>2. 비용 문제</strong></li>
+                  <li className="ml-2">- 임대료가 너무 비싸짐 (런던 £150/sq ft)</li>
+                  <li className="ml-2">- 전력 비용 상승, 운영비 증가</li>
+                </ul>
+              </div>
+              
+              <div className="bg-gray-50 rounded p-2">
+                <h5 className="font-semibold text-xs text-gray-800 mb-1">실제 사례</h5>
+                <ul className="text-xs text-gray-600 space-y-1">
+                  <li>• <strong>런던</strong>: 도심 대형 DC 대신 M25 순환도로 주변 소규모 Edge DC 구축</li>
+                  <li>• <strong>프랑크푸르트</strong>: 도시 외곽 산업단지에 Edge DC 네트워크 구축</li>
+                  <li>• <strong>암스테르담</strong>: 2019년부터 신규 대형 DC 건설 모라토리엄, Edge DC만 허용</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 rounded p-2">
+              <h5 className="font-semibold text-xs text-blue-800 mb-1">새로운 수요</h5>
+              <ul className="text-xs text-gray-700 space-y-1">
+                <li>• 5G, IoT, 자율주행 → 초저지연(1-5ms) 필요</li>
+                <li>• 실시간 AI/ML 처리</li>
+                <li>• 스트리밍, 게임 등 엣지 컴퓨팅 수요</li>
+              </ul>
+            </div>
+          </div>
         </div>
         
         <div className="space-y-6">
