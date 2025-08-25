@@ -1,0 +1,135 @@
+{
+  "categories": [
+    {
+      "name_kr": "총합계",
+      "name_en": "총합계",
+      "company_count": 128,
+      "total_amount": 10401269175.0,
+      "total_amount_billions": 10.401269175,
+      "avg_per_company": 81259915.4296875,
+      "avg_per_company_billions": 0.0812599154296875
+    },
+    {
+      "name_kr": "AX",
+      "name_en": "AX",
+      "company_count": 40,
+      "total_amount": 7296557694.0,
+      "total_amount_billions": 7.296557694,
+      "avg_per_company": 182413942.35,
+      "avg_per_company_billions": 0.18241394235
+    },
+    {
+      "name_kr": "CP",
+      "name_en": "Content Provider",
+      "company_count": 16,
+      "total_amount": 6371457585.0,
+      "total_amount_billions": 6.371457585,
+      "avg_per_company": 398216099.0625,
+      "avg_per_company_billions": 0.3982160990625
+    },
+    {
+      "name_kr": "공공",
+      "name_en": "공공",
+      "company_count": 21,
+      "total_amount": 2728904434.0,
+      "total_amount_billions": 2.728904434,
+      "avg_per_company": 129947830.1904762,
+      "avg_per_company_billions": 0.1299478301904762
+    },
+    {
+      "name_kr": "Telco",
+      "name_en": "Telecommunications",
+      "company_count": 18,
+      "total_amount": 1211510186.0,
+      "total_amount_billions": 1.211510186,
+      "avg_per_company": 67306121.44444445,
+      "avg_per_company_billions": 0.06730612144444445
+    },
+    {
+      "name_kr": "금융",
+      "name_en": "Finance",
+      "company_count": 52,
+      "total_amount": 1119039874.0,
+      "total_amount_billions": 1.119039874,
+      "avg_per_company": 21519997.576923076,
+      "avg_per_company_billions": 0.021519997576923078
+    },
+    {
+      "name_kr": "전략",
+      "name_en": "전략",
+      "company_count": 20,
+      "total_amount": 696300528.0,
+      "total_amount_billions": 0.696300528,
+      "avg_per_company": 34815026.4,
+      "avg_per_company_billions": 0.0348150264
+    },
+    {
+      "name_kr": "제조",
+      "name_en": "Manufacturing",
+      "company_count": 29,
+      "total_amount": 691283955.0,
+      "total_amount_billions": 0.691283955,
+      "avg_per_company": 23837377.75862069,
+      "avg_per_company_billions": 0.02383737775862069
+    },
+    {
+      "name_kr": "법인",
+      "name_en": "법인",
+      "company_count": 33,
+      "total_amount": 310655382.0,
+      "total_amount_billions": 0.310655382,
+      "avg_per_company": 9413799.454545455,
+      "avg_per_company_billions": 0.009413799454545456
+    },
+    {
+      "name_kr": "IT",
+      "name_en": "IT Services",
+      "company_count": 15,
+      "total_amount": 287194698.0,
+      "total_amount_billions": 0.287194698,
+      "avg_per_company": 19146313.2,
+      "avg_per_company_billions": 0.0191463132
+    },
+    {
+      "name_kr": "방송",
+      "name_en": "방송",
+      "company_count": 8,
+      "total_amount": 54685612.0,
+      "total_amount_billions": 0.054685612,
+      "avg_per_company": 6835701.5,
+      "avg_per_company_billions": 0.0068357015
+    },
+    {
+      "name_kr": "항공",
+      "name_en": "항공",
+      "company_count": 2,
+      "total_amount": 26648402.0,
+      "total_amount_billions": 0.026648402,
+      "avg_per_company": 13324201.0,
+      "avg_per_company_billions": 0.013324201
+    },
+    {
+      "name_kr": "건설",
+      "name_en": "건설",
+      "company_count": 1,
+      "total_amount": 6596000.0,
+      "total_amount_billions": 0.006596,
+      "avg_per_company": 6596000.0,
+      "avg_per_company_billions": 0.006596
+    },
+    {
+      "name_kr": "교육",
+      "name_en": "교육",
+      "company_count": 1,
+      "total_amount": 1704000.0,
+      "total_amount_billions": 0.001704,
+      "avg_per_company": 1704000.0,
+      "avg_per_company_billions": 0.001704
+    }
+  ],
+  "total": {
+    "company_count": 384,
+    "total_amount": 31203807525.0,
+    "total_amount_billions": 31.203807525
+  }
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, TrendingUp, DollarSign, MapPin, Shield, AlertTriangle, CheckCircle, Anchor } from 'lucide-react';
+import { Globe, TrendingUp, DollarSign, MapPin, Shield, AlertTriangle, CheckCircle, Anchor, Building2 } from 'lucide-react';
 import { DataLink } from '../components/DataLink';
 
 export function SingaporeEuropeIRU() {
@@ -691,6 +691,398 @@ export function SingaporeEuropeIRU() {
           <li>5. Singtel Official Press Release - Singapore-France Submarine Cable Project</li>
           <li>6. Orange France Infrastructure Investment Report</li>
         </ol>
+      </div>
+
+      {/* 8. 유럽의 주요 DC 현황 */}
+      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <Building2 className="w-6 h-6 mr-2 text-indigo-600" />
+          8. 유럽의 주요 DC 현황
+        </h2>
+        
+        {/* 핵심 인사이트 */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-6">
+          <h3 className="font-bold text-gray-800 mb-3">📊 핵심 인사이트</h3>
+          <ul className="space-y-2 text-sm text-gray-700">
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>지역 집중도</strong>: 유럽 전체 DC 용량 3,640MW 중 영국(1,030MW)과 독일(800MW)이 50% 차지, FLAP-D(Frankfurt, London, Amsterdam, Paris, Dublin) 5개 도시가 전체 용량의 65%를 점유하는 극심한 편중 현상</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>마르세유의 특수성</strong>: 용량은 85MW로 작지만 지중해 해저케이블 허브로서 아시아-유럽 연결의 전략적 요충지 역할, 싱가포르-유럽 IRU 투자의 핵심 거점</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>하이퍼스케일러 주도</strong>: AWS, Azure, Google Cloud가 유럽 전역에 1,750MW 이상 투자, 특히 아일랜드 더블린은 하이퍼스케일러 집중으로 320MW 규모 성장</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>IX 연결성</strong>: DE-CIX Frankfurt(12Tbps), AMS-IX(10Tbps) 등 세계 최대 인터넷 익스체인지 보유로 글로벌 트래픽 허브 역할</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>신흥 시장 부상</strong>: 북유럽(스톡홀름, 오슬로) 친환경 에너지 기반 연 15-20% 고성장, 2025년까지 용량 2배 증가 예상</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-blue-500 mr-2">•</span>
+              <span><strong>시장 성숙도 양극화</strong>: FLAP-D 성숙 시장은 전력 제약과 높은 임대료로 성장률 8-10% 둔화, Edge DC로 전환 중이며 신흥 시장과의 격차 확대</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">8.1 주요 데이터센터 허브 도시</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 px-4 py-2 text-left">지역</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">도시</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">총 용량 (MW)</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">DC 개수</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">주요 사업자</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={2}>영국</td>
+                    <td className="border border-gray-300 px-4 py-2">런던</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">850</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">90+</td>
+                    <td className="border border-gray-300 px-4 py-2">Equinix, Digital Realty, Telehouse</td>
+                    <td className="border border-gray-300 px-4 py-2">유럽 최대 DC 허브, 금융 특화</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">슬라우</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">180</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">25+</td>
+                    <td className="border border-gray-300 px-4 py-2">Equinix, ARK Data Centres</td>
+                    <td className="border border-gray-300 px-4 py-2">런던 서부 위성 허브</td>
+                  </tr>
+                  <tr className="bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-2 text-right font-semibold" colSpan={2}>영국 소계</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">1,030</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">115+</td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={2}>독일</td>
+                    <td className="border border-gray-300 px-4 py-2">프랑크푸르트</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">650</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">60+</td>
+                    <td className="border border-gray-300 px-4 py-2">Interxion, e-shelter, Equinix</td>
+                    <td className="border border-gray-300 px-4 py-2">DE-CIX 위치, 유럽 2위 허브</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">베를린</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">150</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">20+</td>
+                    <td className="border border-gray-300 px-4 py-2">NTT, Digital Realty</td>
+                    <td className="border border-gray-300 px-4 py-2">동유럽 연결점</td>
+                  </tr>
+                  <tr className="bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-2 text-right font-semibold" colSpan={2}>독일 소계</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">800</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">80+</td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={2}>네덜란드</td>
+                    <td className="border border-gray-300 px-4 py-2">암스테르담</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">450</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">50+</td>
+                    <td className="border border-gray-300 px-4 py-2">Equinix, Interxion, Digital Realty</td>
+                    <td className="border border-gray-300 px-4 py-2">AMS-IX, 콘텐츠 배포 중심</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">스키폴</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">120</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">15+</td>
+                    <td className="border border-gray-300 px-4 py-2">Maincubes, Digital Realty</td>
+                    <td className="border border-gray-300 px-4 py-2">암스테르담 위성 지역</td>
+                  </tr>
+                  <tr className="bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-2 text-right font-semibold" colSpan={2}>네덜란드 소계</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">570</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">65+</td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={2}>프랑스</td>
+                    <td className="border border-gray-300 px-4 py-2">파리</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">380</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">40+</td>
+                    <td className="border border-gray-300 px-4 py-2">Equinix, Interxion, OVHcloud</td>
+                    <td className="border border-gray-300 px-4 py-2">서유럽 허브, 클라우드 중심</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">마르세유</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">85</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">10+</td>
+                    <td className="border border-gray-300 px-4 py-2">Interxion, Jaguar Network</td>
+                    <td className="border border-gray-300 px-4 py-2">지중해 케이블 허브</td>
+                  </tr>
+                  <tr className="bg-yellow-50">
+                    <td className="border border-gray-300 px-4 py-2 text-right font-semibold" colSpan={2}>프랑스 소계</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">465</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">50+</td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}></td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">아일랜드</td>
+                    <td className="border border-gray-300 px-4 py-2">더블린</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">320</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">35+</td>
+                    <td className="border border-gray-300 px-4 py-2">AWS, Google, Microsoft</td>
+                    <td className="border border-gray-300 px-4 py-2">하이퍼스케일러 집중</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">스웨덴</td>
+                    <td className="border border-gray-300 px-4 py-2">스톡홀름</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">180</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">20+</td>
+                    <td className="border border-gray-300 px-4 py-2">Facebook, AWS, Interxion</td>
+                    <td className="border border-gray-300 px-4 py-2">북유럽 허브, 친환경 에너지</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">스위스</td>
+                    <td className="border border-gray-300 px-4 py-2">취리히</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">120</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">15+</td>
+                    <td className="border border-gray-300 px-4 py-2">Green, Equinix, Safe Host</td>
+                    <td className="border border-gray-300 px-4 py-2">금융 데이터 특화</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">스페인</td>
+                    <td className="border border-gray-300 px-4 py-2">마드리드</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">150</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">20+</td>
+                    <td className="border border-gray-300 px-4 py-2">Equinix, Interxion, Global Switch</td>
+                    <td className="border border-gray-300 px-4 py-2">남유럽 허브</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">이탈리아</td>
+                    <td className="border border-gray-300 px-4 py-2">밀라노</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">110</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">15+</td>
+                    <td className="border border-gray-300 px-4 py-2">STACK EMEA, Equinix</td>
+                    <td className="border border-gray-300 px-4 py-2">이탈리아 최대 DC 시장</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">벨기에</td>
+                    <td className="border border-gray-300 px-4 py-2">브뤼셀</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">95</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">12+</td>
+                    <td className="border border-gray-300 px-4 py-2">LCL, Proximus</td>
+                    <td className="border border-gray-300 px-4 py-2">EU 기관 집중</td>
+                  </tr>
+                  <tr className="bg-blue-50 font-bold">
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}>총계</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">3,640 MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">460+</td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={2}>유럽 전체 DC 용량의 약 75%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">8.2 하이퍼스케일 데이터센터 현황</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-800 mb-3">AWS 유럽 리전</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li><strong>eu-west-1</strong> (아일랜드): 3개 AZ, 450MW+</li>
+                  <li><strong>eu-west-2</strong> (런던): 3개 AZ, 300MW+</li>
+                  <li><strong>eu-west-3</strong> (파리): 3개 AZ, 250MW+</li>
+                  <li><strong>eu-central-1</strong> (프랑크푸르트): 3개 AZ, 400MW+</li>
+                  <li><strong>eu-north-1</strong> (스톡홀름): 3개 AZ, 200MW+</li>
+                  <li><strong>eu-south-1</strong> (밀라노): 3개 AZ, 150MW+</li>
+                  <li><strong>eu-south-2</strong> (스페인): 3개 AZ, 계획 중</li>
+                </ul>
+              </div>
+              
+              <div className="bg-green-50 rounded-lg p-4">
+                <h4 className="font-semibold text-green-800 mb-3">Microsoft Azure 유럽 리전</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li><strong>West Europe</strong> (네덜란드): 3개 존, 350MW+</li>
+                  <li><strong>North Europe</strong> (아일랜드): 3개 존, 300MW+</li>
+                  <li><strong>UK South</strong> (런던): 3개 존, 250MW+</li>
+                  <li><strong>Germany West Central</strong> (프랑크푸르트): 3개 존, 300MW+</li>
+                  <li><strong>France Central</strong> (파리): 3개 존, 200MW+</li>
+                  <li><strong>Switzerland North</strong> (취리히): 3개 존, 150MW+</li>
+                  <li><strong>Norway East</strong> (오슬로): 3개 존, 180MW+</li>
+                </ul>
+              </div>
+              
+              <div className="bg-purple-50 rounded-lg p-4">
+                <h4 className="font-semibold text-purple-800 mb-3">Google Cloud 유럽 리전</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li><strong>europe-west1</strong> (벨기에): 3개 존, 280MW+</li>
+                  <li><strong>europe-west2</strong> (런던): 3개 존, 250MW+</li>
+                  <li><strong>europe-west3</strong> (프랑크푸르트): 3개 존, 300MW+</li>
+                  <li><strong>europe-west4</strong> (네덜란드): 3개 존, 320MW+</li>
+                  <li><strong>europe-north1</strong> (핀란드): 3개 존, 200MW+</li>
+                  <li><strong>europe-west6</strong> (취리히): 3개 존, 150MW+</li>
+                </ul>
+              </div>
+              
+              <div className="bg-yellow-50 rounded-lg p-4">
+                <h4 className="font-semibold text-yellow-800 mb-3">Meta (Facebook) 데이터센터</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li><strong>Luleå</strong> (스웨덴): 120MW, 3개 건물</li>
+                  <li><strong>Odense</strong> (덴마크): 100MW, 2개 건물</li>
+                  <li><strong>Clonee</strong> (아일랜드): 90MW, 2개 건물</li>
+                  <li><strong>Papillion</strong> (네브래스카): 계획 중</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">8.3 주요 코로케이션 사업자</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 px-4 py-2 text-left">사업자</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">유럽 DC 수</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">총 용량 (MW)</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">주요 위치</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">Equinix</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">65</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">450</td>
+                    <td className="border border-gray-300 px-4 py-2">런던, 프랑크푸르트, 암스테르담, 파리</td>
+                    <td className="border border-gray-300 px-4 py-2">세계 최대 코로케이션 사업자</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">Digital Realty/Interxion</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">55</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">380</td>
+                    <td className="border border-gray-300 px-4 py-2">11개국 13개 도시</td>
+                    <td className="border border-gray-300 px-4 py-2">유럽 최대 캐리어 중립 DC</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">NTT Communications</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">30</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">200</td>
+                    <td className="border border-gray-300 px-4 py-2">런던, 프랑크푸르트, 비엔나</td>
+                    <td className="border border-gray-300 px-4 py-2">아시아-유럽 연결 특화</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">Global Switch</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">15</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">280</td>
+                    <td className="border border-gray-300 px-4 py-2">런던, 암스테르담, 파리, 프랑크푸르트</td>
+                    <td className="border border-gray-300 px-4 py-2">대규모 캠퍼스형 DC</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">Telehouse</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">12</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">150</td>
+                    <td className="border border-gray-300 px-4 py-2">런던, 파리, 프랑크푸르트</td>
+                    <td className="border border-gray-300 px-4 py-2">KDDI 자회사, 아시아 연결</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">8.4 지역별 특징 및 전망</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">FLAP-D 시장 (성숙 시장)</h4>
+                <p className="text-xs text-gray-600 mb-2">Frankfurt, London, Amsterdam, Paris, Dublin</p>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• 유럽 DC 용량의 65% 차지</li>
+                  <li>• 연평균 성장률: 8-10%</li>
+                  <li>• 특징: 높은 임대료, 전력 제약, 규제 강화</li>
+                  <li>• 전망: Edge DC로 확장 중</li>
+                </ul>
+              </div>
+              
+              <div className="border rounded-lg p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">신흥 시장</h4>
+                <p className="text-xs text-gray-600 mb-2">스톡홀름, 오슬로, 바르샤바, 부다페스트</p>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• 연평균 성장률: 15-20%</li>
+                  <li>• 장점: 저렴한 전력, 친환경 에너지</li>
+                  <li>• 특징: 하이퍼스케일러 신규 투자 집중</li>
+                  <li>• 전망: 2025년까지 용량 2배 증가 예상</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">8.5 주요 인터넷 익스체인지 (IX)</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-300 px-3 py-2 text-left">IX 명칭</th>
+                    <th className="border border-gray-300 px-3 py-2 text-left">위치</th>
+                    <th className="border border-gray-300 px-3 py-2 text-center">피크 트래픽</th>
+                    <th className="border border-gray-300 px-3 py-2 text-center">연결 회원</th>
+                    <th className="border border-gray-300 px-3 py-2 text-left">특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-3 py-2 font-semibold">DE-CIX Frankfurt</td>
+                    <td className="border border-gray-300 px-3 py-2">프랑크푸르트</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">12 Tbps</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">1,100+</td>
+                    <td className="border border-gray-300 px-3 py-2">세계 최대 IX</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-3 py-2 font-semibold">AMS-IX</td>
+                    <td className="border border-gray-300 px-3 py-2">암스테르담</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">10 Tbps</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">900+</td>
+                    <td className="border border-gray-300 px-3 py-2">유럽 2위 IX</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-3 py-2 font-semibold">LINX</td>
+                    <td className="border border-gray-300 px-3 py-2">런던</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">5 Tbps</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">950+</td>
+                    <td className="border border-gray-300 px-3 py-2">가장 오래된 IX (1994)</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-3 py-2 font-semibold">France-IX</td>
+                    <td className="border border-gray-300 px-3 py-2">파리, 마르세유</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">2.5 Tbps</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">500+</td>
+                    <td className="border border-gray-300 px-3 py-2">프랑스 최대 IX</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-3 py-2 font-semibold">MIX Milan</td>
+                    <td className="border border-gray-300 px-3 py-2">밀라노</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">1.5 Tbps</td>
+                    <td className="border border-gray-300 px-3 py-2 text-center">300+</td>
+                    <td className="border border-gray-300 px-3 py-2">남유럽 최대 IX</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 별첨 1: 기술 용어 해설 */}

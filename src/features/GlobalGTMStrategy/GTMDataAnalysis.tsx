@@ -15,8 +15,12 @@ import {
   Plus,
   RefreshCw,
   Trash2,
-  X
+  X,
+  Building2,
+  Activity
 } from 'lucide-react';
+import ActiveCustomersSection from './components/ActiveCustomersSection';
+import GTMIntegratedDashboard from './components/GTMIntegratedDashboard';
 
 interface GTMCustomer {
   id: string;
@@ -67,7 +71,7 @@ const GTMDataAnalysis: React.FC = () => {
   const [customers, setCustomers] = useState<GTMCustomer[]>([]);
   const [statistics, setStatistics] = useState<GTMStatistics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState<'dashboard' | 'analysis' | 'customers' | 'opportunities'>('dashboard');
+  const [selectedTab, setSelectedTab] = useState<'integrated' | 'analysis' | 'customers' | 'opportunities' | 'active-customers'>('integrated');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterHeadquarters, setFilterHeadquarters] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -1384,15 +1388,28 @@ const GTMDataAnalysis: React.FC = () => {
           <div className="flex border-b">
             <button
               className={`px-6 py-3 font-medium ${
-                selectedTab === 'dashboard' 
+                selectedTab === 'integrated' 
                   ? 'text-blue-600 border-b-2 border-blue-600' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
-              onClick={() => setSelectedTab('dashboard')}
+              onClick={() => setSelectedTab('integrated')}
             >
               <div className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                대시보드
+                <Activity className="h-4 w-4" />
+                통합 대시보드
+              </div>
+            </button>
+            <button
+              className={`px-6 py-3 font-medium ${
+                selectedTab === 'active-customers' 
+                  ? 'text-blue-600 border-b-2 border-blue-600' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+              onClick={() => setSelectedTab('active-customers')}
+            >
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4" />
+                활성 고객
               </div>
             </button>
             <button
@@ -1444,7 +1461,8 @@ const GTMDataAnalysis: React.FC = () => {
 
         {/* 콘텐츠 영역 */}
         <div>
-          {selectedTab === 'dashboard' && renderDashboard()}
+          {selectedTab === 'integrated' && <GTMIntegratedDashboard />}
+          {selectedTab === 'active-customers' && <ActiveCustomersSection />}
           {selectedTab === 'analysis' && renderAnalysis()}
           {selectedTab === 'opportunities' && renderOpportunities()}
           {selectedTab === 'customers' && renderCustomers()}
