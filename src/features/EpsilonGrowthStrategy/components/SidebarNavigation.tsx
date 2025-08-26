@@ -72,8 +72,7 @@ const navigationStructure: NavSection[] = [
       { id: 'iru-appendix-2', title: '별첨 2: 마르세유 vs 런던' },
       { id: 'iru-appendix-3', title: '별첨 3: 재무 모델링' },
       { id: 'iru-appendix-4', title: '별첨 4: 법적 규제' },
-      { id: 'iru-appendix-5', title: '별첨 5: NTT 현황 분석' },
-      { id: 'iru-appendix-6', title: '별첨 6: 실행 로드맵' }
+      { id: 'iru-appendix-6', title: '별첨 5: 실행 로드맵' }
     ]
   },
   {
@@ -90,6 +89,26 @@ const navigationStructure: NavSection[] = [
       { id: 'aus-appendix-3', title: '별첨 3: 재무 모델링' },
       { id: 'aus-appendix-4', title: '별첨 4: 법적 규제' },
       { id: 'aus-appendix-5', title: '별첨 5: 실행 로드맵' }
+    ]
+  },
+  {
+    id: 'europe-dc-market',
+    title: '[추가] 유럽 DC 시장 분석',
+    subsections: [
+      { id: 'europe-overview', title: 'Executive Summary' },
+      { id: 'europe-london-concentration', title: '1. 런던 17개 PoP 집중 문제' },
+      { id: 'europe-red-ocean', title: '2. 유럽 시장 Red Ocean 분석' },
+      { id: 'europe-dc-details', title: '2.2 유럽 주요 DC 현황' },
+      { id: 'europe-ix-ecosystem', title: '3. IX 중심 이동' },
+      { id: 'europe-connectivity', title: '4. 파트너십 재구성' },
+      { id: 'europe-marseille', title: '5. 마르세유 대안' },
+      { id: 'europe-pop-strategy', title: '6. 런던 PoP 재배치' },
+      { id: 'europe-bridge', title: '7. 아시아-유럽 Bridge' },
+      { id: 'europe-strategy', title: '8. KT 진입 전략' },
+      { id: 'europe-investment', title: '9. 투자 계획' },
+      { id: 'europe-risk', title: '10. 위험 관리' },
+      { id: 'europe-roadmap', title: '11. 실행 로드맵' },
+      { id: 'europe-ntt-analysis', title: '12. NTT 현황 분석 (부록)' }
     ]
   },
   {
