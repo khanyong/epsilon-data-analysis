@@ -11,6 +11,8 @@ import {
   DollarSign, Calendar, AlertCircle, CheckCircle,
   Globe, Briefcase, UserCheck, Layers, Filter, Search
 } from 'lucide-react';
+import GTMSalesAnalysis from './components/GTMSalesAnalysis';
+import GTMStrategyInsights from './components/GTMStrategyInsights';
 
 interface GlobalGTMStrategyProps {
   sectionId: string;
@@ -245,7 +247,7 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-lg">
         <h2 className="text-3xl font-bold mb-4">Global GTM Strategy - Executive Summary</h2>
-        <p className="text-lg">데이터 기반 글로벌 시장 진출 전략 및 영업 조직 최적화 방안</p>
+        <p className="text-lg">GTM Sales 데이터 기반 글로벌 시장 진출 전략 및 영업 조직 최적화 방안</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -979,6 +981,10 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
         <div className="space-y-12">
           {renderExecutiveSummary()}
           <hr className="my-8" />
+          <GTMStrategyInsights />
+          <hr className="my-8" />
+          <GTMSalesAnalysis />
+          <hr className="my-8" />
           {renderCustomerSegmentation()}
           <hr className="my-8" />
           {renderSalesOrganization()}
@@ -1001,6 +1007,10 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
         return renderTargetCompanies();
       case 'data-requirements':
         return renderDataRequirements();
+      case 'sales-analysis':
+        return <GTMSalesAnalysis />;
+      case 'strategy-insights':
+        return <GTMStrategyInsights />;
       default:
         return renderExecutiveSummary();
     }

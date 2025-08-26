@@ -17,7 +17,7 @@ import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStra
 import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
 import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
 import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
-import GTMDataAnalysis from './GlobalGTMStrategy/GTMDataAnalysis';
+import GTMSalesAnalysis from './GlobalGTMStrategy/GTMSalesAnalysis';
 import { EpsilonGrowthStrategy } from './EpsilonGrowthStrategy/EpsilonGrowthStrategy';
 import { epsilonGrowthStrategyToc } from './EpsilonGrowthStrategy/EpsilonGrowthStrategyTocData';
 import { Home, ArrowLeft } from 'lucide-react';
@@ -269,7 +269,7 @@ export function Dashboard() {
           </>
         );
       case 'GTM_DATA_ANALYSIS':
-        return <GTMDataAnalysis />;
+        return <GTMSalesAnalysis />;
       case 'EPSILON_GROWTH_STRATEGY':
         return (
           <>
@@ -705,6 +705,20 @@ export function Dashboard() {
                 </ul>
               )}
             </li>
+            {/* GTM Sales Analysis */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'GTM_DATA_ANALYSIS'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
+                }`}
+                onClick={() => setSelectedMenu('GTM_DATA_ANALYSIS')}
+              >
+                <span>GTM Sales Analysis</span>
+                <span className="ml-2 text-xs bg-yellow-500 text-gray-900 px-2 py-0.5 rounded">New</span>
+              </button>
+            </li>
             {/* Epsilon 성장 전략 보고서 */}
             <li>
               <button
@@ -729,17 +743,45 @@ export function Dashboard() {
                 <ul id="epsilongrowthstrategy-toc-list" className="pl-4 mt-1 space-y-1">
                   {epsilonGrowthStrategyToc.map((item) => (
                     <li key={item.id}>
-                      <button
-                        className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
-                          epsilonGrowthStrategySection === item.id ? 'font-bold text-emerald-400' : ''
-                        }`}
-                        onClick={() => {
-                          setEpsilonGrowthStrategySection(item.id);
-                          setEpsilonGrowthStrategyViewMode('section');
-                        }}
-                      >
-                        {item.label}
-                      </button>
+                      <div>
+                        <button
+                          className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left ${
+                            epsilonGrowthStrategySection === item.id ? 'font-bold text-emerald-400' : ''
+                          }`}
+                          onClick={() => {
+                            setEpsilonGrowthStrategySection(item.id);
+                            setEpsilonGrowthStrategyViewMode('section');
+                          }}
+                        >
+                          {item.label}
+                        </button>
+                        {/* 하위 섹션 표시 */}
+                        {epsilonGrowthStrategySection === item.id && item.subsections && (
+                          <ul className="pl-4 mt-1 space-y-1">
+                            {item.subsections.map((sub) => (
+                              <li key={sub.id}>
+                                <button
+                                  className="block px-2 py-1 text-sm text-gray-400 hover:text-gray-200 hover:bg-slate-700 rounded transition-colors w-full text-left"
+                                  onClick={() => {
+                                    // 전체 보기 모드일 때만 스크롤
+                                    if (epsilonGrowthStrategyViewMode === 'all') {
+                                      const element = document.getElementById(sub.id);
+                                      if (element) {
+                                        element.scrollIntoView({ 
+                                          behavior: 'smooth', 
+                                          block: 'start' 
+                                        });
+                                      }
+                                    }
+                                  }}
+                                >
+                                  • {sub.label}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </li>
                   ))}
                 </ul>

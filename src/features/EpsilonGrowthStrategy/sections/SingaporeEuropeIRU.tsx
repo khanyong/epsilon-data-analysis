@@ -1,8 +1,10 @@
-import React from 'react';
-import { Globe, TrendingUp, DollarSign, MapPin, Shield, AlertTriangle, CheckCircle, Anchor, Building2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Globe, TrendingUp, DollarSign, MapPin, Shield, AlertTriangle, CheckCircle, Anchor, Building2, Info, X } from 'lucide-react';
 import { DataLink } from '../components/DataLink';
 
 export function SingaporeEuropeIRU() {
+  const [showM25Modal, setShowM25Modal] = useState(false);
+
   return (
     <div className="space-y-8">
       <div>
@@ -76,7 +78,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 1. 사업 개요 */}
-      <div className="bg-white rounded-xl shadow-lg p-8">
+      <div id="iru-overview" className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
           <Globe className="w-6 h-6 mr-2 text-indigo-600" />
           1. 사업 개요
@@ -165,7 +167,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 2. 마르세유 허브의 전략적 가치 */}
-      <div className="bg-white rounded-xl shadow-lg p-8">
+      <div id="iru-marseille" className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
           <Anchor className="w-6 h-6 mr-2 text-blue-600" />
           2. 마르세유 허브의 전략적 가치
@@ -255,7 +257,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 3. 런던 대비 마르세유의 우위성 */}
-      <div className="bg-white rounded-xl shadow-lg p-8">
+      <div id="iru-route" className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
           <MapPin className="w-6 h-6 mr-2 text-green-600" />
           3. 런던 대비 마르세유의 우위성
@@ -351,7 +353,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 4. IRU 투자 구조 및 재무 분석 */}
-      <div className="bg-white rounded-xl shadow-lg p-8">
+      <div id="iru-financial" className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
           <DollarSign className="w-6 h-6 mr-2 text-green-600" />
           4. IRU 투자 구조 및 재무 분석
@@ -755,7 +757,7 @@ export function SingaporeEuropeIRU() {
                   <li className="ml-2">- 전력 공급 한계 (런던, 암스테르담은 신규 DC 전력 제한)</li>
                   <li className="ml-2">- 냉각수 부족, 환경 규제 강화</li>
                   <li><strong>2. 비용 문제</strong></li>
-                  <li className="ml-2">- 임대료가 너무 비싸짐 (런던 £150/sq ft)</li>
+                  <li className="ml-2">- 임대료가 너무 비싸짐 (런던 £150/sq ft = 약 220만원/m²)</li>
                   <li className="ml-2">- 전력 비용 상승, 운영비 증가</li>
                 </ul>
               </div>
@@ -763,7 +765,15 @@ export function SingaporeEuropeIRU() {
               <div className="bg-gray-50 rounded p-2">
                 <h5 className="font-semibold text-xs text-gray-800 mb-1">실제 사례</h5>
                 <ul className="text-xs text-gray-600 space-y-1">
-                  <li>• <strong>런던</strong>: 도심 대형 DC 대신 M25 순환도로 주변 소규모 Edge DC 구축</li>
+                  <li>• <strong>런던</strong>: 도심 대형 DC 대신 
+                    <button 
+                      onClick={() => setShowM25Modal(true)}
+                      className="text-blue-600 hover:text-blue-800 underline inline-flex items-center gap-0.5"
+                    >
+                      M25 순환도로
+                      <Info className="h-3 w-3" />
+                    </button> 주변 소규모 Edge DC 구축
+                  </li>
                   <li>• <strong>프랑크푸르트</strong>: 도시 외곽 산업단지에 Edge DC 네트워크 구축</li>
                   <li>• <strong>암스테르담</strong>: 2019년부터 신규 대형 DC 건설 모라토리엄, Edge DC만 허용</li>
                 </ul>
@@ -1136,7 +1146,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 별첨 1: 기술 용어 해설 */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+      <div id="iru-appendix-1" className="bg-white rounded-xl shadow-lg p-8 mt-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 1: 기술 용어 해설</h2>
         
         <div className="space-y-6">
@@ -1208,7 +1218,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 별첨 2: 마르세유 vs 런던 상세 비교 */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+      <div id="iru-appendix-2" className="bg-white rounded-xl shadow-lg p-8 mt-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 2: 마르세유 vs 런던 상세 비교</h2>
         
         <div className="space-y-6">
@@ -1296,7 +1306,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 별첨 3: 재무 모델링 상세 */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+      <div id="iru-appendix-3" className="bg-white rounded-xl shadow-lg p-8 mt-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 3: 재무 모델링 상세</h2>
         
         <div className="space-y-6">
@@ -1404,7 +1414,7 @@ export function SingaporeEuropeIRU() {
       </div>
 
       {/* 별첨 4: 법적 및 규제 환경 */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
+      <div id="iru-appendix-4" className="bg-white rounded-xl shadow-lg p-8 mt-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 4: 법적 및 규제 환경</h2>
         
         <div className="space-y-6">
@@ -1515,9 +1525,311 @@ export function SingaporeEuropeIRU() {
         </div>
       </div>
 
-      {/* 별첨 5: 투자 실행 로드맵 */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 5: 투자 실행 로드맵</h2>
+      {/* 별첨 5: NTT 유럽 데이터센터 현황 분석 */}
+      <div id="iru-appendix-5" className="bg-white rounded-xl shadow-lg p-8 mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 5: NTT 유럽 데이터센터 현황 분석</h2>
+        
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">A. 전세계 DC 현황 (2025년 기준)</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">구분</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">수량/규모</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">총 DC 수</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">160개 이상</td>
+                    <td className="border border-gray-300 px-4 py-2">세계 3위 데이터센터 사업자</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">국가/지역</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">20개국 이상</td>
+                    <td className="border border-gray-300 px-4 py-2">Americas, EMEA, APAC, 인도</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">총 직원 수</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">약 194,000명</td>
+                    <td className="border border-gray-300 px-4 py-2">50개국 이상에 분포</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">총 투자규모</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">$100억</td>
+                    <td className="border border-gray-300 px-4 py-2">2023-2027 글로벌 확장 계획</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">B. 지역별 DC 운영 용량 (2024년 실제 데이터)</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">지역</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">운영 용량</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">2024년 추가</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">비중</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">Americas (미주)</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">520MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">24MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">40.0%</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">EMEA (유럽/중동/아프리카)</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">430MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">41MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">33.1%</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">India (인도)</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">290MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">155MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">22.3%</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">APAC (아시아태평양)</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">60MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">7MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">4.6%</td>
+                  </tr>
+                  <tr className="bg-blue-100">
+                    <td className="border border-gray-300 px-4 py-2 font-bold">전체</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">1,300MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">227MW</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">100%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">C. 유럽(EMEA) 국가별 DC 현황</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">국가</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">도시</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">DC 수</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">용량/특징</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={4}>🇩🇪 독일</td>
+                    <td className="border border-gray-300 px-4 py-2">프랑크푸르트</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">5개</td>
+                    <td className="border border-gray-300 px-4 py-2">77.4MW, 52,200m² IT 공간</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">뮌헨</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">2개+</td>
+                    <td className="border border-gray-300 px-4 py-2">1,100 랙, 5,600m² 확장 계획</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2">베를린</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">1개</td>
+                    <td className="border border-gray-300 px-4 py-2">2024년 신규 부지 취득</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2">니어스테인</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">계획</td>
+                    <td className="border border-gray-300 px-4 py-2">프랑크푸르트 남쪽 50km</td>
+                  </tr>
+                  <tr className="bg-blue-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold" rowSpan={3}>🇬🇧 영국</td>
+                    <td className="border border-gray-300 px-4 py-2">런던</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center font-bold">7개+</td>
+                    <td className="border border-gray-300 px-4 py-2">도크랜즈 인근, 금융허브</td>
+                  </tr>
+                  <tr className="bg-blue-50">
+                    <td className="border border-gray-300 px-4 py-2">헤멀햄스테드</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">1개+</td>
+                    <td className="border border-gray-300 px-4 py-2">LON7, 런던 위성 지역</td>
+                  </tr>
+                  <tr className="bg-blue-50">
+                    <td className="border border-gray-300 px-4 py-2">신규부지</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">계획</td>
+                    <td className="border border-gray-300 px-4 py-2">LON2, 26.3 에이커</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇳🇱 네덜란드</td>
+                    <td className="border border-gray-300 px-4 py-2">암스테르담</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">2개+</td>
+                    <td className="border border-gray-300 px-4 py-2">9,720m² 확장 중</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇫🇷 프랑스</td>
+                    <td className="border border-gray-300 px-4 py-2">파리 남부</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">3개 건설 중</td>
+                    <td className="border border-gray-300 px-4 py-2">84MW, 14.4 헥타르</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇪🇸 스페인</td>
+                    <td className="border border-gray-300 px-4 py-2">마드리드</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">1개+</td>
+                    <td className="border border-gray-300 px-4 py-2">Las Rozas, 2022년 개장</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇮🇹 이탈리아</td>
+                    <td className="border border-gray-300 px-4 py-2">밀라노</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">계획</td>
+                    <td className="border border-gray-300 px-4 py-2">53 에이커, 128MW 용량</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇦🇹 오스트리아</td>
+                    <td className="border border-gray-300 px-4 py-2">비엔나</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">1개+</td>
+                    <td className="border border-gray-300 px-4 py-2">동유럽 게이트웨이</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">🇨🇭 스위스</td>
+                    <td className="border border-gray-300 px-4 py-2">취리히</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">1개+</td>
+                    <td className="border border-gray-300 px-4 py-2">Rümlang, 2011년 개장</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">D. 유럽 핵심 시장 집중도 (FLAP 전략)</h3>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 text-left">도시</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">DC 집중도</th>
+                    <th className="border border-gray-300 px-4 py-2 text-left">특징</th>
+                    <th className="border border-gray-300 px-4 py-2 text-center">용량/투자</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">프랑크푸르트</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <span className="text-green-600 font-bold">5개</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      • 독일 금융 수도<br/>
+                      • DE-CIX (세계 최대 IXP)<br/>
+                      • 동서유럽 연결 허브
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">77.4MW+</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">런던</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <span className="text-green-600 font-bold">7개+</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      • 유럽 금융 중심지<br/>
+                      • LINX 허브<br/>
+                      • 브렉시트 후에도 지속 투자
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">100MW+</td>
+                  </tr>
+                  <tr>
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">암스테르담</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <span className="text-yellow-600 font-bold">2개+</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      • AMS-IX 허브<br/>
+                      • 유럽 디지털 게이트웨이<br/>
+                      • 확장 진행 중
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">확장 중</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="border border-gray-300 px-4 py-2 font-semibold">파리</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">
+                      <span className="text-blue-600 font-bold">3개 (신규)</span>
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      • FLAP 전략 완성<br/>
+                      • 2024년 신규 진입<br/>
+                      • 대규모 투자
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-center">84MW</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">E. 투자 계획 (2023-2027)</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">총 투자 규모</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• 글로벌 DC 투자: <span className="font-bold">$100억 이상</span></li>
+                  <li>• 데이터센터 특화: <span className="font-bold">¥1.5조 이상</span></li>
+                  <li>• 2024년 연간 투자: <span className="font-bold">$2.9억</span></li>
+                </ul>
+              </div>
+
+              <div className="border rounded-lg p-4">
+                <h4 className="font-semibold text-gray-800 mb-2">2024년 지역별 신규 용량</h4>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• 인도: <span className="font-bold">155MW (68.3%)</span></li>
+                  <li>• EMEA: <span className="font-bold">41MW (18.1%)</span></li>
+                  <li>• Americas: <span className="font-bold">24MW (10.6%)</span></li>
+                  <li>• APAC: <span className="font-bold">7MW (3.1%)</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">F. 주요 시사점</h3>
+            
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+              <h4 className="font-semibold text-gray-800 mb-2">NTT의 유럽 전략 특징</h4>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• EMEA 지역 집중도: 전체 DC 용량의 <span className="font-bold">33.1% (430MW/1,300MW)</span></li>
+                <li>• 독일 최우선: 프랑크푸르트 5개 DC로 유럽 내 최대 집중</li>
+                <li>• 영국 지속 투자: 런던 7개+ DC 운영, 신규 26.3 에이커 부지 확보</li>
+                <li>• 프랑스 신규 진출: 2024년 파리 84MW 프로젝트로 FLAP 전략 완성</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 mt-4">
+              <h4 className="font-semibold text-gray-800 mb-2">마르세유 IRU 전략과의 차별화 포인트</h4>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• 지중해 루트: 마르세유 중심의 남유럽-MENA 연결 (NTT 미진출 지역)</li>
+                <li>• 동남아 허브: 싱가포르-조호바르 DC를 통한 동남아 거점 확보</li>
+                <li>• 타이밍: NTT가 상대적으로 약한 남유럽/지중해 지역 선점 기회</li>
+                <li>• 파트너십: 직접 투자(NTT $100억) 대비 효율적 IRU 전략</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 별첨 6: 투자 실행 로드맵 */}
+      <div id="iru-appendix-6" className="bg-white rounded-xl shadow-lg p-8 mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">별첨 6: 투자 실행 로드맵</h2>
         
         <div className="space-y-6">
           <div>
@@ -1614,7 +1926,7 @@ export function SingaporeEuropeIRU() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">C. 위험 관리 체계</h3>
+            <h3 id="iru-risk" className="text-lg font-semibold text-gray-800 mb-4">C. 위험 관리 체계</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="border rounded-lg p-4">
@@ -1657,6 +1969,134 @@ export function SingaporeEuropeIRU() {
           본 보고서는 기업비밀Ⅱ급으로 분류되며, 관련 정보의 외부 유출을 금지합니다.
         </p>
       </div>
+
+      {/* M25 설명 모달 */}
+      {showM25Modal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-4xl max-h-[90vh] overflow-auto shadow-2xl">
+            <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-gray-900">M25 순환도로 Edge DC 전략 상세</h2>
+              <button
+                onClick={() => setShowM25Modal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              {/* M25 개요 */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-bold text-gray-900 mb-3">📍 M25란?</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li>• <strong>정식 명칭</strong>: M25 London Orbital Motorway</li>
+                  <li>• <strong>특징</strong>: 런던을 완전히 둘러싸는 원형 고속도로 (총 188km)</li>
+                  <li>• <strong>위치</strong>: 런던 중심부(City of London)에서 25-30km 떨어진 외곽</li>
+                </ul>
+              </div>
+
+              {/* 기존 vs 신규 비교 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-red-50 rounded-lg p-4">
+                  <h4 className="font-bold text-red-800 mb-3">❌ 기존 방식 (도심 대형 DC)</h4>
+                  <p className="text-sm text-gray-700 mb-2">
+                    <strong>위치</strong>: 런던 중심부 (Canary Wharf, City of London 등)
+                  </p>
+                  <ul className="space-y-1 text-sm text-gray-700">
+                    <li>• <strong>규모</strong>: 50-100MW 대형 시설</li>
+                    <li>• <strong>장점</strong>: 금융기관과 가까움, 네트워크 연결성 우수</li>
+                  </ul>
+                  <div className="mt-3 pt-3 border-t border-red-200">
+                    <p className="font-semibold text-red-800 mb-2">문제점:</p>
+                    <ul className="space-y-1 text-sm text-gray-700">
+                      <li>• 임대료: £150/sq ft = 약 220만원/m² (세계 최고 수준)</li>
+                      <li>• 전력 제한: 런던 시내 전력망 포화</li>
+                      <li>• 부지 부족: 신규 대형 부지 확보 불가능</li>
+                      <li>• 냉각: 템즈강 냉각수 사용 제한</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 rounded-lg p-4">
+                  <h4 className="font-bold text-green-800 mb-3">✅ 새로운 방식 (M25 주변 Edge DC)</h4>
+                  <p className="text-sm text-gray-700 mb-2">
+                    <strong>주요 위치</strong>:
+                  </p>
+                  <ul className="space-y-1 text-sm text-gray-700">
+                    <li>• <strong>Slough</strong> (서쪽): M4와 M25 교차점, 히드로 공항 인근</li>
+                    <li>• <strong>Croydon</strong> (남쪽): 런던 남부 비즈니스 지구</li>
+                    <li>• <strong>Enfield</strong> (북쪽): M25 북부 산업단지</li>
+                    <li>• <strong>Dagenham</strong> (동쪽): 템즈강 동부 산업지대</li>
+                  </ul>
+                  <div className="mt-3 pt-3 border-t border-green-200">
+                    <p className="font-semibold text-green-800 mb-2">특징:</p>
+                    <ul className="space-y-1 text-sm text-gray-700">
+                      <li>• <strong>규모</strong>: 1-5MW 소규모 시설 여러 개</li>
+                      <li>• <strong>거리</strong>: 도심에서 30-40분 거리</li>
+                      <li>• <strong>임대료</strong>: 도심의 30-40% 수준</li>
+                      <li>• <strong>전력</strong>: 충분한 전력 인프라</li>
+                      <li>• <strong>부지</strong>: 산업단지 활용 가능</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 실제 사례 */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-bold text-gray-800 mb-3">🏢 실제 사례</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="bg-white rounded p-3">
+                    <h5 className="font-semibold text-blue-600 mb-1">Equinix LD10</h5>
+                    <p className="text-xs text-gray-600">위치: Slough (M4/M25 교차점)</p>
+                    <p className="text-xs text-gray-600">용도: 금융 Edge 서비스</p>
+                  </div>
+                  <div className="bg-white rounded p-3">
+                    <h5 className="font-semibold text-blue-600 mb-1">Virtus LONDON5</h5>
+                    <p className="text-xs text-gray-600">위치: Hayes (히드로 인근)</p>
+                    <p className="text-xs text-gray-600">용도: 항공/물류 데이터 처리</p>
+                  </div>
+                  <div className="bg-white rounded p-3">
+                    <h5 className="font-semibold text-blue-600 mb-1">Digital Realty</h5>
+                    <p className="text-xs text-gray-600">위치: Woking (M25 남서부)</p>
+                    <p className="text-xs text-gray-600">용도: 기업 백업 센터</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 이점 */}
+              <div className="bg-yellow-50 rounded-lg p-4">
+                <h4 className="font-bold text-gray-800 mb-3">💡 이렇게 하는 이유</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-yellow-600">5-10ms</p>
+                    <p className="text-xs text-gray-600">도심 지연시간</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-yellow-600">60-70%</p>
+                    <p className="text-xs text-gray-600">비용 절감</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-yellow-600">무제한</p>
+                    <p className="text-xs text-gray-600">확장 가능성</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-yellow-600">5G/IoT</p>
+                    <p className="text-xs text-gray-600">신규 수요 대응</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 결론 */}
+              <div className="bg-blue-100 rounded-lg p-4">
+                <p className="text-sm text-gray-800">
+                  <strong>결론</strong>: 비싸고 제약이 많은 런던 도심 대신 M25 순환도로를 따라 분산된 소규모 DC 네트워크를 구축하는 전략으로, 
+                  비용 효율성과 확장성을 동시에 확보하는 혁신적인 접근 방식입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

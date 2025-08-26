@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Landing } from './features/Landing'
 import { Login } from './features/Login'
 import { Dashboard } from './features/Dashboard'
+import GTMSalesAnalysis from './features/GlobalGTMStrategy/GTMSalesAnalysis'
 
 function App() {
   return (
@@ -22,6 +23,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* GTM Sales 분석 페이지 */}
+            <Route 
+              path="/gtm-sales" 
+              element={
+                <ProtectedRoute>
+                  <GTMSalesAnalysis />
                 </ProtectedRoute>
               } 
             />
