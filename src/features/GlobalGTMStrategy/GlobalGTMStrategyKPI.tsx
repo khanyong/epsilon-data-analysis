@@ -145,10 +145,33 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
         supabase.from('kotra').select('*')
       ]);
 
-      if (custResult.data) setCustomers(custResult.data);
-      if (salesResult.data) setSales(salesResult.data);
-      if (revResult.data) setRevenues(revResult.data);
-      if (kotraResult.data) setKotraData(kotraResult.data);
+      if (custResult.data) {
+        setCustomers(custResult.data);
+        console.log('Customers loaded:', custResult.data.length);
+      } else {
+        console.error('Customer data error:', custResult.error);
+      }
+      
+      if (salesResult.data) {
+        setSales(salesResult.data);
+        console.log('Sales loaded:', salesResult.data.length);
+      } else {
+        console.error('Sales data error:', salesResult.error);
+      }
+      
+      if (revResult.data) {
+        setRevenues(revResult.data);
+        console.log('Revenues loaded:', revResult.data.length);
+      } else {
+        console.error('Revenue data error:', revResult.error);
+      }
+      
+      if (kotraResult.data) {
+        setKotraData(kotraResult.data);
+        console.log('KOTRA data loaded:', kotraResult.data.length);
+      } else {
+        console.error('KOTRA data error:', kotraResult.error);
+      }
       
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -186,17 +209,19 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
     }, {} as Record<string, number>);
 
     // 서비스별 갱신율 (Active 상태 비율)
-    const renewalRate = sales.filter(s => s.status === 'Active').length / sales.length * 100;
+    const renewalRate = sales.length > 0 
+      ? (sales.filter(s => s.status === 'Active').length / sales.length * 100)
+      : 0;
 
     return {
       hqPotentialCustomers,
       renewalSoon,
       competitorCustomers,
       monthlyRevenue,
-      renewalRate,
-      totalCustomers: customers.length,
-      activeCustomers: customers.filter(c => c.kt_global_data_usage_2025).length,
-      potentialValue: competitorCustomers.reduce((sum, c) => sum + (c.other_monthly_fee || 0), 0)
+      renewalRate: renewalRate || 0,
+      totalCustomers: customers.length || 0,
+      activeCustomers: customers.filter(c => c.kt_global_data_usage_2025).length || 0,
+      potentialValue: competitorCustomers.reduce((sum, c) => sum + (c.other_monthly_fee || 0), 0) || 0
     };
   };
 
@@ -205,7 +230,23 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
-        <div className="text-gray-500">데이터 로딩 중...</div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="text-gray-500">GTM 데이터 로딩 중...</div>
+        </div>
+      </div>
+    );
+  }
+  
+  // 데이터가 없는 경우 안내 메시지
+  if (!customers.length && !sales.length && !revenues.length) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+          <div className="text-gray-600 font-semibold mb-2">GTM 데이터가 없습니다</div>
+          <div className="text-sm text-gray-500">GTM Data Management 메뉴에서 데이터를 입력해주세요.</div>
+        </div>
       </div>
     );
   }

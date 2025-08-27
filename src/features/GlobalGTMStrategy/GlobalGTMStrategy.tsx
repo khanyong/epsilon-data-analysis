@@ -966,6 +966,25 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
   );
 
   const renderContent = () => {
+    console.log('GlobalGTMStrategy renderContent - sectionId:', sectionId);
+    
+    // 새로운 KPI 섹션들은 로딩 상태와 관계없이 바로 렌더링
+    const kpiSections = [
+      'kpi-dashboard',
+      'headquarters-analysis', 
+      'renewal-conversion',
+      'competitor-analysis',
+      'sales-org-strategy',
+      'territory-optimization',
+      'customer-segmentation',
+      'revenue-forecasting'
+    ];
+
+    if (kpiSections.includes(sectionId)) {
+      console.log('Rendering KPI section:', sectionId);
+      return <GlobalGTMStrategyKPI section={sectionId} />;
+    }
+    
     if (loading) {
       return (
         <div className="flex items-center justify-center h-64">
@@ -995,22 +1014,6 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
           {renderDataRequirements()}
         </div>
       );
-    }
-
-    // 새로운 KPI 기반 섹션들 처리
-    const kpiSections = [
-      'kpi-dashboard',
-      'headquarters-analysis', 
-      'renewal-conversion',
-      'competitor-analysis',
-      'sales-org-strategy',
-      'territory-optimization',
-      'customer-segmentation',
-      'revenue-forecasting'
-    ];
-
-    if (kpiSections.includes(sectionId)) {
-      return <GlobalGTMStrategyKPI section={sectionId} />;
     }
 
     // 기존 섹션들 (레거시 지원)
