@@ -17,7 +17,8 @@ import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStra
 import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
 import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
 import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
-import GTMSalesAnalysis from './GlobalGTMStrategy/GTMSalesAnalysis';
+import GlobalGTMStrategyDashboard from './GlobalGTMStrategy/GlobalGTMStrategyDashboard';
+import GTMDataManagement from './GlobalGTMStrategy/GTMDataManagement';
 import { EpsilonGrowthStrategy } from './EpsilonGrowthStrategy/EpsilonGrowthStrategy';
 import { epsilonGrowthStrategyToc } from './EpsilonGrowthStrategy/EpsilonGrowthStrategyTocData';
 import { Home, ArrowLeft } from 'lucide-react';
@@ -26,6 +27,8 @@ type MenuType =
   | 'RFQ'
   | 'SOF'
   | 'KOTRA'
+  | 'GTM_DATA_ANALYSIS'
+  | 'GTM_DATA_MANAGEMENT'
   | 'EPSILON_POPS'
   | 'INVEST_REPORT'
   | 'MARKETING_REPORT'
@@ -34,7 +37,6 @@ type MenuType =
   | 'SYNERGY_SALES'
   | 'EURO_MARKETING_STRATEGY'
   | 'GLOBAL_GTM_STRATEGY'
-  | 'GTM_DATA_ANALYSIS'
   | 'EPSILON_GROWTH_STRATEGY';
 
 // URL parameter to MenuType mapping
@@ -42,6 +44,8 @@ const viewToMenuType: Record<string, MenuType> = {
   'rfq': 'RFQ',
   'sof': 'SOF',
   'kotra': 'KOTRA',
+  'gtm-data': 'GTM_DATA_ANALYSIS',
+  'gtm-data-mgmt': 'GTM_DATA_MANAGEMENT',
   'epsilon-pop': 'EPSILON_POPS',
   'investment': 'INVEST_REPORT',
   'business': 'MARKETING_REPORT',
@@ -50,7 +54,6 @@ const viewToMenuType: Record<string, MenuType> = {
   'synergy': 'SYNERGY_SALES',
   'euro-marketing': 'EURO_MARKETING_STRATEGY',
   'global-gtm': 'GLOBAL_GTM_STRATEGY',
-  'gtm-data': 'GTM_DATA_ANALYSIS',
   'epsilon-growth': 'EPSILON_GROWTH_STRATEGY'
 };
 
@@ -269,7 +272,9 @@ export function Dashboard() {
           </>
         );
       case 'GTM_DATA_ANALYSIS':
-        return <GTMSalesAnalysis />;
+        return <GlobalGTMStrategyDashboard />;
+      case 'GTM_DATA_MANAGEMENT':
+        return <GTMDataManagement />;
       case 'EPSILON_GROWTH_STRATEGY':
         return (
           <>
@@ -702,22 +707,18 @@ export function Dashboard() {
                       </button>
                     </li>
                   ))}
+                  <li className="border-t border-gray-600 pt-1 mt-1">
+                    <button
+                      className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm transition-colors w-full text-left ${
+                        selectedMenu === 'GTM_DATA_MANAGEMENT' ? 'font-bold text-emerald-400 bg-slate-700' : 'text-gray-300 hover:text-white'
+                      }`}
+                      onClick={() => setSelectedMenu('GTM_DATA_MANAGEMENT')}
+                    >
+                      • 데이터 수정/추가
+                    </button>
+                  </li>
                 </ul>
               )}
-            </li>
-            {/* GTM Sales Analysis */}
-            <li>
-              <button
-                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
-                  selectedMenu === 'GTM_DATA_ANALYSIS'
-                    ? 'bg-emerald-600 text-white shadow-md'
-                    : 'hover:bg-slate-600 text-gray-200'
-                }`}
-                onClick={() => setSelectedMenu('GTM_DATA_ANALYSIS')}
-              >
-                <span>GTM Sales Analysis</span>
-                <span className="ml-2 text-xs bg-yellow-500 text-gray-900 px-2 py-0.5 rounded">New</span>
-              </button>
             </li>
             {/* Epsilon 성장 전략 보고서 */}
             <li>
