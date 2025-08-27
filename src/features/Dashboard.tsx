@@ -15,7 +15,7 @@ import { investmentStrategyToc } from './InvestmentStrategyReport/InvestmentStra
 import { SynergySales, toc as synergySalesToc } from './SynergySales/SynergySales';
 import { EuroMarketingStrategy } from './EuroMarketingStrategy/EuroMarketingStrategy';
 import { euroMarketingStrategyToc } from './EuroMarketingStrategy/EuroMarketingStrategyTocData';
-import { GlobalGTMStrategyKorean as GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategyKorean';
+import { GlobalGTMStrategy } from './GlobalGTMStrategy/GlobalGTMStrategy';
 import { globalGTMStrategyToc } from './GlobalGTMStrategy/GlobalGTMStrategyTocData';
 import GlobalGTMStrategyDashboard from './GlobalGTMStrategy/GlobalGTMStrategyDashboard';
 import GTMDataManagement from './GlobalGTMStrategy/GTMDataManagement';
