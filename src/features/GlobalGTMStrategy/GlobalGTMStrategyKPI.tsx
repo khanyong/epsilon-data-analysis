@@ -198,8 +198,19 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
 
     // 서비스별 갱신율 (Active 상태 비율)
     const renewalRate = sales.length > 0 
-      ? (sales.filter(s => s.status === 'Active').length / sales.length * 100)
+      ? (sales.filter((s: SalesData) => s.status === 'Active').length / sales.length * 100)
       : 0;
+
+    // Active 고객 계산 (gtm_sales_master의 유니크 고객)
+    const uniqueActiveCustomers = new Set(
+      sales.map((s: SalesData) => s.customer_name).filter((name: string) => name)
+    );
+    const activeCustomersCount = uniqueActiveCustomers.size;
+    
+    console.log('=== GlobalGTMStrategyKPI Active 고객 계산 ===');
+    console.log('전체 서비스 수 (sales):', sales.length);
+    console.log('유니크 Active 고객 수:', activeCustomersCount);
+    console.log('gtm_customers 기반 Active (kt_global_data_usage_2025):', customers.filter(c => c.kt_global_data_usage_2025).length);
 
     return {
       hqPotentialCustomers,
@@ -208,7 +219,7 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
       monthlyRevenue,
       renewalRate: renewalRate || 0,
       totalCustomers: customers.length || 0,
-      activeCustomers: customers.filter(c => c.kt_global_data_usage_2025).length || 0,
+      activeCustomers: activeCustomersCount,  // gtm_sales_master 기반 유니크 고객 수
       potentialValue: competitorCustomers.reduce((sum, c) => sum + (c.other_monthly_fee || 0), 0) || 0
     };
   };
@@ -618,14 +629,14 @@ const RenewalConversionAnalysis: React.FC<any> = ({ customers, sales }) => {
             <PieChart>
               <Pie
                 data={[
-                  { name: 'Active', value: sales.filter(s => s.status === 'Active').length, fill: '#10b981' },
-                  { name: 'Pending', value: sales.filter(s => s.status === 'Pending').length, fill: '#f59e0b' },
-                  { name: 'Terminated', value: sales.filter(s => s.status === 'Terminated').length, fill: '#ef4444' }
+                  { name: 'Active', value: sales.filter((s: SalesData) => s.status === 'Active').length, fill: '#10b981' },
+                  { name: 'Pending', value: sales.filter((s: SalesData) => s.status === 'Pending').length, fill: '#f59e0b' },
+                  { name: 'Terminated', value: sales.filter((s: SalesData) => s.status === 'Terminated').length, fill: '#ef4444' }
                 ]}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name}: ${percent ? (percent * 100).toFixed(0) : 0}%`}
                 outerRadius={80}
                 dataKey="value"
               >
@@ -1226,7 +1237,7 @@ const CustomerSegmentation: React.FC<any> = ({ customers, revenues }) => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name}: ${percent ? (percent * 100).toFixed(0) : 0}%`}
                 outerRadius={80}
                 dataKey="value"
               >
