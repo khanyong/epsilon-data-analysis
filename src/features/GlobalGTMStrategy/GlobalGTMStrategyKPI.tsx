@@ -124,6 +124,8 @@ interface KOTRAData {
 }
 
 export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section }) => {
+  console.log('GlobalGTMStrategyKPI mounted with section:', section);
+  
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [sales, setSales] = useState<SalesData[]>([]);
   const [revenues, setRevenues] = useState<RevenueData[]>([]);
@@ -131,6 +133,7 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('GlobalGTMStrategyKPI useEffect - fetching data');
     fetchData();
   }, []);
 
@@ -252,6 +255,13 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
   }
 
   // 섹션별 렌더링
+  console.log('GlobalGTMStrategyKPI rendering section:', section, 'with data:', {
+    customers: customers.length,
+    sales: sales.length,
+    revenues: revenues.length,
+    kotraData: kotraData.length
+  });
+  
   switch (section) {
     case 'kpi-dashboard':
       return <KPIDashboard kpis={kpis} customers={customers} sales={sales} revenues={revenues} />;
