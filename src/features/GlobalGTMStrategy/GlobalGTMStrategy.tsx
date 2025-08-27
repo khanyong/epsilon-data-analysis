@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import GTMSalesAnalysis from './components/GTMSalesAnalysis';
 import GTMStrategyInsights from './components/GTMStrategyInsights';
+import { GlobalGTMStrategyKPI } from './GlobalGTMStrategyKPI';
 
 interface GlobalGTMStrategyProps {
   sectionId: string;
@@ -996,11 +997,26 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
       );
     }
 
+    // 새로운 KPI 기반 섹션들 처리
+    const kpiSections = [
+      'kpi-dashboard',
+      'headquarters-analysis', 
+      'renewal-conversion',
+      'competitor-analysis',
+      'sales-org-strategy',
+      'territory-optimization',
+      'customer-segmentation',
+      'revenue-forecasting'
+    ];
+
+    if (kpiSections.includes(sectionId)) {
+      return <GlobalGTMStrategyKPI section={sectionId} />;
+    }
+
+    // 기존 섹션들 (레거시 지원)
     switch (sectionId) {
       case 'overview':
         return renderExecutiveSummary();
-      case 'customer-segmentation':
-        return renderCustomerSegmentation();
       case 'sales-organization':
         return renderSalesOrganization();
       case 'target-companies':
@@ -1012,7 +1028,7 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
       case 'strategy-insights':
         return <GTMStrategyInsights />;
       default:
-        return renderExecutiveSummary();
+        return <GlobalGTMStrategyKPI section="kpi-dashboard" />;
     }
   };
 
