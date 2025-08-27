@@ -126,7 +126,7 @@ export function Dashboard() {
   const [euroMarketingStrategyViewMode, setEuroMarketingStrategyViewMode] = useState<'section' | 'all'>('section');
   // Global GTM Strategy 상태
   const [globalGtmStrategyOpen, setGlobalGtmStrategyOpen] = useState(true);
-  const [globalGtmStrategySection, setGlobalGtmStrategySection] = useState('overview');
+  const [globalGtmStrategySection, setGlobalGtmStrategySection] = useState('kpi-dashboard');
   const [globalGtmStrategyViewMode, setGlobalGtmStrategyViewMode] = useState<'section' | 'all'>('section');
   // Epsilon Growth Strategy 상태
   const [epsilonGrowthStrategyOpen, setEpsilonGrowthStrategyOpen] = useState(true);
