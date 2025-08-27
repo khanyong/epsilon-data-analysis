@@ -662,6 +662,86 @@ const GTMDataManagement: React.FC = () => {
                         onChange={(e) => setNewCustomer({...newCustomer, renewal_date: e.target.value})}
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">연간 매출액 (억원)</label>
+                      <Input
+                        type="number"
+                        value={newCustomer.annual_revenue || ''}
+                        onChange={(e) => setNewCustomer({...newCustomer, annual_revenue: parseFloat(e.target.value)})}
+                        placeholder="예: 1000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">매출 기준년도</label>
+                      <Input
+                        type="number"
+                        value={newCustomer.revenue_year || ''}
+                        onChange={(e) => setNewCustomer({...newCustomer, revenue_year: parseInt(e.target.value)})}
+                        placeholder="예: 2024"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">기업 규모</label>
+                      <Select
+                        value={(() => {
+                          const rev = newCustomer.annual_revenue;
+                          if (!rev) return '';
+                          if (rev >= 5000) return '대기업';
+                          if (rev >= 400) return '중견기업';
+                          return '중소기업';
+                        })()}
+                        disabled
+                        className="bg-gray-100"
+                      >
+                        <option value="">매출 입력 시 자동 분류</option>
+                        <option value="대기업">대기업 (5000억↑)</option>
+                        <option value="중견기업">중견기업 (400~5000억)</option>
+                        <option value="중소기업">중소기업 (~400억)</option>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">산업 분류</label>
+                      <Select
+                        value={newCustomer.industry_category || ''}
+                        onChange={(e) => setNewCustomer({...newCustomer, industry_category: e.target.value})}
+                      >
+                        <option value="">선택</option>
+                        <option value="제조업">제조업</option>
+                        <option value="서비스업">서비스업</option>
+                        <option value="금융업">금융업</option>
+                        <option value="IT/SW">IT/SW</option>
+                        <option value="유통업">유통업</option>
+                        <option value="건설업">건설업</option>
+                        <option value="통신업">통신업</option>
+                        <option value="의료/제약">의료/제약</option>
+                        <option value="교육">교육</option>
+                        <option value="공공기관">공공기관</option>
+                        <option value="기타">기타</option>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">사업 유형</label>
+                      <Select
+                        value={newCustomer.business_type || ''}
+                        onChange={(e) => setNewCustomer({...newCustomer, business_type: e.target.value})}
+                      >
+                        <option value="">선택</option>
+                        <option value="B2B">B2B</option>
+                        <option value="B2C">B2C</option>
+                        <option value="B2G">B2G</option>
+                        <option value="B2B2C">B2B2C</option>
+                        <option value="기타">기타</option>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">직원 수</label>
+                      <Input
+                        type="number"
+                        value={newCustomer.employee_count || ''}
+                        onChange={(e) => setNewCustomer({...newCustomer, employee_count: parseInt(e.target.value)})}
+                        placeholder="예: 1000"
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
                     <Button variant="outline" onClick={() => {
@@ -686,6 +766,9 @@ const GTMDataManagement: React.FC = () => {
                     <tr className="border-b bg-gray-50">
                       <th className="text-left p-3">고객 ID</th>
                       <th className="text-left p-3">고객명</th>
+                      <th className="text-center p-3">산업</th>
+                      <th className="text-center p-3">기업규모</th>
+                      <th className="text-right p-3">연매출(억)</th>
                       <th className="text-left p-3">본부</th>
                       <th className="text-left p-3">팀</th>
                       <th className="text-center p-3">해외사업장</th>
@@ -714,6 +797,54 @@ const GTMDataManagement: React.FC = () => {
                                 value={editingCustomer.customer_name || ''}
                                 onChange={(e) => setEditingCustomer({...editingCustomer, customer_name: e.target.value})}
                                 className="text-sm"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <Select
+                                value={editingCustomer.industry_category || ''}
+                                onChange={(e) => setEditingCustomer({...editingCustomer, industry_category: e.target.value})}
+                                className="text-sm"
+                              >
+                                <option value="">-</option>
+                                <option value="제조업">제조업</option>
+                                <option value="서비스업">서비스업</option>
+                                <option value="금융업">금융업</option>
+                                <option value="IT/SW">IT/SW</option>
+                                <option value="유통업">유통업</option>
+                                <option value="건설업">건설업</option>
+                                <option value="통신업">통신업</option>
+                                <option value="의료/제약">의료/제약</option>
+                                <option value="교육">교육</option>
+                                <option value="공공기관">공공기관</option>
+                                <option value="기타">기타</option>
+                              </Select>
+                            </td>
+                            <td className="p-2 text-center">
+                              <span className={`px-2 py-1 rounded-full text-xs ${
+                                (() => {
+                                  const rev = editingCustomer.annual_revenue;
+                                  if (!rev) return 'bg-gray-100 text-gray-600';
+                                  if (rev >= 5000) return 'bg-purple-100 text-purple-700';
+                                  if (rev >= 400) return 'bg-blue-100 text-blue-700';
+                                  return 'bg-green-100 text-green-700';
+                                })()
+                              }`}>
+                                {(() => {
+                                  const rev = editingCustomer.annual_revenue;
+                                  if (!rev) return '-';
+                                  if (rev >= 5000) return '대기업';
+                                  if (rev >= 400) return '중견기업';
+                                  return '중소기업';
+                                })()}
+                              </span>
+                            </td>
+                            <td className="p-2">
+                              <Input
+                                type="number"
+                                value={editingCustomer.annual_revenue || ''}
+                                onChange={(e) => setEditingCustomer({...editingCustomer, annual_revenue: parseFloat(e.target.value)})}
+                                className="text-sm text-right"
+                                placeholder="억원"
                               />
                             </td>
                             <td className="p-2">
@@ -801,6 +932,44 @@ const GTMDataManagement: React.FC = () => {
                           <>
                             <td className="p-3 font-medium">{customer.customer_id}</td>
                             <td className="p-3">{customer.customer_name}</td>
+                            <td className="p-3 text-center">
+                              {customer.industry_category ? (
+                                <span className="px-2 py-1 rounded-md text-xs bg-slate-100 text-slate-700">
+                                  {customer.industry_category}
+                                </span>
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className={`px-2 py-1 rounded-full text-xs ${
+                                (() => {
+                                  const rev = customer.annual_revenue;
+                                  if (!rev) return 'bg-gray-100 text-gray-600';
+                                  if (rev >= 5000) return 'bg-purple-100 text-purple-700';
+                                  if (rev >= 400) return 'bg-blue-100 text-blue-700';
+                                  return 'bg-green-100 text-green-700';
+                                })()
+                              }`}>
+                                {(() => {
+                                  const rev = customer.annual_revenue;
+                                  if (!rev) return '-';
+                                  if (rev >= 5000) return '대기업';
+                                  if (rev >= 400) return '중견기업';
+                                  return '중소기업';
+                                })()}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right font-medium">
+                              {customer.annual_revenue ? 
+                                `${customer.annual_revenue.toLocaleString()}억` : 
+                                '-'
+                              }
+                              {customer.revenue_year && customer.annual_revenue ? 
+                                <span className="text-xs text-gray-500 ml-1">({customer.revenue_year})</span> : 
+                                null
+                              }
+                            </td>
                             <td className="p-3">{customer.headquarters}</td>
                             <td className="p-3">{customer.team}</td>
                             <td className="p-3 text-center">
