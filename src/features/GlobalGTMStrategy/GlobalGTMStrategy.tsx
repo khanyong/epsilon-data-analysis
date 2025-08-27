@@ -966,8 +966,6 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
   );
 
   const renderContent = () => {
-    console.log('GlobalGTMStrategy renderContent - sectionId:', sectionId);
-    
     // 새로운 KPI 섹션들은 로딩 상태와 관계없이 바로 렌더링
     const kpiSections = [
       'kpi-dashboard',
@@ -981,7 +979,6 @@ export function GlobalGTMStrategy({ sectionId, viewMode }: GlobalGTMStrategyProp
     ];
 
     if (kpiSections.includes(sectionId)) {
-      console.log('Rendering KPI section:', sectionId);
       return <GlobalGTMStrategyKPI section={sectionId} />;
     }
     

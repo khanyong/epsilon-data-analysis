@@ -142,7 +142,6 @@ export function Dashboard() {
   };
 
   const renderContent = () => {
-    console.log('Dashboard - Selected Menu:', selectedMenu);
     switch (selectedMenu) {
       case 'RFQ':
         return <RFQAnalysis />;

@@ -124,8 +124,6 @@ interface KOTRAData {
 }
 
 export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section }) => {
-  console.log('GlobalGTMStrategyKPI mounted with section:', section);
-  
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [sales, setSales] = useState<SalesData[]>([]);
   const [revenues, setRevenues] = useState<RevenueData[]>([]);
@@ -133,7 +131,6 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('GlobalGTMStrategyKPI useEffect - fetching data');
     fetchData();
   }, []);
 
@@ -150,30 +147,18 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
 
       if (custResult.data) {
         setCustomers(custResult.data);
-        console.log('Customers loaded:', custResult.data.length);
-      } else {
-        console.error('Customer data error:', custResult.error);
       }
       
       if (salesResult.data) {
         setSales(salesResult.data);
-        console.log('Sales loaded:', salesResult.data.length);
-      } else {
-        console.error('Sales data error:', salesResult.error);
       }
       
       if (revResult.data) {
         setRevenues(revResult.data);
-        console.log('Revenues loaded:', revResult.data.length);
-      } else {
-        console.error('Revenue data error:', revResult.error);
       }
       
       if (kotraResult.data) {
         setKotraData(kotraResult.data);
-        console.log('KOTRA data loaded:', kotraResult.data.length);
-      } else {
-        console.error('KOTRA data error:', kotraResult.error);
       }
       
     } catch (error) {
@@ -255,13 +240,6 @@ export const GlobalGTMStrategyKPI: React.FC<{ section: string }> = ({ section })
   }
 
   // 섹션별 렌더링
-  console.log('GlobalGTMStrategyKPI rendering section:', section, 'with data:', {
-    customers: customers.length,
-    sales: sales.length,
-    revenues: revenues.length,
-    kotraData: kotraData.length
-  });
-  
   switch (section) {
     case 'kpi-dashboard':
       return <KPIDashboard kpis={kpis} customers={customers} sales={sales} revenues={revenues} />;
