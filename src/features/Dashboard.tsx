@@ -709,9 +709,7 @@ export function Dashboard() {
                   ))}
                   <li className="border-t border-gray-600 pt-1 mt-1">
                     <button
-                      className={`block px-2 py-1 rounded hover:bg-slate-600 text-sm transition-colors w-full text-left ${
-                        selectedMenu === 'GTM_DATA_MANAGEMENT' ? 'font-bold text-emerald-400 bg-slate-700' : 'text-gray-300 hover:text-white'
-                      }`}
+                      className="block px-2 py-1 rounded hover:bg-slate-600 text-sm text-gray-300 hover:text-white transition-colors w-full text-left"
                       onClick={() => setSelectedMenu('GTM_DATA_MANAGEMENT')}
                     >
                       • 데이터 수정/추가
