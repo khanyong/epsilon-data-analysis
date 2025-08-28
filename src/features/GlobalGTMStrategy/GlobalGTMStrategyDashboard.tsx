@@ -341,11 +341,11 @@ const GlobalGTMStrategyDashboard: React.FC = () => {
 
     // 매출 분석
     const monthlyRevenue = revenueData.reduce((acc, curr) => {
-      const existing = acc.find(item => item.month === curr.month_code);
+      const existing = acc.find(item => item.month === curr.revenue_month);
       if (existing) {
         existing.revenue += curr.revenue_amount;
       } else {
-        acc.push({ month: curr.month_code, revenue: curr.revenue_amount });
+        acc.push({ month: curr.revenue_month, revenue: curr.revenue_amount });
       }
       return acc;
     }, [] as { month: string; revenue: number }[]);
@@ -755,7 +755,7 @@ const GlobalGTMStrategyDashboard: React.FC = () => {
               </div>
               <div className="mt-4 flex justify-between items-center">
                 <p className="text-sm text-gray-600">데이터 준비중</p>
-                <Button variant="outline" size="sm">
+                <Button className="text-sm px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">
                   전체 리스트 다운로드
                 </Button>
               </div>
@@ -944,93 +944,191 @@ const GlobalGTMStrategyDashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {(() => {
-                      // 타사 이용 고객 중 기회 점수 계산 (해외 거점 보유 우선)
-                      const opportunityTargets = customerData
-                        .filter(c => c.other_provider_name && c.other_provider_name !== 'N/A')
-                        .map(customer => {
-                          // 기회 점수 계산 로직
-                          let score = 50;
-                          if (customer.overseas_presence_2025) score += 20;
-                          if (customer.other_monthly_fee && customer.other_monthly_fee > 100000) score += 15;
-                          if (customer.renewal_date) {
-                            const daysUntil = Math.ceil((new Date(customer.renewal_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-                            if (daysUntil <= 30) score += 25;
-                            else if (daysUntil <= 90) score += 15;
-                          }
-                          
-                          // 월평균 매출 계산
-                          const customerRevenue = revenueData
-                            .filter(r => {
-                              const sale = salesData.find(s => s.service_id === r.service_id);
-                              return sale && sale.customer_name === customer.customer_name;
-                            })
-                            .reduce((sum, r) => sum + r.revenue_amount, 0);
-                          
-                          const months = new Set(revenueData.map(r => r.revenue_month)).size;
-                          const monthlyAvg = months > 0 ? customerRevenue / months : 0;
-                          
-                          return {
-                            name: customer.customer_name,
-                            industry: customer.industry || '기타',
-                            monthlyRevenue: monthlyAvg,
-                            overseas: customer.headquarters || '국내',
-                            provider: customer.other_provider_name,
-                            renewalDate: customer.renewal_date,
-                            score: Math.min(score, 100)
-                          };
-                        })
-                        .sort((a, b) => b.score - a.score)
-                        .slice(0, 5);
-                      
-                      return opportunityTargets.map((item, idx) => {
-                        const daysUntil = item.renewalDate ? 
-                          Math.ceil((new Date(item.renewalDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 999;
-                        
-                        const status = daysUntil <= 30 ? `갱신 ${daysUntil}일` :
-                                      daysUntil <= 90 ? `갱신 ${daysUntil}일` :
-                                      '타사 이용';
-                        
-                        const action = item.score >= 90 ? '즉시 컨택' :
-                                      item.score >= 80 ? '제안서 준비' :
-                                      item.score >= 70 ? 'PoC 제안' : '니즈 파악';
-                        
-                        return (
-                          <tr key={idx} className="border-b hover:bg-gray-50">
-                            <td className="p-2">
-                              <span className="font-bold text-lg text-gray-400">#{idx + 1}</span>
-                            </td>
-                            <td className="p-2 font-medium">{item.name}</td>
-                            <td className="p-2 text-center">
-                              <Badge variant="outline">{item.industry}</Badge>
-                            </td>
-                            <td className="p-2 text-center text-sm">
-                              {(item.monthlyRevenue / 100000000).toFixed(1)}억/월
-                            </td>
-                            <td className="p-2 text-center text-sm">{item.overseas}</td>
-                            <td className="p-2 text-center">
-                              <Badge variant={status.includes('타사') ? 'destructive' : 'secondary'}>
-                                {status}
-                              </Badge>
-                            </td>
-                            <td className="p-2 text-center">
-                              <div className={`inline-block px-3 py-1 rounded font-bold ${
-                                item.score >= 90 ? 'bg-red-100 text-red-700' :
-                                item.score >= 80 ? 'bg-orange-100 text-orange-700' :
-                                'bg-yellow-100 text-yellow-700'
-                              }`}>
-                                {item.score}
-                              </div>
-                            </td>
-                            <td className="p-2 text-center">
-                              <Button className="text-xs py-1 px-3">
-                                {action}
-                              </Button>
-                            </td>
-                          </tr>
-                        );
-                      });
-                    })()}
+                    {/* 샘플 데이터 */}
+                    {[
+                      {
+                        rank: 1,
+                        name: "삼성전자 (샘플)",
+                        industry: "전자/반도체",
+                        revenue: "15.2",
+                        overseas: "베트남/인도",
+                        status: "갱신 15일",
+                        statusType: "urgent",
+                        score: 98,
+                        action: "즉시 컨택",
+                        actionType: "immediate"
+                      },
+                      {
+                        rank: 2,
+                        name: "현대자동차 (샘플)",
+                        industry: "자동차",
+                        revenue: "12.8",
+                        overseas: "미국/체코",
+                        status: "갱신 45일",
+                        statusType: "warning",
+                        score: 92,
+                        action: "맞춤 제안서",
+                        actionType: "proposal"
+                      },
+                      {
+                        rank: 3,
+                        name: "LG화학 (샘플)",
+                        industry: "화학/배터리",
+                        revenue: "9.5",
+                        overseas: "중국/폴란드",
+                        status: "타사 이용",
+                        statusType: "competitor",
+                        score: 88,
+                        action: "PoC 제안",
+                        actionType: "poc"
+                      },
+                      {
+                        rank: 4,
+                        name: "SK하이닉스 (샘플)",
+                        industry: "반도체",
+                        revenue: "8.3",
+                        overseas: "중국/일본",
+                        status: "갱신 60일",
+                        statusType: "warning",
+                        score: 85,
+                        action: "벤치마크 분석",
+                        actionType: "benchmark"
+                      },
+                      {
+                        rank: 5,
+                        name: "포스코 (샘플)",
+                        industry: "철강",
+                        revenue: "7.2",
+                        overseas: "인도네시아",
+                        status: "타사 이용",
+                        statusType: "competitor",
+                        score: 82,
+                        action: "경쟁사 비교",
+                        actionType: "comparison"
+                      },
+                      {
+                        rank: 6,
+                        name: "한화솔루션 (샘플)",
+                        industry: "에너지/화학",
+                        revenue: "6.5",
+                        overseas: "미국/말레이시아",
+                        status: "신규 기회",
+                        statusType: "new",
+                        score: 79,
+                        action: "니즈 파악",
+                        actionType: "discovery"
+                      },
+                      {
+                        rank: 7,
+                        name: "두산중공업 (샘플)",
+                        industry: "중공업",
+                        revenue: "5.8",
+                        overseas: "베트남/UAE",
+                        status: "갱신 90일",
+                        statusType: "normal",
+                        score: 76,
+                        action: "관계 구축",
+                        actionType: "relationship"
+                      },
+                      {
+                        rank: 8,
+                        name: "CJ제일제당 (샘플)",
+                        industry: "식품",
+                        revenue: "4.9",
+                        overseas: "중국/베트남",
+                        status: "타사 이용",
+                        statusType: "competitor",
+                        score: 73,
+                        action: "사례 공유",
+                        actionType: "case-study"
+                      },
+                      {
+                        rank: 9,
+                        name: "롯데케미칼 (샘플)",
+                        industry: "화학",
+                        revenue: "4.2",
+                        overseas: "말레이시아",
+                        status: "신규 진출",
+                        statusType: "new",
+                        score: 70,
+                        action: "정기 미팅",
+                        actionType: "meeting"
+                      },
+                      {
+                        rank: 10,
+                        name: "셀트리온 (샘플)",
+                        industry: "바이오",
+                        revenue: "3.5",
+                        overseas: "유럽/미국",
+                        status: "갱신 120일",
+                        statusType: "normal",
+                        score: 68,
+                        action: "뉴스레터 발송",
+                        actionType: "nurture"
+                      }
+                    ].map((item) => {
+                      const getStatusVariant = (type: string) => {
+                        switch(type) {
+                          case 'urgent': return 'destructive';
+                          case 'warning': return 'secondary';
+                          case 'competitor': return 'outline';
+                          case 'new': return 'default';
+                          default: return 'secondary';
+                        }
+                      };
+
+                      const getActionStyle = (type: string) => {
+                        switch(type) {
+                          case 'immediate': return 'bg-red-600 hover:bg-red-700 text-white';
+                          case 'proposal': return 'bg-orange-600 hover:bg-orange-700 text-white';
+                          case 'poc': return 'bg-blue-600 hover:bg-blue-700 text-white';
+                          case 'benchmark': return 'bg-purple-600 hover:bg-purple-700 text-white';
+                          case 'comparison': return 'bg-indigo-600 hover:bg-indigo-700 text-white';
+                          case 'discovery': return 'bg-green-600 hover:bg-green-700 text-white';
+                          case 'relationship': return 'bg-teal-600 hover:bg-teal-700 text-white';
+                          case 'case-study': return 'bg-cyan-600 hover:bg-cyan-700 text-white';
+                          case 'meeting': return 'bg-gray-600 hover:bg-gray-700 text-white';
+                          case 'nurture': return 'bg-slate-600 hover:bg-slate-700 text-white';
+                          default: return 'bg-blue-600 hover:bg-blue-700 text-white';
+                        }
+                      };
+
+                      return (
+                        <tr key={item.rank} className="border-b hover:bg-gray-50">
+                          <td className="p-2">
+                            <span className="font-bold text-lg text-gray-400">#{item.rank}</span>
+                          </td>
+                          <td className="p-2 font-medium">{item.name}</td>
+                          <td className="p-2 text-center">
+                            <Badge variant="outline">{item.industry}</Badge>
+                          </td>
+                          <td className="p-2 text-center text-sm">
+                            {item.revenue}억/월
+                          </td>
+                          <td className="p-2 text-center text-sm">{item.overseas}</td>
+                          <td className="p-2 text-center">
+                            <Badge variant={getStatusVariant(item.statusType)}>
+                              {item.status}
+                            </Badge>
+                          </td>
+                          <td className="p-2 text-center">
+                            <div className={`inline-block px-3 py-1 rounded font-bold ${
+                              item.score >= 90 ? 'bg-red-100 text-red-700' :
+                              item.score >= 80 ? 'bg-orange-100 text-orange-700' :
+                              item.score >= 70 ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-green-100 text-green-700'
+                            }`}>
+                              {item.score}
+                            </div>
+                          </td>
+                          <td className="p-2 text-center">
+                            <button className={`text-xs py-1 px-3 rounded transition-colors ${getActionStyle(item.actionType)}`}>
+                              {item.action}
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -1452,8 +1550,8 @@ const GlobalGTMStrategyDashboard: React.FC = () => {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value, percent }) => 
-                        `${name}: ${(percent * 100).toFixed(0)}%`
+                      label={({ name, percent }) => 
+                        `${name}: ${((percent || 0) * 100).toFixed(0)}%`
                       }
                       outerRadius={80}
                       fill="#8884d8"
