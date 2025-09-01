@@ -129,6 +129,15 @@ export function NavigationHub() {
       available: false
     },
     {
+      id: 'financial-simulation',
+      title: 'Financial Simulation',
+      subtitle: 'DCF 모델 및 재무 시뮬레이션',
+      icon: <DollarSign className="w-8 h-8" />,
+      gradient: 'from-amber-500 to-yellow-600',
+      category: 'report',
+      available: true
+    },
+    {
       id: 'gtm-data',
       title: 'GTM Data Analysis',
       subtitle: 'KT 글로벌 영업 데이터 분석',

@@ -21,6 +21,7 @@ import GlobalGTMStrategyDashboard from './GlobalGTMStrategy/GlobalGTMStrategyDas
 import GTMDataManagement from './GlobalGTMStrategy/GTMDataManagement';
 import { EpsilonGrowthStrategy } from './EpsilonGrowthStrategy/EpsilonGrowthStrategy';
 import { epsilonGrowthStrategyToc } from './EpsilonGrowthStrategy/EpsilonGrowthStrategyTocData';
+import EpsilonFinancialSimulation from './EpsilonFinancialSimulation/EpsilonFinancialSimulation';
 import { Home, ArrowLeft } from 'lucide-react';
 
 type MenuType =
@@ -37,7 +38,8 @@ type MenuType =
   | 'SYNERGY_SALES'
   | 'EURO_MARKETING_STRATEGY'
   | 'GLOBAL_GTM_STRATEGY'
-  | 'EPSILON_GROWTH_STRATEGY';
+  | 'EPSILON_GROWTH_STRATEGY'
+  | 'FINANCIAL_SIMULATION';
 
 // URL parameter to MenuType mapping
 const viewToMenuType: Record<string, MenuType> = {
@@ -54,7 +56,8 @@ const viewToMenuType: Record<string, MenuType> = {
   'synergy': 'SYNERGY_SALES',
   'euro-marketing': 'EURO_MARKETING_STRATEGY',
   'global-gtm': 'GLOBAL_GTM_STRATEGY',
-  'epsilon-growth': 'EPSILON_GROWTH_STRATEGY'
+  'epsilon-growth': 'EPSILON_GROWTH_STRATEGY',
+  'financial-simulation': 'FINANCIAL_SIMULATION'
 };
 
 export function Dashboard() {
@@ -292,6 +295,8 @@ export function Dashboard() {
             />
           </>
         );
+      case 'FINANCIAL_SIMULATION':
+        return <EpsilonFinancialSimulation />;
       default:
         return <RFQAnalysis />;
     }
@@ -785,6 +790,22 @@ export function Dashboard() {
                   ))}
                 </ul>
               )}
+            </li>
+            {/* Epsilon Financial Simulation */}
+            <li>
+              <button
+                className={`rounded px-3 py-2 font-semibold flex justify-between items-center w-full ${
+                  selectedMenu === 'FINANCIAL_SIMULATION'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'hover:bg-slate-600 text-gray-200'
+                }`}
+                onClick={() => {
+                  setSelectedMenu('FINANCIAL_SIMULATION');
+                }}
+              >
+                <span>Financial Simulation</span>
+                <span className="text-xs text-gray-400 ml-2">DCF Model</span>
+              </button>
             </li>
           </ul>
           {/* 하단 여백 - 스크롤 시 마지막 항목이 잘 보이도록 */}

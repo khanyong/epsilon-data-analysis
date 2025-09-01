@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCF Valuation Template - Excel Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+        }
+        
+        .excel-container {
+            background: white;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            max-width: 100%;
+            overflow: auto;
+        }
+        
+        .excel-header {
+            background: #217346;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .excel-header h1 {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .excel-toolbar {
+            background: #f3f3f3;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 5px 10px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .toolbar-button {
+            padding: 4px 10px;
+            background: white;
+            border: 1px solid #d0d0d0;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 2px;
+        }
+        
+        .toolbar-button:hover {
+            background: #e0e0e0;
+        }
+        
+        .formula-bar {
+            background: white;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .formula-bar label {
+            font-size: 12px;
+            color: #666;
+            min-width: 30px;
+        }
+        
+        .formula-input {
+            flex: 1;
+            padding: 3px 5px;
+            border: 1px solid #d0d0d0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .spreadsheet-wrapper {
+            position: relative;
+            overflow: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        table.spreadsheet {
+            border-collapse: collapse;
+            font-size: 11px;
+            width: auto;
+            min-width: 100%;
+        }
+        
+        .spreadsheet th,
+        .spreadsheet td {
+            border: 1px solid #d0d0d0;
+            padding: 0;
+            height: 22px;
+            min-width: 80px;
+            position: relative;
+        }
+        
+        .spreadsheet th {
+            background: #f3f3f3;
+            font-weight: 500;
+            text-align: center;
+            user-select: none;
+            padding: 4px;
+        }
+        
+        .row-header {
+            width: 40px !important;
+            min-width: 40px !important;
+            text-align: center;
+            background: #f3f3f3;
+            color: #666;
+            font-weight: 400;
+            user-select: none;
+        }
+        
+        .spreadsheet td input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 2px 4px;
+            font-size: 11px;
+            font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+            background: transparent;
+        }
+        
+        .spreadsheet td input:focus {
+            outline: 2px solid #217346;
+            outline-offset: -1px;
+            background: white;
+            z-index: 10;
+            position: relative;
+        }
+        
+        /* 셀 타입별 스타일 */
+        .cell-header {
+            background: #e8f4f8;
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .cell-subheader {
+            background: #f0f8ff;
+            font-weight: 500;
+            padding-left: 15px !important;
+        }
+        
+        .cell-input {
+            background: white;
+            text-align: right;
+            color: #000;
+        }
+        
+        .cell-formula {
+            background: #fffef0;
+            text-align: right;
+            color: #0066cc;
+            font-style: italic;
+        }
+        
+        .cell-calculated {
+            background: #f0f8ff;
+            text-align: right;
+            color: #0066cc;
+            font-weight: 500;
+        }
+        
+        .cell-percentage {
+            text-align: right;
+            color: #008000;
+        }
+        
+        .cell-currency {
+            text-align: right;
+        }
+        
+        .cell-currency::before {
+            content: '$';
+            color: #666;
+            margin-right: 2px;
+        }
+        
+        .cell-total {
+            background: #fff3cd;
+            font-weight: 600;
+            text-align: right;
+            border-top: 2px solid #333;
+        }
+        
+        .cell-subtotal {
+            background: #f8f9fa;
+            font-weight: 500;
+            text-align: right;
+            border-top: 1px solid #666;
+        }
+        
+        .cell-empty {
+            background: #fafafa;
+        }
+        
+        .cell-year {
+            background: #217346;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .cell-readonly {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .cell-negative {
+            color: #dc3545;
+        }
+        
+        .cell-positive {
+            color: #28a745;
+        }
+        
+        /* 섹션 구분 */
+        .section-divider {
+            background: #333;
+            height: 2px;
+        }
+        
+        .section-title {
+            background: #217346;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 5px !important;
+        }
+        
+        /* 탭 스타일 */
+        .sheet-tabs {
+            background: #f3f3f3;
+            border-top: 1px solid #d0d0d0;
+            padding: 0;
+            display: flex;
+            align-items: flex-end;
+            overflow-x: auto;
+        }
+        
+        .sheet-tab {
+            padding: 5px 15px;
+            background: #e0e0e0;
+            border: 1px solid #d0d0d0;
+            border-bottom: none;
+            margin-right: 2px;
+            cursor: pointer;
+            font-size: 11px;
+            min-width: 100px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .sheet-tab:hover {
+            background: #f0f0f0;
+        }
+        
+        .sheet-tab.active {
+            background: white;
+            font-weight: 600;
+            color: #217346;
+            padding-bottom: 6px;
+        }
+        
+        /* 상태바 */
+        .status-bar {
+            background: #f3f3f3;
+            border-top: 1px solid #d0d0d0;
+            padding: 3px 10px;
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* 우클릭 메뉴 */
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #d0d0d0;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            padding: 5px 0;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .context-menu-item {
+            padding: 5px 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .context-menu-item:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 범위 선택 */
+        .selected-range {
+            background: rgba(33, 115, 70, 0.1) !important;
+        }
+        
+        .copy-mode {
+            border: 2px dashed #217346 !important;
+        }
+        
+        /* 자동 완성 */
+        .autocomplete {
+            position: absolute;
+            background: white;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+        }
+        
+        .autocomplete-item {
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .autocomplete-item:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 반응형 */
+        @media print {
+            .excel-toolbar,
+            .formula-bar,
+            .sheet-tabs,
+            .status-bar {
+                display: none;
+            }
+            
+            .spreadsheet {
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="excel-container">
+        <div class="excel-header">
+            <h1>📊 DCF Valuation Model - Epsilon SP Financial Projection</h1>
+            <div>
+                <span style="font-size: 12px;">Auto-save: On | Last saved: Just now</span>
+            </div>
+        </div>
+        
+        <div class="excel-toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="saveWorkbook()">💾 Save</button>
+                <button class="toolbar-button" onclick="loadWorkbook()">📁 Open</button>
+                <button class="toolbar-button" onclick="exportExcel()">📤 Export</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="copySelection()">📋 Copy</button>
+                <button class="toolbar-button" onclick="pasteSelection()">📄 Paste</button>
+                <button class="toolbar-button" onclick="clearSelection()">🗑️ Clear</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="insertRow()">➕ Row</button>
+                <button class="toolbar-button" onclick="insertColumn()">➕ Column</button>
+                <button class="toolbar-button" onclick="deleteRow()">➖ Row</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="autoSum()">Σ Sum</button>
+                <button class="toolbar-button" onclick="insertFunction()">fx Function</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="formatCurrency()">$ Format</button>
+                <button class="toolbar-button" onclick="formatPercent()">% Percent</button>
+            </div>
+            <div class="toolbar-group">
+                <button class="toolbar-button" onclick="recalculate()">🔄 Recalculate</button>
+            </div>
+        </div>
+        
+        <div class="formula-bar">
+            <label id="cellAddress">A1</label>
+            <input type="text" class="formula-input" id="formulaBar" placeholder="Enter value or formula (start with =)">
+        </div>
+        
+        <div class="sheet-tabs">
+            <div class="sheet-tab active" onclick="showSheet(event, 'valuation')">Valuation</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'income')">Income Statement</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'cashflow')">Cash Flow</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'wacc')">WACC</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'assumptions')">Assumptions</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'sensitivity')">Sensitivity</div>
+            <div class="sheet-tab" onclick="showSheet(event, 'charts')">Charts</div>
+        </div>
+        
+        <div class="spreadsheet-wrapper" id="spreadsheetWrapper">
+            <!-- Valuation Sheet -->
+            <table class="spreadsheet" id="valuationSheet">
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>E</th>
+                        <th>F</th>
+                        <th>G</th>
+                        <th>H</th>
+                        <th>I</th>
+                        <th>J</th>
+                        <th>K</th>
+                        <th>L</th>
+                        <th>M</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 타이틀 -->
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="13" class="section-title">
+                            <input type="text" value="DCF VALUATION MODEL - EPSILON SP" readonly>
+                        </td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- 연도 헤더 -->
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="3" class="cell-header"><input type="text" value="DCF Analysis" readonly></td>
+                        <td class="cell-year"><input type="text" value="Actual" readonly></td>
+                        <td class="cell-year"><input type="text" value="Actual" readonly></td>
+                        <td class="cell-year"><input type="text" value="Actual" readonly></td>
+                        <td class="cell-year"><input type="text" value="Base Year" readonly></td>
+                        <td class="cell-year"><input type="text" value="Year 1" readonly></td>
+                        <td class="cell-year"><input type="text" value="Year 2" readonly></td>
+                        <td class="cell-year"><input type="text" value="Year 3" readonly></td>
+                        <td class="cell-year"><input type="text" value="Year 4" readonly></td>
+                        <td class="cell-year"><input type="text" value="Year 5" readonly></td>
+                        <td class="cell-year"><input type="text" value="Terminal" readonly></td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td colspan="3" class="cell-header"><input type="text" value="Period" readonly></td>
+                        <td class="cell-input"><input type="number" value="2021" id="year-3"></td>
+                        <td class="cell-input"><input type="number" value="2022" id="year-2"></td>
+                        <td class="cell-input"><input type="number" value="2023" id="year-1"></td>
+                        <td class="cell-input"><input type="number" value="2024" id="year0"></td>
+                        <td class="cell-formula"><input type="text" value="2025" readonly></td>
+                        <td class="cell-formula"><input type="text" value="2026" readonly></td>
+                        <td class="cell-formula"><input type="text" value="2027" readonly></td>
+                        <td class="cell-formula"><input type="text" value="2028" readonly></td>
+                        <td class="cell-formula"><input type="text" value="2029" readonly></td>
+                        <td class="cell-formula"><input type="text" value="Perpetual" readonly></td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">5</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- INCOME STATEMENT 섹션 -->
+                    <tr>
+                        <td class="row-header">6</td>
+                        <td colspan="13" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="I. INCOME STATEMENT" readonly>
+                        </td>
+                    </tr>
+                    
+                    <!-- Revenue -->
+                    <tr>
+                        <td class="row-header">7</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Revenue" readonly></td>
+                        <td class="cell-input"><input type="number" value="23156279" step="1" id="rev-3" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="30451679" step="1" id="rev-2" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="38568085" step="1" id="rev-1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="39199876" step="1" id="rev0" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="42036926" step="1" id="rev1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="47459314" step="1" id="rev2" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="52500000" step="1" id="rev3" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="57000000" step="1" id="rev4" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="61500000" step="1" id="rev5" onchange="recalc()"></td>
+                        <td class="cell-calculated"><input type="text" value="=L7*(1+2%)" readonly></td>
+                    </tr>
+                    
+                    <!-- Cost of Sales -->
+                    <tr>
+                        <td class="row-header">8</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Cost of Sales" readonly></td>
+                        <td class="cell-input"><input type="number" value="-11573910" step="1" id="cos-3" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-15540267" step="1" id="cos-2" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-20978439" step="1" id="cos-1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-20301639" step="1" id="cos0" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-21775128" step="1" id="cos1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-24583925" step="1" id="cos2" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-27195000" step="1" id="cos3" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-29526000" step="1" id="cos4" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-31857000" step="1" id="cos5" onchange="recalc()"></td>
+                        <td class="cell-formula"><input type="text" value="=M7*51.8%" readonly></td>
+                    </tr>
+                    
+                    <!-- Gross Profit -->
+                    <tr>
+                        <td class="row-header">9</td>
+                        <td colspan="3" class="cell-subheader" style="font-weight: 600;"><input type="text" value="Gross Profit" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="11582369" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="14911412" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="17589646" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="18898237" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="20261798" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="22875389" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="25305000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="27474000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="29643000" readonly></td>
+                        <td class="cell-calculated"><input type="text" value="=SUM(M7:M8)" readonly></td>
+                    </tr>
+                    
+                    <!-- SG&A -->
+                    <tr>
+                        <td class="row-header">10</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="SG&A Expenses" readonly></td>
+                        <td class="cell-input"><input type="number" value="-14504623" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-16163984" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-18651369" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-16170350" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-17319214" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-19553237" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-21630000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-23484000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-25338000" step="1" onchange="recalc()"></td>
+                        <td class="cell-formula"><input type="text" value="=M7*41.2%" readonly></td>
+                    </tr>
+                    
+                    <!-- EBITDA -->
+                    <tr>
+                        <td class="row-header">11</td>
+                        <td colspan="3" class="cell-subheader" style="font-weight: 600;"><input type="text" value="EBITDA" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="2034219" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="2678339" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="797066" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="2727887" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="2942584" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="3322152" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="3675000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="3990000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="4305000" readonly></td>
+                        <td class="cell-calculated"><input type="text" value="=M9+M10" readonly></td>
+                    </tr>
+                    
+                    <!-- D&A -->
+                    <tr>
+                        <td class="row-header">12</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Depreciation & Amortization" readonly></td>
+                        <td class="cell-input"><input type="number" value="-1601347" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2101654" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-1931173" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-1931173" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2000000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2200000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2400000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2600000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2800000" step="1" onchange="recalc()"></td>
+                        <td class="cell-formula"><input type="text" value="=-2800000" readonly></td>
+                    </tr>
+                    
+                    <!-- EBIT -->
+                    <tr>
+                        <td class="row-header">13</td>
+                        <td colspan="3" class="cell-subheader" style="font-weight: 600;"><input type="text" value="EBIT" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="432872" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="576685" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-1134107" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="796714" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="942584" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1122152" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1275000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1390000" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1505000" readonly></td>
+                        <td class="cell-calculated"><input type="text" value="=M11+M12" readonly></td>
+                    </tr>
+                    
+                    <!-- Tax -->
+                    <tr>
+                        <td class="row-header">14</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Tax (17%)" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-73588" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-98036" readonly></td>
+                        <td class="cell-formula"><input type="number" value="0" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-135441" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-160239" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-190766" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-216750" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-236300" readonly></td>
+                        <td class="cell-formula"><input type="number" value="-255850" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=M13*-17%" readonly></td>
+                    </tr>
+                    
+                    <!-- NOPAT -->
+                    <tr>
+                        <td class="row-header">15</td>
+                        <td colspan="3" class="cell-subheader" style="font-weight: 600;"><input type="text" value="NOPAT" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="359284" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="478649" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-1134107" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="661273" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="782345" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="931386" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1058250" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1153700" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="1249150" readonly></td>
+                        <td class="cell-calculated"><input type="text" value="=M13+M14" readonly></td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">16</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- CASH FLOW 섹션 -->
+                    <tr>
+                        <td class="row-header">17</td>
+                        <td colspan="13" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="II. CASH FLOW CALCULATION" readonly>
+                        </td>
+                    </tr>
+                    
+                    <!-- NOPAT (반복) -->
+                    <tr>
+                        <td class="row-header">18</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="NOPAT" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=D15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=E15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=F15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=G15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=H15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=I15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=J15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=K15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=L15" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=M15" readonly></td>
+                    </tr>
+                    
+                    <!-- Add back D&A -->
+                    <tr>
+                        <td class="row-header">19</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="(+) D&A" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=D12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=E12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=F12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=G12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=H12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=I12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=J12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=K12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=L12*-1" readonly></td>
+                        <td class="cell-formula"><input type="text" value="=M12*-1" readonly></td>
+                    </tr>
+                    
+                    <!-- Working Capital Change -->
+                    <tr>
+                        <td class="row-header">20</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="(-) Change in NWC" readonly></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="0" step="1" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- CAPEX -->
+                    <tr>
+                        <td class="row-header">21</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="(-) CAPEX" readonly></td>
+                        <td class="cell-input"><input type="number" value="-2491591" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-214326" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-523409" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-523409" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-583" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-56580646" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-41927113" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-28298670" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-15000000" step="1" onchange="recalc()"></td>
+                        <td class="cell-input"><input type="number" value="-2000000" step="1" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Free Cash Flow -->
+                    <tr>
+                        <td class="row-header">22</td>
+                        <td colspan="3" class="cell-total"><input type="text" value="Free Cash Flow to Firm" readonly></td>
+                        <td class="cell-total"><input type="number" value="-530956" readonly></td>
+                        <td class="cell-total"><input type="number" value="2365977" readonly></td>
+                        <td class="cell-total"><input type="number" value="273484" readonly></td>
+                        <td class="cell-total"><input type="number" value="1904678" readonly></td>
+                        <td class="cell-total"><input type="number" value="2781762" readonly></td>
+                        <td class="cell-total"><input type="number" value="-53449260" readonly></td>
+                        <td class="cell-total"><input type="number" value="-38468863" readonly></td>
+                        <td class="cell-total"><input type="number" value="-25544970" readonly></td>
+                        <td class="cell-total"><input type="number" value="-10950850" readonly></td>
+                        <td class="cell-total"><input type="number" value="2049150" readonly></td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">23</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- DCF VALUATION 섹션 -->
+                    <tr>
+                        <td class="row-header">24</td>
+                        <td colspan="13" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="III. DCF VALUATION" readonly>
+                        </td>
+                    </tr>
+                    
+                    <!-- WACC -->
+                    <tr>
+                        <td class="row-header">25</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="WACC (%)" readonly></td>
+                        <td class="cell-input" colspan="10"><input type="number" value="6.86" step="0.01" id="wacc" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Terminal Growth -->
+                    <tr>
+                        <td class="row-header">26</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Terminal Growth Rate (%)" readonly></td>
+                        <td class="cell-input" colspan="10"><input type="number" value="2.0" step="0.1" id="termGrowth" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Discount Period -->
+                    <tr>
+                        <td class="row-header">27</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Discount Period" readonly></td>
+                        <td class="cell-empty" colspan="3"></td>
+                        <td class="cell-empty"></td>
+                        <td class="cell-formula"><input type="text" value="0.5" readonly></td>
+                        <td class="cell-formula"><input type="text" value="1.5" readonly></td>
+                        <td class="cell-formula"><input type="text" value="2.5" readonly></td>
+                        <td class="cell-formula"><input type="text" value="3.5" readonly></td>
+                        <td class="cell-formula"><input type="text" value="4.5" readonly></td>
+                        <td class="cell-formula"><input type="text" value="5" readonly></td>
+                    </tr>
+                    
+                    <!-- Discount Factor -->
+                    <tr>
+                        <td class="row-header">28</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Discount Factor" readonly></td>
+                        <td class="cell-empty" colspan="3"></td>
+                        <td class="cell-empty"></td>
+                        <td class="cell-calculated"><input type="number" value="0.9676" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="0.9055" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="0.8474" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="0.7930" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="0.7420" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="0.7175" readonly></td>
+                    </tr>
+                    
+                    <!-- PV of FCF -->
+                    <tr>
+                        <td class="row-header">29</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="PV of FCF" readonly></td>
+                        <td class="cell-empty" colspan="3"></td>
+                        <td class="cell-empty"></td>
+                        <td class="cell-calculated"><input type="number" value="2692396" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-48411279" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-32598558" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-20257197" readonly></td>
+                        <td class="cell-calculated"><input type="number" value="-8127931" readonly></td>
+                        <td class="cell-empty"></td>
+                    </tr>
+                    
+                    <!-- Terminal Value -->
+                    <tr>
+                        <td class="row-header">30</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Terminal Value" readonly></td>
+                        <td class="cell-empty" colspan="8"></td>
+                        <td class="cell-empty"></td>
+                        <td class="cell-calculated"><input type="number" value="42429897" readonly></td>
+                    </tr>
+                    
+                    <!-- PV of Terminal Value -->
+                    <tr>
+                        <td class="row-header">31</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="PV of Terminal Value" readonly></td>
+                        <td class="cell-empty" colspan="8"></td>
+                        <td class="cell-empty"></td>
+                        <td class="cell-calculated"><input type="number" value="30443456" readonly></td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">32</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- ENTERPRISE VALUE 섹션 -->
+                    <tr>
+                        <td class="row-header">33</td>
+                        <td colspan="13" class="section-title" style="background: #217346;">
+                            <input type="text" value="IV. ENTERPRISE & EQUITY VALUE" readonly style="color: white;">
+                        </td>
+                    </tr>
+                    
+                    <!-- Sum of PV -->
+                    <tr>
+                        <td class="row-header">34</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Sum of PV of FCF (Years 1-5)" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="number" value="-106702569" readonly id="sumPV"></td>
+                    </tr>
+                    
+                    <!-- Terminal Value PV -->
+                    <tr>
+                        <td class="row-header">35</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="PV of Terminal Value" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="number" value="30443456" readonly id="pvTV"></td>
+                    </tr>
+                    
+                    <!-- Enterprise Value -->
+                    <tr>
+                        <td class="row-header">36</td>
+                        <td colspan="3" class="cell-total" style="font-weight: 700;"><input type="text" value="Enterprise Value" readonly></td>
+                        <td class="cell-total" colspan="10" style="font-weight: 700;"><input type="number" value="-76259113" readonly id="entVal"></td>
+                    </tr>
+                    
+                    <!-- Add Cash -->
+                    <tr>
+                        <td class="row-header">37</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="(+) Cash & Cash Equivalents" readonly></td>
+                        <td class="cell-input" colspan="10"><input type="number" value="1948227" id="cash" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Less Debt -->
+                    <tr>
+                        <td class="row-header">38</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="(-) Total Debt" readonly></td>
+                        <td class="cell-input" colspan="10"><input type="number" value="0" id="debt" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Equity Value -->
+                    <tr>
+                        <td class="row-header">39</td>
+                        <td colspan="3" class="cell-total" style="font-weight: 700; background: #90EE90;"><input type="text" value="Equity Value" readonly></td>
+                        <td class="cell-total" colspan="10" style="font-weight: 700; background: #90EE90;"><input type="number" value="-74310886" readonly id="eqVal"></td>
+                    </tr>
+                    
+                    <!-- Shares Outstanding -->
+                    <tr>
+                        <td class="row-header">40</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Shares Outstanding" readonly></td>
+                        <td class="cell-input" colspan="10"><input type="number" value="213660" id="shares" onchange="recalc()"></td>
+                    </tr>
+                    
+                    <!-- Value per Share -->
+                    <tr>
+                        <td class="row-header">41</td>
+                        <td colspan="3" class="cell-total" style="font-weight: 700; background: #FFD700;"><input type="text" value="Value per Share" readonly></td>
+                        <td class="cell-total" colspan="10" style="font-weight: 700; background: #FFD700;"><input type="number" value="-347.74" step="0.01" readonly id="valPerShare"></td>
+                    </tr>
+                    
+                    <!-- 빈 행 -->
+                    <tr>
+                        <td class="row-header">42</td>
+                        <td class="cell-empty" colspan="13"></td>
+                    </tr>
+                    
+                    <!-- IMPLIED MULTIPLES 섹션 -->
+                    <tr>
+                        <td class="row-header">43</td>
+                        <td colspan="13" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="V. IMPLIED VALUATION MULTIPLES" readonly>
+                        </td>
+                    </tr>
+                    
+                    <!-- EV/Revenue -->
+                    <tr>
+                        <td class="row-header">44</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="EV / Revenue (2024)" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="text" value="-1.95x" readonly></td>
+                    </tr>
+                    
+                    <!-- EV/EBITDA -->
+                    <tr>
+                        <td class="row-header">45</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="EV / EBITDA (2024)" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="text" value="-27.96x" readonly></td>
+                    </tr>
+                    
+                    <!-- P/E -->
+                    <tr>
+                        <td class="row-header">46</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="P / E Ratio (2024)" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="text" value="N/A" readonly></td>
+                    </tr>
+                    
+                    <!-- IRR -->
+                    <tr>
+                        <td class="row-header">47</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Project IRR" readonly></td>
+                        <td class="cell-calculated" colspan="10"><input type="text" value="N/M" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="status-bar">
+            <span>Ready | Cells: A1:M47 | Sum: 0 | Avg: 0</span>
+            <span>Calculation: Automatic | 100% Zoom</span>
+        </div>
+    </div>
+    
+    <!-- 컨텍스트 메뉴 -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="copySelection()">Copy</div>
+        <div class="context-menu-item" onclick="pasteSelection()">Paste</div>
+        <div class="context-menu-item" onclick="clearSelection()">Clear Contents</div>
+        <div class="context-menu-item" onclick="insertRow()">Insert Row</div>
+        <div class="context-menu-item" onclick="deleteRow()">Delete Row</div>
+        <div class="context-menu-item" onclick="formatCells()">Format Cells...</div>
+    </div>
+    
+    <script>
+        // 전역 변수
+        let currentCell = null;
+        let selectedRange = [];
+        let clipboard = null;
+        
+        // 숫자 포맷팅 함수 (천 단위 콤마)
+        function formatNumber(num) {
+            if (num === null || num === undefined || num === '') return '';
+            const number = parseFloat(num);
+            if (isNaN(number)) return '';
+            return number.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+        
+        // 숫자 파싱 함수 (콤마 제거)
+        function parseNumber(str) {
+            if (typeof str === 'number') return str;
+            if (!str) return 0;
+            return parseFloat(str.toString().replace(/,/g, '')) || 0;
+        }
+        
+        // 입력 필드 포맷팅
+        function formatInputField(input) {
+            if (input.readOnly || input.classList.contains('no-format')) return;
+            
+            const value = parseNumber(input.value);
+            if (!isNaN(value) && value !== 0) {
+                input.value = formatNumber(value);
+            }
+        }
+        
+        // 포커스 시 콤마 제거
+        function removeCommas(input) {
+            if (input.readOnly) return;
+            const value = parseNumber(input.value);
+            if (!isNaN(value)) {
+                input.value = value || '';
+            }
+        }
+        
+        // 시트 표시/숨기기
+        function showSheet(event, sheetName) {
+            // 모든 시트 숨기기
+            const sheets = ['valuationSheet', 'incomeSheet', 'cashflowSheet', 'waccSheet', 'assumptionsSheet', 'sensitivitySheet', 'chartsSheet'];
+            sheets.forEach(id => {
+                const sheet = document.getElementById(id);
+                if (sheet) sheet.style.display = 'none';
+            });
+            
+            // 모든 탭 비활성화
+            const tabs = document.querySelectorAll('.sheet-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 선택된 시트 표시
+            const selectedSheet = document.getElementById(sheetName + 'Sheet');
+            if (selectedSheet) {
+                selectedSheet.style.display = 'table';
+            } else {
+                // 시트가 없으면 새로 생성
+                createSheet(sheetName);
+            }
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+        }
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSpreadsheet();
+            recalculate();
+        });
+        
+        // 스프레드시트 초기화
+        function initializeSpreadsheet() {
+            // 모든 입력 필드에 이벤트 리스너 추가
+            const inputs = document.querySelectorAll('.spreadsheet input');
+            inputs.forEach(input => {
+                // 초기 포맷팅
+                if (input.type === 'number' && !input.readOnly) {
+                    formatInputField(input);
+                }
+                
+                // 포커스 이벤트 - 편집 시 콤마 제거
+                input.addEventListener('focus', function() {
+                    currentCell = this;
+                    updateFormulaBar();
+                    updateCellAddress();
+                    if (this.type === 'number' && !this.readOnly) {
+                        removeCommas(this);
+                    }
+                });
+                
+                // 블러 이벤트 - 편집 후 콤마 추가
+                input.addEventListener('blur', function() {
+                    if (this.type === 'number' && !this.readOnly) {
+                        formatInputField(this);
+                    }
+                });
+                
+                // 변경 이벤트
+                input.addEventListener('change', function() {
+                    if (this.id) {
+                        recalc();
+                    }
+                });
+                
+                // 키보드 이벤트
+                input.addEventListener('keydown', handleKeyDown);
+            });
+            
+            // 우클릭 메뉴
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.tagName === 'INPUT' && e.target.closest('.spreadsheet')) {
+                    e.preventDefault();
+                    showContextMenu(e.pageX, e.pageY);
+                }
+            });
+            
+            // 메뉴 숨기기
+            document.addEventListener('click', hideContextMenu);
+        }
+        
+        // Helper 함수들
+        function getCellValue(row, col) {
+            const table = document.querySelector('.spreadsheet tbody');
+            const cell = table.rows[row - 1].cells[col];
+            const input = cell.querySelector('input');
+            return input ? parseNumber(input.value) : 0;
+        }
+        
+        function updateCellValue(row, col, value) {
+            const table = document.querySelector('.spreadsheet tbody');
+            const cell = table.rows[row - 1].cells[col];
+            const input = cell.querySelector('input');
+            if (input) {
+                input.value = formatNumber(Math.round(value));
+            }
+        }
+        
+        // 키보드 네비게이션
+        function handleKeyDown(e) {
+            const currentInput = e.target;
+            const cell = currentInput.closest('td');
+            const row = cell.closest('tr');
+            const cellIndex = Array.from(row.cells).indexOf(cell);
+            const rowIndex = Array.from(row.parentElement.rows).indexOf(row);
+            
+            switch(e.key) {
+                case 'Enter':
+                    e.preventDefault();
+                    navigateCell(rowIndex + 1, cellIndex);
+                    break;
+                case 'Tab':
+                    e.preventDefault();
+                    navigateCell(rowIndex, cellIndex + (e.shiftKey ? -1 : 1));
+                    break;
+                case 'ArrowUp':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        navigateCell(rowIndex - 1, cellIndex);
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        navigateCell(rowIndex + 1, cellIndex);
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        navigateCell(rowIndex, cellIndex - 1);
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        navigateCell(rowIndex, cellIndex + 1);
+                    }
+                    break;
+            }
+        }
+        
+        // 셀 네비게이션
+        function navigateCell(row, col) {
+            const table = document.querySelector('.spreadsheet tbody');
+            if (row >= 0 && row < table.rows.length && col >= 0 && col < table.rows[0].cells.length) {
+                const cell = table.rows[row].cells[col];
+                const input = cell.querySelector('input');
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }
+        }
+        
+        // 수식 바 업데이트
+        function updateFormulaBar() {
+            const formulaBar = document.getElementById('formulaBar');
+            if (currentCell) {
+                formulaBar.value = currentCell.value;
+            }
+        }
+        
+        // 셀 주소 업데이트
+        function updateCellAddress() {
+            const cellAddress = document.getElementById('cellAddress');
+            if (currentCell) {
+                const cell = currentCell.closest('td');
+                const row = cell.closest('tr');
+                const cellIndex = Array.from(row.cells).indexOf(cell);
+                const rowIndex = Array.from(row.parentElement.rows).indexOf(row) + 1;
+                const colLetter = String.fromCharCode(64 + cellIndex);
+                cellAddress.textContent = colLetter + rowIndex;
+            }
+        }
+        
+        // 숫자 포맷팅 함수 (천 단위 콤마)
+        function formatNumber(num) {
+            if (num === null || num === undefined || num === '') return '';
+            const number = parseFloat(num);
+            if (isNaN(number)) return '';
+            return number.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+        
+        // 숫자 파싱 함수 (콤마 제거)
+        function parseNumber(str) {
+            if (typeof str === 'number') return str;
+            if (!str) return 0;
+            return parseFloat(str.toString().replace(/,/g, '')) || 0;
+        }
+        
+        // 입력 필드 포맷팅
+        function formatInputField(input) {
+            if (input.readOnly || input.classList.contains('no-format')) return;
+            
+            const value = parseNumber(input.value);
+            if (!isNaN(value) && value !== 0) {
+                input.value = formatNumber(value);
+            }
+        }
+        
+        // 포커스 시 콤마 제거
+        function removeCommas(input) {
+            if (input.readOnly) return;
+            const value = parseNumber(input.value);
+            if (!isNaN(value)) {
+                input.value = value || '';
+            }
+        }
+        
+        // 재계산 함수
+        function recalc() {
+            console.log('Recalculating...');
+            
+            // WACC 가져오기
+            const wacc = parseFloat(document.getElementById('wacc').value) / 100;
+            const termGrowth = parseFloat(document.getElementById('termGrowth').value) / 100;
+            
+            // Gross Profit 계산 (Revenue + COGS)
+            for (let i = -3; i <= 5; i++) {
+                const suffix = i === 0 ? '0' : i;
+                const revEl = document.getElementById('rev' + suffix);
+                const cosEl = document.getElementById('cos' + suffix);
+                
+                if (revEl && cosEl) {
+                    const revenue = parseNumber(revEl.value);
+                    const cogs = parseNumber(cosEl.value);
+                    const grossProfit = revenue + cogs; // COGS는 음수
+                    
+                    // Gross Profit 행 업데이트 (행 9)
+                    updateCellValue(9, i + 7, grossProfit);
+                }
+            }
+            
+            // EBITDA 계산 (Gross Profit + SG&A)
+            for (let col = 4; col <= 12; col++) {
+                const table = document.querySelector('.spreadsheet tbody');
+                const grossProfit = getCellValue(9, col);
+                const sga = getCellValue(10, col);
+                const ebitda = grossProfit + sga;
+                updateCellValue(11, col, ebitda);
+            }
+            
+            // EBIT 계산 (EBITDA + D&A)
+            for (let col = 4; col <= 12; col++) {
+                const ebitda = getCellValue(11, col);
+                const da = getCellValue(12, col);
+                const ebit = ebitda + da;
+                updateCellValue(13, col, ebit);
+            }
+            
+            // Tax 계산
+            for (let col = 4; col <= 12; col++) {
+                const ebit = getCellValue(13, col);
+                const tax = ebit > 0 ? -ebit * 0.17 : 0;
+                updateCellValue(14, col, tax);
+            }
+            
+            // NOPAT 계산
+            for (let col = 4; col <= 12; col++) {
+                const ebit = getCellValue(13, col);
+                const tax = getCellValue(14, col);
+                const nopat = ebit + tax;
+                updateCellValue(15, col, nopat);
+            }
+            
+            // Free Cash Flow 계산
+            for (let col = 4; col <= 12; col++) {
+                const nopat = getCellValue(15, col);
+                const da = Math.abs(getCellValue(12, col));
+                const nwc = getCellValue(20, col);
+                const capex = getCellValue(21, col);
+                const fcf = nopat + da - nwc + capex; // capex는 음수로 입력됨
+                updateCellValue(22, col, fcf);
+            }
+            
+            // Discount Factor 계산
+            const discountPeriods = [0.5, 1.5, 2.5, 3.5, 4.5];
+            for (let i = 0; i < 5; i++) {
+                const discountFactor = Math.pow(1 + wacc, -discountPeriods[i]);
+                updateCellValue(28, i + 8, discountFactor);
+            }
+            
+            // PV of FCF 계산
+            let sumPV = 0;
+            for (let i = 0; i < 5; i++) {
+                const fcf = getCellValue(22, i + 8);
+                const discountFactor = getCellValue(28, i + 8);
+                const pv = fcf * discountFactor;
+                updateCellValue(29, i + 8, pv);
+                sumPV += pv;
+            }
+            
+            // Terminal Value 계산
+            const lastFCF = getCellValue(22, 12); // Year 5 FCF
+            const terminalValue = (lastFCF * (1 + termGrowth)) / (wacc - termGrowth);
+            updateCellValue(30, 13, terminalValue);
+            
+            // PV of Terminal Value
+            const terminalDiscountFactor = Math.pow(1 + wacc, -5);
+            const pvTerminal = terminalValue * terminalDiscountFactor;
+            updateCellValue(31, 13, pvTerminal);
+            
+            // Enterprise Value 계산
+            document.getElementById('sumPV').value = formatNumber(Math.round(sumPV));
+            document.getElementById('pvTV').value = formatNumber(Math.round(pvTerminal));
+            document.getElementById('entVal').value = formatNumber(Math.round(sumPV + pvTerminal));
+            
+            // Equity Value 계산
+            const entVal = sumPV + pvTerminal;
+            const cash = parseNumber(document.getElementById('cash').value);
+            const debt = parseNumber(document.getElementById('debt').value);
+            const equityValue = entVal + cash - debt;
+            document.getElementById('eqVal').value = formatNumber(Math.round(equityValue));
+            
+            // Value per Share
+            const shares = parseNumber(document.getElementById('shares').value) || 1;
+            const valuePerShare = equityValue / shares;
+            document.getElementById('valPerShare').value = valuePerShare.toFixed(2);
+            
+        // 시트 표시/숨기기
+        function showSheet(event, sheetName) {
+            // 모든 시트 숨기기
+            const sheets = ['valuationSheet', 'incomeSheet', 'cashflowSheet', 'waccSheet', 'assumptionsSheet', 'sensitivitySheet', 'chartsSheet'];
+            sheets.forEach(id => {
+                const sheet = document.getElementById(id);
+                if (sheet) sheet.style.display = 'none';
+            });
+            
+            // 모든 탭 비활성화
+            const tabs = document.querySelectorAll('.sheet-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 선택된 시트 표시
+            const selectedSheet = document.getElementById(sheetName + 'Sheet');
+            if (selectedSheet) {
+                selectedSheet.style.display = 'table';
+            } else {
+                // 시트가 없으면 새로 생성
+                createSheet(sheetName);
+            }
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+        }
+        
+        // 새 시트 생성
+        function createSheet(sheetName) {
+            const wrapper = document.getElementById('spreadsheetWrapper');
+            const newTable = document.createElement('table');
+            newTable.className = 'spreadsheet';
+            newTable.id = sheetName + 'Sheet';
+            
+            // 시트별 내용 생성
+            let content = '';
+            
+            switch(sheetName) {
+                case 'income':
+                    content = createIncomeStatementSheet();
+                    break;
+                case 'cashflow':
+                    content = createCashFlowSheet();
+                    break;
+                case 'wacc':
+                    content = createWACCSheet();
+                    break;
+                case 'assumptions':
+                    content = createAssumptionsSheet();
+                    break;
+                case 'sensitivity':
+                    content = createSensitivitySheet();
+                    break;
+                case 'charts':
+                    content = createChartsSheet();
+                    break;
+                default:
+                    content = createDefaultSheet(sheetName);
+            }
+            
+            newTable.innerHTML = content;
+            wrapper.appendChild(newTable);
+            
+            // 새 시트의 입력 필드에 이벤트 리스너 추가
+            initializeNewSheet(newTable);
+        }
+        
+        // Income Statement 시트 생성
+        function createIncomeStatementSheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th><th>K</th><th>L</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="12" class="section-title">
+                            <input type="text" value="INCOME STATEMENT - DETAILED" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="12"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="3" class="cell-header"><input type="text" value="Period" readonly></td>
+                        <td class="cell-year"><input type="text" value="2021" readonly></td>
+                        <td class="cell-year"><input type="text" value="2022" readonly></td>
+                        <td class="cell-year"><input type="text" value="2023" readonly></td>
+                        <td class="cell-year"><input type="text" value="2024" readonly></td>
+                        <td class="cell-year"><input type="text" value="2025F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2026F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2027F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2028F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2029F" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td colspan="12" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="REVENUE" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">5</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Data Services" readonly></td>
+                        <td class="cell-input"><input type="number" value="9180078"></td>
+                        <td class="cell-input"><input type="number" value="10406411"></td>
+                        <td class="cell-input"><input type="number" value="13474044"></td>
+                        <td class="cell-input"><input type="number" value="14584402"></td>
+                        <td class="cell-input"><input type="number" value="15999907"></td>
+                        <td class="cell-input"><input type="number" value="17552796"></td>
+                        <td class="cell-input"><input type="number" value="19000000"></td>
+                        <td class="cell-input"><input type="number" value="20500000"></td>
+                        <td class="cell-input"><input type="number" value="22000000"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">6</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Colocation" readonly></td>
+                        <td class="cell-input"><input type="number" value="10320462"></td>
+                        <td class="cell-input"><input type="number" value="15626448"></td>
+                        <td class="cell-input"><input type="number" value="19692842"></td>
+                        <td class="cell-input"><input type="number" value="20253590"></td>
+                        <td class="cell-input"><input type="number" value="20830306"></td>
+                        <td class="cell-input"><input type="number" value="21423443"></td>
+                        <td class="cell-input"><input type="number" value="22500000"></td>
+                        <td class="cell-input"><input type="number" value="23500000"></td>
+                        <td class="cell-input"><input type="number" value="24500000"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">7</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Voice & Others" readonly></td>
+                        <td class="cell-input"><input type="number" value="109046"></td>
+                        <td class="cell-input"><input type="number" value="244699"></td>
+                        <td class="cell-input"><input type="number" value="273619"></td>
+                        <td class="cell-input"><input type="number" value="202295"></td>
+                        <td class="cell-input"><input type="number" value="200463"></td>
+                        <td class="cell-input"><input type="number" value="202733"></td>
+                        <td class="cell-input"><input type="number" value="210000"></td>
+                        <td class="cell-input"><input type="number" value="220000"></td>
+                        <td class="cell-input"><input type="number" value="230000"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">8</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Intercompany" readonly></td>
+                        <td class="cell-input"><input type="number" value="3546692"></td>
+                        <td class="cell-input"><input type="number" value="4174121"></td>
+                        <td class="cell-input"><input type="number" value="5127580"></td>
+                        <td class="cell-input"><input type="number" value="4159589"></td>
+                        <td class="cell-input"><input type="number" value="4736020"></td>
+                        <td class="cell-input"><input type="number" value="4886929"></td>
+                        <td class="cell-input"><input type="number" value="5100000"></td>
+                        <td class="cell-input"><input type="number" value="5300000"></td>
+                        <td class="cell-input"><input type="number" value="5500000"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">9</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="New Projects" readonly></td>
+                        <td class="cell-input"><input type="number" value="0"></td>
+                        <td class="cell-input"><input type="number" value="0"></td>
+                        <td class="cell-input"><input type="number" value="0"></td>
+                        <td class="cell-input"><input type="number" value="0"></td>
+                        <td class="cell-input"><input type="number" value="270230"></td>
+                        <td class="cell-input"><input type="number" value="3393414"></td>
+                        <td class="cell-input"><input type="number" value="5690000"></td>
+                        <td class="cell-input"><input type="number" value="7480000"></td>
+                        <td class="cell-input"><input type="number" value="9270000"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">10</td>
+                        <td colspan="3" class="cell-total"><input type="text" value="Total Revenue" readonly></td>
+                        <td class="cell-total"><input type="number" value="23156279" readonly></td>
+                        <td class="cell-total"><input type="number" value="30451679" readonly></td>
+                        <td class="cell-total"><input type="number" value="38568085" readonly></td>
+                        <td class="cell-total"><input type="number" value="39199876" readonly></td>
+                        <td class="cell-total"><input type="number" value="42036926" readonly></td>
+                        <td class="cell-total"><input type="number" value="47459314" readonly></td>
+                        <td class="cell-total"><input type="number" value="52500000" readonly></td>
+                        <td class="cell-total"><input type="number" value="57000000" readonly></td>
+                        <td class="cell-total"><input type="number" value="61500000" readonly></td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // Cash Flow 시트 생성
+        function createCashFlowSheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="10" class="section-title">
+                            <input type="text" value="CASH FLOW STATEMENT" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="10"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="3" class="cell-header"><input type="text" value="Period" readonly></td>
+                        <td class="cell-year"><input type="text" value="2025F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2026F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2027F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2028F" readonly></td>
+                        <td class="cell-year"><input type="text" value="2029F" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td colspan="10" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="OPERATING ACTIVITIES" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">5</td>
+                        <td colspan="3" class="cell-subheader"><input type="text" value="Net Income" readonly></td>
+                        <td class="cell-input"><input type="number" value="782345"></td>
+                        <td class="cell-input"><input type="number" value="931386"></td>
+                        <td class="cell-input"><input type="number" value="1058250"></td>
+                        <td class="cell-input"><input type="number" value="1153700"></td>
+                        <td class="cell-input"><input type="number" value="1249150"></td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // WACC 시트 생성
+        function createWACCSheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="8" class="section-title">
+                            <input type="text" value="WACC CALCULATION" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="8"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="8" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="COMPARABLE COMPANIES" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td class="cell-subheader"><input type="text" value="Ticker" readonly></td>
+                        <td colspan="2" class="cell-subheader"><input type="text" value="Company Name" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="Country" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="D/V" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="E/V" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="Tax Rate" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="Beta" readonly></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">5</td>
+                        <td class="cell-input"><input type="text" value="CNSL US"></td>
+                        <td colspan="2" class="cell-input"><input type="text" value="Consolidated Comm"></td>
+                        <td class="cell-input"><input type="text" value="USA"></td>
+                        <td class="cell-input"><input type="number" value="0.841" step="0.001"></td>
+                        <td class="cell-input"><input type="number" value="0.159" step="0.001"></td>
+                        <td class="cell-input"><input type="number" value="0.275" step="0.001"></td>
+                        <td class="cell-input"><input type="number" value="0.991" step="0.001"></td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // Assumptions 시트 생성
+        function createAssumptionsSheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="6" class="section-title">
+                            <input type="text" value="KEY ASSUMPTIONS" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="6" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="GROWTH RATES" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td colspan="2" class="cell-subheader"><input type="text" value="Revenue Growth - Data" readonly></td>
+                        <td class="cell-input"><input type="number" value="9.7" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="9.7" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="8.2" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="7.9" step="0.1">%</td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">5</td>
+                        <td colspan="2" class="cell-subheader"><input type="text" value="Revenue Growth - Colocation" readonly></td>
+                        <td class="cell-input"><input type="number" value="2.9" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="2.9" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="5.0" step="0.1">%</td>
+                        <td class="cell-input"><input type="number" value="4.4" step="0.1">%</td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // Sensitivity 시트 생성
+        function createSensitivitySheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="7" class="section-title">
+                            <input type="text" value="SENSITIVITY ANALYSIS" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="7"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="7" class="cell-header" style="background: #e8f4f8;">
+                            <input type="text" value="WACC vs TERMINAL GROWTH RATE" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">4</td>
+                        <td class="cell-subheader"><input type="text" value="WACC / g" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="1.0%" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="1.5%" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="2.0%" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="2.5%" readonly></td>
+                        <td class="cell-subheader"><input type="text" value="3.0%" readonly></td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // Charts 시트 생성
+        function createChartsSheet() {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="6" class="section-title">
+                            <input type="text" value="CHARTS & VISUALIZATIONS" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">2</td>
+                        <td class="cell-empty" colspan="6"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-header">3</td>
+                        <td colspan="6" style="text-align: center; padding: 50px;">
+                            <div style="display: inline-block; padding: 20px; background: #f0f8ff; border-radius: 10px;">
+                                <p style="font-size: 14px; color: #333;">Charts will be displayed here</p>
+                                <p style="font-size: 12px; color: #666; margin-top: 10px;">Revenue Trends | EBITDA Margins | FCF Analysis | Valuation Multiples</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // 기본 시트 생성
+        function createDefaultSheet(name) {
+            return `
+                <thead>
+                    <tr>
+                        <th class="row-header"></th>
+                        <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-header">1</td>
+                        <td colspan="5" class="section-title">
+                            <input type="text" value="${name.toUpperCase()} SHEET" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        // 새 시트 초기화
+        function initializeNewSheet(table) {
+            const inputs = table.querySelectorAll('input');
+            inputs.forEach(input => {
+                // 초기 포맷팅
+                if (input.type === 'number' && !input.readOnly) {
+                    formatInputField(input);
+                }
+                
+                // 이벤트 리스너 추가
+                input.addEventListener('focus', function() {
+                    currentCell = this;
+                    updateFormulaBar();
+                    updateCellAddress();
+                    if (this.type === 'number' && !this.readOnly) {
+                        removeCommas(this);
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.type === 'number' && !this.readOnly) {
+                        formatInputField(this);
+                    }
+                });
+                
+                input.addEventListener('change', function() {
+                    if (this.id) {
+                        recalc();
+                    }
+                });
+                
+                input.addEventListener('keydown', handleKeyDown);
+            });
+        }
